@@ -1,1 +1,1 @@
-export * from '../modules/users/schemas/users';
+export * from '../database/schemas/users.schema';
