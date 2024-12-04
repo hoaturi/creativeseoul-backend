@@ -43,8 +43,8 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
-# schema file
-/drizzle
+# migrations
+/src/database/migrations
 
 # temp directory
 .temp
