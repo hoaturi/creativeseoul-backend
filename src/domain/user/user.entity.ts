@@ -19,7 +19,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Property({ length: 128 })
-  password: string;
+  password!: string;
 
   @Enum(() => UserRole)
   role: UserRole;
@@ -27,16 +27,10 @@ export class User extends BaseEntity {
   @Property({ default: true })
   isActive!: boolean;
 
-  constructor(
-    fullName: string,
-    email: string,
-    password: string,
-    role: UserRole,
-  ) {
+  constructor(fullName: string, email: string, role: UserRole) {
     super();
     this.fullName = fullName;
     this.email = email;
-    this.password = password;
     this.role = role;
   }
 }
