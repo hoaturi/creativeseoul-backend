@@ -12,7 +12,7 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
   constructor(private readonly em: EntityManager) {}
 
   async execute(command: SignUpCommand): Promise<Result<void, ResultError>> {
-    const exists = this.em.findOne(
+    const exists = await this.em.findOne(
       User,
       { email: command.user.email },
       {
