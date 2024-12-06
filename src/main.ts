@@ -9,8 +9,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
-    .setTitle('Kimchi Crew API')
-    .setDescription('Backend API documentation for Kimchi Crew')
+    .setTitle('FloatSeoul API')
+    .setDescription('Backend API documentation for FloatSeoul')
     .setVersion('0.1')
     .build();
 
