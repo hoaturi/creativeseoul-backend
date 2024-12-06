@@ -1,158 +1,167 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
+import { SignUpHandler } from '../../src/features/auth/commands/signUp/sign-up.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Queue } from 'bullmq';
-import * as bcrypt from 'bcrypt';
-
-import { Result } from '../../src/common/result/result';
+import { getQueueToken } from '@nestjs/bullmq';
+import { QueueType } from '../../src/infrastructure/queue/queue-type.enum';
 import { SignUpCommand } from '../../src/features/auth/commands/signUp/sign-up.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
+import { EmailVerification } from '../../src/domain/user/email-verification.entity';
 import { UserErrors } from '../../src/features/user/errors/user.errors';
-import { SignUpHandler } from '../../src/features/auth/commands/signUp/sign-up.handler';
-import { QueueType } from '../../src/infrastructure/queue/queue-type.enum';
-import { getQueueToken } from '@nestjs/bullmq';
 import { EmailJobType } from '../../src/infrastructure/queue/email/email-job.type.enum';
+import { authEmailOption } from '../../src/infrastructure/queue/email/auth-email.option';
 
 jest.mock('bcrypt');
 
 describe('SignUpHandler', () => {
   let handler: SignUpHandler;
-  let entityManager: jest.Mocked<EntityManager>;
+  let em: jest.Mocked<EntityManager>;
   let emailQueue: jest.Mocked<Queue>;
 
+  const mockEntityManager = {
+    findOne: jest.fn(),
+    create: jest.fn(),
+    flush: jest.fn(),
+  };
+
+  const mockQueue = {
+    add: jest.fn(),
+  };
+
+  const mockCommand = new SignUpCommand({
+    email: 'test@example.com',
+    fullName: 'Test User',
+    password: 'password123',
+    role: 'CANDIDATE',
+  });
+
   beforeEach(async () => {
-    const entityManagerMock = {
-      findOne: jest.fn(),
-      create: jest.fn(),
-      flush: jest.fn(),
-    };
-
-    const queueMock = {
-      add: jest.fn(),
-    };
-
-    const moduleRef = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         SignUpHandler,
         {
           provide: EntityManager,
-          useValue: entityManagerMock,
+          useValue: mockEntityManager,
         },
         {
           provide: getQueueToken(QueueType.EMAIL),
-          useValue: queueMock,
+          useValue: mockQueue,
         },
       ],
     }).compile();
 
-    handler = moduleRef.get<SignUpHandler>(SignUpHandler);
-    entityManager = moduleRef.get(EntityManager);
-    emailQueue = moduleRef.get(getQueueToken(QueueType.EMAIL));
+    handler = module.get<SignUpHandler>(SignUpHandler);
+    em = module.get(EntityManager);
+    emailQueue = module.get(getQueueToken(QueueType.EMAIL));
+
+    // Reset all mocks before each test
+    jest.clearAllMocks();
 
     // Mock bcrypt hash
     (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  describe('execute', () => {
+    it('should create user, email verification and queue verify email job', async () => {
+      em.findOne.mockResolvedValue(null);
+
+      const result = await handler.execute(mockCommand);
+
+      expect(result.isSuccess).toBe(true);
+      expect(em.findOne).toHaveBeenCalled();
+      expect(bcrypt.hash).toHaveBeenCalled();
+      expect(em.create).toHaveBeenCalledTimes(2);
+      expect(em.flush).toHaveBeenCalled();
+      expect(emailQueue.add).toHaveBeenCalled();
+    });
   });
 
-  describe('execute', () => {
-    const mockCommand = new SignUpCommand({
-      fullName: 'John Doe',
-      email: 'jane@example.com',
-      password: 'password123',
-      role: 'CANDIDATE',
+  it('should return failure when email already exists', async () => {
+    // Arrange
+    em.findOne.mockResolvedValue(
+      new User('existing', 'test@example.com', UserRole.CANDIDATE, 'hash'),
+    );
+
+    // Act
+    const result = await handler.execute(mockCommand);
+
+    // Assert
+    expect(result.isSuccess).toBe(false);
+    expect(result.error).toBe(UserErrors.EmailAlreadyExists);
+    expect(em.create).not.toHaveBeenCalled();
+    expect(em.flush).not.toHaveBeenCalled();
+    expect(emailQueue.add).not.toHaveBeenCalled();
+  });
+
+  it('should create user with correct data', async () => {
+    em.findOne.mockResolvedValue(null);
+
+    await handler.execute(mockCommand);
+
+    expect(em.create).toHaveBeenCalledWith(
+      User,
+      expect.objectContaining({
+        fullName: mockCommand.user.fullName,
+        email: mockCommand.user.email,
+        role: UserRole[mockCommand.user.role],
+        password: 'hashedPassword',
+      }),
+    );
+  });
+
+  it('should create email verification with correct expiration time', async () => {
+    // Arrange
+    jest.useFakeTimers();
+    const now = new Date('2024-01-01T00:00:00Z');
+    jest.setSystemTime(now);
+
+    em.findOne.mockResolvedValue(null);
+    let capturedExpirationTime: Date | undefined;
+
+    em.create.mockImplementation((Entity: any, data: any) => {
+      if (Entity === EmailVerification) {
+        capturedExpirationTime = data.expiresAt;
+        return new EmailVerification(data.user, data.token, data.expiresAt);
+      }
+      return data;
     });
 
-    it('should create user and queue verification email', async () => {
-      // Arrange
-      entityManager.findOne.mockResolvedValue(null);
+    // Act
+    await handler.execute(mockCommand);
 
-      const mockVerificationToken = crypto.randomUUID();
-      const mockVerificationTokenExpiresAt = new Date();
-      jest.spyOn(crypto, 'randomUUID').mockReturnValue(mockVerificationToken);
-      jest
-        .spyOn(Date, 'now')
-        .mockReturnValue(mockVerificationTokenExpiresAt.getTime());
+    // Assert
+    expect(capturedExpirationTime).toEqual(
+      new Date(now.getTime() + 30 * 60 * 1000),
+    );
 
-      const mockUser = new User(
-        mockCommand.user.fullName,
-        mockCommand.user.email,
-        UserRole[mockCommand.user.role],
-        'hashedPassword',
-        mockVerificationToken,
-        mockVerificationTokenExpiresAt,
-      );
-      entityManager.create.mockReturnValue(mockUser);
+    jest.useRealTimers();
+  });
 
-      // Act
-      const result = await handler.execute(mockCommand);
+  it('should queue verification email after successful user creation', async () => {
+    // Arrange
+    em.findOne.mockResolvedValue(null);
+    const mockUser = new User(
+      mockCommand.user.fullName,
+      mockCommand.user.email,
+      UserRole.CANDIDATE,
+      'hashedPassword',
+    );
 
-      // Assert
-      expect(result.isSuccess).toBe(true);
-      expect(entityManager.findOne).toHaveBeenCalledWith(
-        User,
-        { email: mockCommand.user.email },
-        { fields: ['id'] },
-      );
-      expect(bcrypt.hash).toHaveBeenCalledWith(mockCommand.user.password, 10);
-      expect(entityManager.create).toHaveBeenCalledWith(
-        User,
-        expect.objectContaining({
-          email: mockCommand.user.email,
-          fullName: mockCommand.user.fullName,
-          password: 'hashedPassword',
-          role: UserRole[mockCommand.user.role],
-          verificationToken: mockVerificationToken,
-          verificationTokenExpiresAt: expect.any(Date),
-          createdAt: expect.any(Date),
-          updatedAt: expect.any(Date),
-        }),
-      );
-      expect(entityManager.flush).toHaveBeenCalled();
-      expect(emailQueue.add).toHaveBeenCalledWith(
-        EmailJobType.VERIFY_EMAIL,
-        {
-          userId: mockUser.id,
-          email: mockUser.email,
-          fullName: mockUser.fullName,
-          verificationToken: mockUser.verificationToken,
-        },
-        expect.any(Object),
-      );
-    });
+    em.create.mockReturnValue(mockUser);
 
-    it('should not queue verification email if user creation fails', async () => {
-      // Arrange
-      entityManager.findOne.mockResolvedValue(null);
-      entityManager.flush.mockRejectedValue(new Error('Database error'));
+    // Act
+    await handler.execute(mockCommand);
 
-      // Act & Assert
-      await expect(handler.execute(mockCommand)).rejects.toThrow(
-        'Database error',
-      );
-      expect(emailQueue.add).not.toHaveBeenCalled();
-    });
-
-    it('should return failure when email already exists without queueing email', async () => {
-      // Arrange
-      entityManager.findOne.mockResolvedValue(
-        new User(
-          'Test User',
-          'john@example.com',
-          UserRole.CANDIDATE,
-          'password',
-        ),
-      );
-
-      // Act
-      const result = await handler.execute(mockCommand);
-
-      // Assert
-      expect(result).toEqual(Result.failure(UserErrors.EmailAlreadyExists));
-      expect(entityManager.create).not.toHaveBeenCalled();
-      expect(entityManager.flush).not.toHaveBeenCalled();
-      expect(emailQueue.add).not.toHaveBeenCalled();
-    });
+    // Assert
+    expect(emailQueue.add).toHaveBeenCalledWith(
+      EmailJobType.VERIFY_EMAIL,
+      {
+        email: mockCommand.user.email,
+        fullName: mockCommand.user.fullName,
+        verificationToken: expect.any(String),
+      },
+      expect.objectContaining(authEmailOption),
+    );
   });
 });

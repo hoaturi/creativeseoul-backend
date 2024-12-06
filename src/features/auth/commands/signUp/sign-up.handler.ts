@@ -12,6 +12,7 @@ import { VerifyEmailJob } from '../../../../infrastructure/queue/email/email-job
 import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
 import { Queue } from 'bullmq';
 import { authEmailOption } from '../../../../infrastructure/queue/email/auth-email.option';
+import { EmailVerification } from '../../../../domain/user/email-verification.entity';
 
 @CommandHandler(SignUpCommand)
 export class SignUpHandler implements ICommandHandler<SignUpCommand> {
@@ -22,39 +23,60 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
   ) {}
 
   async execute(command: SignUpCommand): Promise<Result<void, ResultError>> {
-    const exists = await this.em.findOne(
-      User,
-      { email: command.user.email },
-      {
-        fields: ['id'],
-      },
-    );
+    const { email, fullName, password, role } = command.user;
 
-    if (exists) {
+    if (await this.checkEmailExists(email)) {
       return Result.failure(UserErrors.EmailAlreadyExists);
     }
 
-    const password = await bcrypt.hash(command.user.password, 10);
-    const verificationToken = crypto.randomUUID();
-    const verificationTokenExpiresAt = new Date(Date.now() + 60 * 30 * 1000);
+    const user = await this.createUser(fullName, email, role, password);
+    const emailVerification = await this.createEmailVerification(user);
 
-    const user = new User(
-      command.user.fullName,
-      command.user.email,
-      UserRole[command.user.role],
-      password,
-      verificationToken,
-      verificationTokenExpiresAt,
-    );
-
-    this.em.create(User, user);
     await this.em.flush();
+    await this.queueVerificationEmail(user, emailVerification.token);
 
+    return Result.success();
+  }
+
+  private async checkEmailExists(email: string): Promise<boolean> {
+    const exists = await this.em.findOne(User, { email }, { fields: ['id'] });
+    return !!exists;
+  }
+
+  private async createUser(
+    fullName: string,
+    email: string,
+    role: string,
+    password: string,
+  ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User(fullName, email, UserRole[role], hashedPassword);
+    this.em.create(User, user);
+    return user;
+  }
+
+  private async createEmailVerification(
+    user: User,
+  ): Promise<EmailVerification> {
+    const token = crypto.randomUUID();
+    const tokenExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
+    const emailVerification = new EmailVerification(
+      user,
+      token,
+      tokenExpiresAt,
+    );
+    this.em.create(EmailVerification, emailVerification);
+    return emailVerification;
+  }
+
+  private async queueVerificationEmail(
+    user: User,
+    verificationToken: string,
+  ): Promise<void> {
     const verifyEmailJob: VerifyEmailJob = {
-      userId: user.id,
       email: user.email,
       fullName: user.fullName,
-      verificationToken: user.verificationToken,
+      verificationToken,
     };
 
     await this.emailQueue.add(
@@ -62,7 +84,5 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
       verifyEmailJob,
       authEmailOption,
     );
-
-    return Result.success();
   }
 }
