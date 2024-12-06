@@ -27,10 +27,26 @@ export class User extends BaseEntity {
   @Property({ default: true })
   isActive!: boolean;
 
-  constructor(fullName: string, email: string, role: UserRole) {
+  @Property({ nullable: true })
+  verificationToken?: string;
+
+  @Property({ nullable: true })
+  verificationTokenExpiresAt?: Date;
+
+  constructor(
+    fullName: string,
+    email: string,
+    role: UserRole,
+    password: string,
+    verificationToken?: string,
+    verificationTokenExpiresAt?: Date,
+  ) {
     super();
     this.fullName = fullName;
     this.email = email;
     this.role = role;
+    this.password = password;
+    this.verificationToken = verificationToken;
+    this.verificationTokenExpiresAt = verificationTokenExpiresAt;
   }
 }
