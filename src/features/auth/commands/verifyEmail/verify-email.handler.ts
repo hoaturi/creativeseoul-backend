@@ -4,6 +4,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { AuthError } from '../../auth.error';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
+import { EmailVerification } from '../../../../domain/auth/email-verification.entity';
 
 @CommandHandler(VerifyEmailCommand)
 export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
@@ -14,32 +15,26 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
   ): Promise<Result<void, ResultError>> {
     const { token } = command.dto;
 
-    const result = await this.em.execute(
-      `
-          WITH updated_verification AS (
-            UPDATE email_verification ev
-              SET used_at = NOW()
-              FROM "user" u
-              WHERE ev.token = ?
-                AND ev.expires_at > NOW()
-                AND ev.used_at IS NULL
-                AND ev.user_id = u.id
-                AND u.is_verified = FALSE
-              RETURNING ev.user_id
-          )
-          UPDATE "user" u
-          SET is_verified = TRUE
-          FROM updated_verification uv
-          WHERE u.id = uv.user_id
-          RETURNING u.id
-        `,
-      [token],
+    const verification = await this.em.findOne(
+      EmailVerification,
+      {
+        token,
+        usedAt: null,
+        expiresAt: { $gt: new Date() },
+      },
+      {
+        fields: ['usedAt', 'user.isVerified'],
+      },
     );
 
-    if (result.length === 0) {
+    if (!verification || verification.user.isVerified) {
       return Result.failure(AuthError.InvalidToken);
     }
 
+    verification.usedAt = new Date();
+    verification.user.isVerified = true;
+
+    await this.em.flush();
     return Result.success();
   }
 }
