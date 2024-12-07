@@ -8,9 +8,9 @@ import { QueueType } from '../../src/infrastructure/queue/queue-type.enum';
 import { SignUpCommand } from '../../src/features/auth/commands/signUp/sign-up.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
 import { EmailVerification } from '../../src/domain/user/email-verification.entity';
-import { UserErrors } from '../../src/features/user/errors/user.errors';
 import { EmailJobType } from '../../src/infrastructure/queue/email/email-job.type.enum';
 import { authEmailOption } from '../../src/infrastructure/queue/email/auth-email.option';
+import { AuthError } from '../../src/features/auth/auth.error';
 
 jest.mock('bcrypt');
 
@@ -88,7 +88,7 @@ describe('SignUpHandler', () => {
 
     // Assert
     expect(result.isSuccess).toBe(false);
-    expect(result.error).toBe(UserErrors.EmailAlreadyExists);
+    expect(result.error).toBe(AuthError.EmailAlreadyExists);
     expect(em.create).not.toHaveBeenCalled();
     expect(em.flush).not.toHaveBeenCalled();
     expect(emailQueue.add).not.toHaveBeenCalled();

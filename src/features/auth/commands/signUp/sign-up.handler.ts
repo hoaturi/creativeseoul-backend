@@ -4,7 +4,6 @@ import { User, UserRole } from '../../../../domain/user/user.entity';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
-import { UserErrors } from '../../../user/errors/user.errors';
 import * as bcrypt from 'bcrypt';
 import { InjectQueue } from '@nestjs/bullmq';
 import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
@@ -13,6 +12,7 @@ import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.t
 import { Queue } from 'bullmq';
 import { authEmailOption } from '../../../../infrastructure/queue/email/auth-email.option';
 import { EmailVerification } from '../../../../domain/user/email-verification.entity';
+import { AuthError } from '../../auth.error';
 
 @CommandHandler(SignUpCommand)
 export class SignUpHandler implements ICommandHandler<SignUpCommand> {
@@ -26,7 +26,7 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
     const { email, fullName, password, role } = command.user;
 
     if (await this.checkEmailExists(email)) {
-      return Result.failure(UserErrors.EmailAlreadyExists);
+      return Result.failure(AuthError.EmailAlreadyExists);
     }
 
     const user = await this.createUser(fullName, email, role, password);
