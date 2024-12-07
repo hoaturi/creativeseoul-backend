@@ -6,7 +6,7 @@ dotenv.config();
 
 const logger = new Logger('MikroORM');
 
-export default defineConfig({
+export const mikroOrmConfig = defineConfig({
   clientUrl: process.env.DATABASE_URL,
   logger: logger.log.bind(logger),
   debug: true,
@@ -16,4 +16,9 @@ export default defineConfig({
     path: 'dist/database/migrations',
     pathTs: 'src/database/migrations',
   },
+});
+
+export const testMikroOrmConfig = defineConfig({
+  clientUrl: process.env.TEST_DATABASE_URL,
+  entities: ['src/domain/**/*.entity.ts'],
 });
