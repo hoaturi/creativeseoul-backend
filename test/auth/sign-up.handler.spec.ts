@@ -62,19 +62,17 @@ describe('SignUpHandler', () => {
     (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
   });
 
-  describe('execute', () => {
-    it('should create user, email verification and queue verify email job', async () => {
-      em.findOne.mockResolvedValue(null);
+  it('should create user, email verification and queue verify email job', async () => {
+    em.findOne.mockResolvedValue(null);
 
-      const result = await handler.execute(mockCommand);
+    const result = await handler.execute(mockCommand);
 
-      expect(result.isSuccess).toBe(true);
-      expect(em.findOne).toHaveBeenCalled();
-      expect(bcrypt.hash).toHaveBeenCalled();
-      expect(em.create).toHaveBeenCalledTimes(2);
-      expect(em.flush).toHaveBeenCalled();
-      expect(emailQueue.add).toHaveBeenCalled();
-    });
+    expect(result.isSuccess).toBe(true);
+    expect(em.findOne).toHaveBeenCalled();
+    expect(bcrypt.hash).toHaveBeenCalled();
+    expect(em.create).toHaveBeenCalledTimes(2);
+    expect(em.flush).toHaveBeenCalled();
+    expect(emailQueue.add).toHaveBeenCalled();
   });
 
   it('should return failure when email already exists', async () => {
