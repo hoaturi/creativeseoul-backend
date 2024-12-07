@@ -7,7 +7,7 @@ import { getQueueToken } from '@nestjs/bullmq';
 import { QueueType } from '../../src/infrastructure/queue/queue-type.enum';
 import { SignUpCommand } from '../../src/features/auth/commands/signUp/sign-up.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
-import { EmailVerification } from '../../src/domain/user/email-verification.entity';
+import { EmailVerification } from '../../src/domain/auth/email-verification.entity';
 import { EmailJobType } from '../../src/infrastructure/queue/email/email-job.type.enum';
 import { authEmailOption } from '../../src/infrastructure/queue/email/auth-email.option';
 import { AuthError } from '../../src/features/auth/auth.error';

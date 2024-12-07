@@ -11,7 +11,7 @@ import { VerifyEmailJob } from '../../../../infrastructure/queue/email/email-job
 import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
 import { Queue } from 'bullmq';
 import { authEmailOption } from '../../../../infrastructure/queue/email/auth-email.option';
-import { EmailVerification } from '../../../../domain/user/email-verification.entity';
+import { EmailVerification } from '../../../../domain/auth/email-verification.entity';
 import { AuthError } from '../../auth.error';
 
 @CommandHandler(SignUpCommand)
