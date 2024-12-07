@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { SignUpRequestDto } from './dtos/sign-up-request.dto';
 import { SignUpCommand } from './commands/signUp/sign-up.command';
 import { ApiResponse } from '@nestjs/swagger';
-import { VerifyEmailDto } from './dtos/verify-email.dto';
+import { VerifyEmailRequestDto } from './dtos/verify-email-request.dto';
 import { VerifyEmailCommand } from './commands/verifyEmail/verify-email.command';
 
 @Controller('auth')
@@ -36,7 +36,7 @@ export class AuthController {
     status: 400,
     description: 'Invalid token',
   })
-  async verifyEmail(@Body() dto: VerifyEmailDto): Promise<void> {
+  async verifyEmail(@Body() dto: VerifyEmailRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new VerifyEmailCommand(dto));
 
     if (!result.isSuccess) {

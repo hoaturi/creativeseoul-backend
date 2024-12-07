@@ -1,10 +1,10 @@
 import { Command } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
-import { VerifyEmailDto } from '../../dtos/verify-email.dto';
+import { VerifyEmailRequestDto } from '../../dtos/verify-email-request.dto';
 
 export class VerifyEmailCommand extends Command<Result<void, ResultError>> {
-  constructor(public readonly dto: VerifyEmailDto) {
+  constructor(public readonly dto: VerifyEmailRequestDto) {
     super();
   }
 }
