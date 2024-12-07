@@ -15,6 +15,12 @@ export class AuthError extends ResultError {
     'Email already in use',
   );
 
+  public static readonly InvalidToken = new AuthError(
+    AuthErrorCode.INVALID_TOKEN,
+    HttpStatus.BAD_REQUEST,
+    'Invalid token',
+  );
+
   constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

@@ -24,6 +24,9 @@ export class User extends BaseEntity {
   @Enum(() => UserRole)
   role: UserRole;
 
+  @Property({ default: false })
+  isVerified!: boolean;
+
   @Property({ default: true })
   isActive!: boolean;
 
