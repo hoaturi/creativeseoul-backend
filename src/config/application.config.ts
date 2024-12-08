@@ -8,8 +8,12 @@ export const applicationConfig = registerAs('app', () => ({
   jwt: {
     accessSecret: process.env[ENV_KEYS.JWT.ACCESS_SECRET],
     refreshSecret: process.env[ENV_KEYS.JWT.REFRESH_SECRET],
-    accessExpirationInMs: process.env[ENV_KEYS.JWT.ACCESS_EXPIRATION_IN_MS],
-    refreshExpirationInMs: process.env[ENV_KEYS.JWT.REFRESH_EXPIRATION_IN_MS],
+    accessExpirationInMs: parseInt(
+      process.env[ENV_KEYS.JWT.ACCESS_EXPIRATION_IN_MS],
+    ),
+    refreshExpirationInMs: parseInt(
+      process.env[ENV_KEYS.JWT.REFRESH_EXPIRATION_IN_MS],
+    ),
   },
   aws: {
     region: process.env[ENV_KEYS.AWS.REGION],

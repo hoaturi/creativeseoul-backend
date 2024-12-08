@@ -21,6 +21,12 @@ export class AuthError extends ResultError {
     'Invalid token',
   );
 
+  public static readonly EmailNotVerified = new AuthError(
+    AuthErrorCode.EMAIL_NOT_VERIFIED,
+    HttpStatus.UNAUTHORIZED,
+    'Email not verified',
+  );
+
   constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

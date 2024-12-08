@@ -1,5 +1,6 @@
 import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/postgresql';
 import { BaseEntity } from '../base.entity';
+import { Index } from '@mikro-orm/core';
 
 export enum UserRole {
   CANDIDATE = 'candidate',
@@ -16,6 +17,7 @@ export class User extends BaseEntity {
   fullName: string;
 
   @Property({ unique: true, length: 256 })
+  @Index()
   email: string;
 
   @Property({ length: 128 })

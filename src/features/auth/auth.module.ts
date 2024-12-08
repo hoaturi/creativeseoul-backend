@@ -8,8 +8,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bullmq';
 import { QueueType } from '../../infrastructure/queue/queue-type.enum';
 import { VerifyEmailHandler } from './commands/verifyEmail/verify-email.handler';
+import { LoginHandler } from './commands/login/login.handler';
 
-const handlers: Provider[] = [SignUpHandler, VerifyEmailHandler];
+const handlers: Provider[] = [SignUpHandler, VerifyEmailHandler, LoginHandler];
 
 @Module({
   imports: [
