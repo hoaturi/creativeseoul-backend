@@ -11,9 +11,26 @@ import { bullMqConfig } from './config/bull-mq.config';
 import { AuthModule } from './features/auth/auth.module';
 import { EmailProcessor } from './infrastructure/queue/email/email.processor';
 import { EmailModule } from './infrastructure/services/email/email.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          targets: [
+            {
+              target: '@autotelic/pino-seq-transport',
+              options: {
+                serverUrl: process.env.SEQ_URL,
+                apiKey: process.env.SEQ_API_KEY,
+              },
+            },
+          ],
+        },
+        autoLogging: false,
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       validate,
