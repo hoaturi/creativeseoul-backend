@@ -3,11 +3,9 @@ import { ConfigType } from '@nestjs/config';
 import { SendTemplatedEmailCommand, SESClient } from '@aws-sdk/client-ses';
 import { applicationConfig } from '../../../config/application.config';
 import { VerifyEmailJob } from '../../queue/email/email-job.interface';
-import {
-  BaseTemplateData,
-  VerifyEmailTemplateData,
-} from './templates/template-data.interface';
 import { EmailJobType } from '../../queue/email/email-job.type.enum';
+import { Template } from './interfaces/template.interface';
+import { VerificationTemplateData } from './interfaces';
 
 @Injectable()
 export class EmailService {
@@ -27,13 +25,7 @@ export class EmailService {
     });
   }
 
-  async sendEmail(
-    email: string,
-    template: {
-      templateType: EmailJobType;
-      templateData: BaseTemplateData;
-    },
-  ): Promise<void> {
+  async sendEmail(email: string, template: Template): Promise<void> {
     const { templateType, templateData } = template;
 
     const emailCommand = new SendTemplatedEmailCommand({
@@ -49,7 +41,7 @@ export class EmailService {
   }
 
   async sendVerificationEmail(payload: VerifyEmailJob): Promise<void> {
-    const templateData: VerifyEmailTemplateData = {
+    const templateData: VerificationTemplateData = {
       fullName: payload.fullName,
       verificationLink: `${this.appConfig.client.baseUrl}?token=${payload.verificationToken}`,
     };
