@@ -37,7 +37,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     if (!isPasswordValid) {
       this.logger.log(
         { userId: user.id },
-        'Login attempt failed due to incorrect password',
+        'auth.login.failed: Invalid password',
       );
       return Result.failure(AuthError.InvalidCredentials);
     }
@@ -62,8 +62,10 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       },
     );
 
-    this.logger.log({ userId: user.id }, 'User logged in successfully');
-
+    this.logger.log(
+      { userId: user.id },
+      'auth.login.success: User authenticated',
+    );
     return Result.success(
       new LoginResponseDto(accessToken, refreshToken, {
         id: user.id,
