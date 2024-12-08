@@ -1,22 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { SendTemplatedEmailCommand, SESClient } from '@aws-sdk/client-ses';
 import { applicationConfig } from '../../../config/application.config';
 import { VerifyEmailJob } from '../../queue/email/email-job.interface';
-import { EmailJobType } from '../../queue/email/email-job.type.enum';
 import {
   BaseTemplateData,
   VerifyEmailTemplateData,
 } from './templates/template-data.interface';
-
-interface EmailPayload {
-  template: EmailJobType;
-  templateData: BaseTemplateData;
-}
+import { EmailJobType } from '../../queue/email/email-job.type.enum';
 
 @Injectable()
 export class EmailService {
+  private readonly logger = new Logger(EmailService.name);
   private readonly sesClient: SESClient;
+
   constructor(
     @Inject(applicationConfig.KEY)
     private readonly appConfig: ConfigType<typeof applicationConfig>,
@@ -30,14 +27,20 @@ export class EmailService {
     });
   }
 
-  async sendEmail(email: string, config: EmailPayload): Promise<void> {
-    const { template, templateData } = config;
+  async sendEmail(
+    email: string,
+    template: {
+      templateType: EmailJobType;
+      templateData: BaseTemplateData;
+    },
+  ): Promise<void> {
+    const { templateType, templateData } = template;
 
     const emailCommand = new SendTemplatedEmailCommand({
       Destination: {
         ToAddresses: [email],
       },
-      Template: template,
+      Template: templateType,
       TemplateData: JSON.stringify(templateData),
       Source: this.appConfig.email.from,
     });
@@ -52,8 +55,13 @@ export class EmailService {
     };
 
     await this.sendEmail(payload.email, {
-      template: EmailJobType.VERIFY_EMAIL,
+      templateType: EmailJobType.VERIFY_EMAIL,
       templateData,
     });
+
+    this.logger.log(
+      { userId: payload.userId },
+      'email.verification.sent: Verification link sent',
+    );
   }
 }

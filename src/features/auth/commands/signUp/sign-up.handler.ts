@@ -13,9 +13,12 @@ import { Queue } from 'bullmq';
 import { authEmailOption } from '../../../../infrastructure/queue/email/auth-email.option';
 import { EmailVerification } from '../../../../domain/auth/email-verification.entity';
 import { AuthError } from '../../auth.error';
+import { Logger } from '@nestjs/common';
 
 @CommandHandler(SignUpCommand)
 export class SignUpHandler implements ICommandHandler<SignUpCommand> {
+  private readonly logger = new Logger(SignUpHandler.name);
+
   constructor(
     private readonly em: EntityManager,
     @InjectQueue(QueueType.EMAIL)
@@ -34,6 +37,11 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
 
     await this.em.flush();
     await this.queueVerificationEmail(user, emailVerification.token);
+
+    this.logger.log(
+      { userId: user.id },
+      'auth.signup.success: Registered new user',
+    );
 
     return Result.success();
   }
@@ -74,6 +82,7 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
     verificationToken: string,
   ): Promise<void> {
     const verifyEmailJob: VerifyEmailJob = {
+      userId: user.id,
       email: user.email,
       fullName: user.fullName,
       verificationToken,
