@@ -1,16 +1,16 @@
-import { UserRole } from '../../../domain/user/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface UserResponse {
-  id: string;
-  fullName: string;
-  email: string;
-  role: UserRole;
-}
+import { AuthenticatedUserDto } from './authenticated-user.dto';
 
 export class LoginResponseDto {
-  constructor(
-    public readonly accessToken: string,
-    public readonly refreshToken: string,
-    public readonly user: UserResponse,
-  ) {}
+  @ApiProperty()
+  accessToken: string;
+
+  @ApiProperty()
+  user: AuthenticatedUserDto;
+
+  constructor(accessToken: string, user: AuthenticatedUserDto) {
+    this.accessToken = accessToken;
+    this.user = user;
+  }
 }

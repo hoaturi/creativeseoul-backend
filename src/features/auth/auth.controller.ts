@@ -18,7 +18,7 @@ import { LoginCommand } from './commands/login/login.command';
 import { Response } from 'express';
 import { applicationConfig } from '../../config/application.config';
 import { ConfigType } from '@nestjs/config';
-import { LoginResponse } from './interfaces/login-response.interface';
+import { LoginResponseDto } from './dtos/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -67,6 +67,7 @@ export class AuthController {
   @Post('login')
   @ApiResponse({
     status: 200,
+    type: LoginResponseDto,
   })
   @ApiResponse({
     status: 401,
@@ -74,24 +75,24 @@ export class AuthController {
   })
   async login(
     @Body() dto: LoginRequestDto,
-    @Res({ passthrough: true }) rse: Response,
-  ): Promise<LoginResponse> {
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LoginResponseDto> {
     const result = await this.commandBus.execute(new LoginCommand(dto));
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
 
-    rse.cookie('refreshToken', result.value.refreshToken, {
+    res.cookie('refreshToken', result.value.tokens.refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: 'none',
       maxAge: this.appConfig.jwt.refreshExpirationInMs,
     });
 
-    return {
-      accessToken: result.value.accessToken,
-      user: result.value.user,
-    };
+    return new LoginResponseDto(
+      result.value.tokens.accessToken,
+      result.value.user,
+    );
   }
 }
