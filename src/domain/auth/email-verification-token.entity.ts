@@ -7,12 +7,12 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { User } from '../user/user.entity';
 import { BaseEntity } from '../base.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 @Index({ properties: ['token', 'expiresAt', 'usedAt'] })
-export class EmailVerification extends BaseEntity {
+export class EmailVerificationToken extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
