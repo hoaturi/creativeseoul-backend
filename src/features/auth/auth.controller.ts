@@ -8,17 +8,17 @@ import {
   Res,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { SignUpRequestDto } from './dtos/sign-up-request.dto';
-import { SignUpCommand } from './commands/signUp/sign-up.command';
+import {
+  LoginRequestDto,
+  LoginResponseDto,
+  SignUpRequestDto,
+  VerifyEmailRequestDto,
+} from './dtos';
+import { LoginCommand, SignUpCommand, VerifyEmailCommand } from './commands';
 import { ApiResponse } from '@nestjs/swagger';
-import { VerifyEmailRequestDto } from './dtos/verify-email-request.dto';
-import { VerifyEmailCommand } from './commands/verifyEmail/verify-email.command';
-import { LoginRequestDto } from './dtos/login-request.dto';
-import { LoginCommand } from './commands/login/login.command';
 import { Response } from 'express';
 import { applicationConfig } from '../../config/application.config';
 import { ConfigType } from '@nestjs/config';
-import { LoginResponseDto } from './dtos/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
