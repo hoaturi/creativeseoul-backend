@@ -65,8 +65,15 @@ export class AuthController {
   @Patch('verify-email')
   @ApiOkResponse()
   @ApiBadRequestResponse({
-    example: {
-      oneOf: [CommonError.ValidationFailed, AuthError.InvalidToken],
+    examples: {
+      ValidationFailed: {
+        summary: 'Validation failed',
+        value: CommonError.ValidationFailed,
+      },
+      InvalidToken: {
+        summary: 'Invalid token',
+        value: AuthError.InvalidToken,
+      },
     },
   })
   public async verifyEmail(@Body() dto: VerifyEmailRequestDto): Promise<void> {
