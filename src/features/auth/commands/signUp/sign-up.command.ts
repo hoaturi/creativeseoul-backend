@@ -1,4 +1,4 @@
-import { SignUpRequestDto } from '../../dtos/sign-up-request.dto';
+import { SignUpRequestDto } from '../../dtos';
 import { Command } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';

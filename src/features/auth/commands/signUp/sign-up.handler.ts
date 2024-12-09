@@ -27,13 +27,13 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
   ) {}
 
   async execute(command: SignUpCommand): Promise<Result<void, ResultError>> {
-    const { email, fullName, password, role } = command.user;
+    const { email, userName, password, role } = command.user;
 
     if (await this.checkEmailExists(email)) {
       return Result.failure(AuthError.EmailAlreadyExists);
     }
 
-    const user = await this.createUser(fullName, email, role, password);
+    const user = await this.createUser(userName, email, role, password);
     const emailVerification = await this.createEmailVerification(user);
 
     await this.em.flush();

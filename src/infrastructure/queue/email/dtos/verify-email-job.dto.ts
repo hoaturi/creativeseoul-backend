@@ -9,7 +9,7 @@ export class VerifyEmailJobDto {
   constructor(user: User, verificationToken: string) {
     this.userId = user.id;
     this.email = user.email;
-    this.fullName = user.fullName;
+    this.fullName = user.userName;
     this.verificationToken = verificationToken;
   }
 }

@@ -25,13 +25,13 @@ export class SignUpRequestDto {
 
   @ApiProperty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(128)
-  readonly fullName: string;
+  @MinLength(3)
+  @MaxLength(16)
+  readonly userName: string;
 
   @ApiProperty({
-    enum: ['CANDIDATE', 'EMPLOYER'],
+    enum: ['candidate', 'employer'],
   })
-  @IsEnum(['CANDIDATE', 'EMPLOYER'])
-  readonly role: 'CANDIDATE' | 'EMPLOYER';
+  @IsEnum(['candidate', 'employer'])
+  readonly role: 'candidate' | 'employer';
 }

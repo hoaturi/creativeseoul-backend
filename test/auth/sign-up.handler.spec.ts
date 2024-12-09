@@ -29,9 +29,9 @@ describe('SignUpHandler', () => {
 
   const mockCommand = new SignUpCommand({
     email: 'test@example.com',
-    fullName: 'Test User',
+    userName: 'Test User',
     password: 'password123',
-    role: 'CANDIDATE',
+    role: 'candidate',
   });
 
   beforeEach(async () => {
@@ -65,7 +65,7 @@ describe('SignUpHandler', () => {
     em.findOne.mockResolvedValue(null);
 
     const mockUser = new User(
-      mockCommand.user.fullName,
+      mockCommand.user.userName,
       mockCommand.user.email,
       UserRole.CANDIDATE,
       'hashedPassword',
@@ -128,7 +128,7 @@ describe('SignUpHandler', () => {
     // Assert
     expect(capturedUser).toBeTruthy();
     expect(capturedUser?.email).toBe(mockCommand.user.email);
-    expect(capturedUser?.fullName).toBe(mockCommand.user.fullName);
+    expect(capturedUser?.userName).toBe(mockCommand.user.userName);
     expect(capturedUser?.role).toBe(UserRole[mockCommand.user.role]);
   });
 
@@ -161,7 +161,7 @@ describe('SignUpHandler', () => {
     // Arrange
     em.findOne.mockResolvedValue(null);
     const mockUser = new User(
-      mockCommand.user.fullName,
+      mockCommand.user.userName,
       mockCommand.user.email,
       UserRole.CANDIDATE,
       'hashedPassword',
@@ -172,7 +172,7 @@ describe('SignUpHandler', () => {
       new Date(),
     );
 
-    em.create.mockImplementation((Entity, data) => {
+    em.create.mockImplementation((Entity, _) => {
       if (Entity === EmailVerificationToken) return mockVerificationToken;
       return mockUser;
     });

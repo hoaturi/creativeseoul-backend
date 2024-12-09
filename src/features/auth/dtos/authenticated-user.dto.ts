@@ -13,7 +13,7 @@ export class AuthenticatedUserDto {
 
   constructor(user: Partial<User>) {
     this.id = user.id;
-    this.fullName = user.fullName;
+    this.fullName = user.userName;
     this.email = user.email;
     this.role = user.role;
   }

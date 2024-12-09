@@ -13,8 +13,8 @@ export class User extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   id!: string;
 
-  @Property({ length: 128 })
-  fullName: string;
+  @Property({ length: 16 })
+  userName: string;
 
   @Property({ unique: true, length: 256 })
   @Index()
@@ -39,7 +39,7 @@ export class User extends BaseEntity {
     password: string,
   ) {
     super();
-    this.fullName = fullName;
+    this.userName = fullName;
     this.email = email;
     this.role = role;
     this.password = password;
