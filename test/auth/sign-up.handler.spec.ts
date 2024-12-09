@@ -129,7 +129,9 @@ describe('SignUpHandler', () => {
     expect(capturedUser).toBeTruthy();
     expect(capturedUser?.email).toBe(mockCommand.user.email);
     expect(capturedUser?.userName).toBe(mockCommand.user.userName);
-    expect(capturedUser?.role).toBe(UserRole[mockCommand.user.role]);
+    expect(capturedUser?.role).toBe(
+      UserRole[mockCommand.user.role.toUpperCase()],
+    );
   });
 
   it('should create email verification with correct expiration time', async () => {

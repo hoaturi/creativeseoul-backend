@@ -62,7 +62,12 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User(fullName, email, UserRole[role], hashedPassword);
+    const user = new User(
+      fullName,
+      email,
+      UserRole[role.toUpperCase()],
+      hashedPassword,
+    );
     this.em.create(User, user);
 
     return user;
