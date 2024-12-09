@@ -42,7 +42,6 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
     verification.user.isVerified = true;
 
     await this.em.flush();
-
     await this.em.nativeDelete(EmailVerificationToken, {
       id: { $ne: verification.id },
       user: verification.user.id,

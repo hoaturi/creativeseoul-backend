@@ -6,8 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthenticatedUserDto } from '../../src/features/auth/dtos/authenticated-user.dto';
 import { User } from '../../src/domain/user/user.entity';
 import { AuthError } from '../../src/features/auth/auth.error';
-import { LoginHandler } from '../../src/features/auth/commands/login/login.handler';
-import { LoginCommand } from '../../src/features/auth/commands/login/login.command';
+import { LoginCommand, LoginHandler } from '../../src/features/auth/commands';
 
 jest.mock('bcrypt');
 
