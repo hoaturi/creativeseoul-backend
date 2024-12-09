@@ -1,4 +1,7 @@
 import { BullRootModuleOptions } from '@nestjs/bullmq';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const bullMqConfig: BullRootModuleOptions = {
   connection: {

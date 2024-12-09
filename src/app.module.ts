@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { mikroOrmConfig } from './config/mikro-orm.config';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import { applicationConfig } from './config/application.config';
@@ -12,6 +11,7 @@ import { AuthModule } from './features/auth/auth.module';
 import { EmailProcessor } from './infrastructure/queue/email/email.processor';
 import { EmailModule } from './infrastructure/services/email/email.module';
 import { LoggerModule } from 'nestjs-pino';
+import mikroOrmConfig from './config/mikro-orm.config';
 
 @Module({
   imports: [
