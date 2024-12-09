@@ -9,6 +9,7 @@ import { QueueType } from '../../infrastructure/queue/queue-type.enum';
 import {
   ForgotPasswordHandler,
   LoginHandler,
+  ResetPasswordHandler,
   SignUpHandler,
   VerifyEmailHandler,
 } from './commands';
@@ -18,6 +19,7 @@ const handlers: Provider[] = [
   VerifyEmailHandler,
   LoginHandler,
   ForgotPasswordHandler,
+  ResetPasswordHandler,
 ];
 
 @Module({

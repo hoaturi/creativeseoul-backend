@@ -21,7 +21,7 @@ export class User extends BaseEntity {
   public email: string;
 
   @Property({ length: 128 })
-  public readonly password!: string;
+  public password!: string;
 
   @Enum(() => UserRole)
   public readonly role: UserRole;

@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  HttpCode,
   HttpException,
+  HttpStatus,
   Inject,
   Patch,
   Post,
@@ -12,12 +14,14 @@ import {
   ForgotPasswordRequestDto,
   LoginRequestDto,
   LoginResponseDto,
+  ResetPasswordRequestDto,
   SignUpRequestDto,
   VerifyEmailRequestDto,
 } from './dtos';
 import {
   ForgotPasswordCommand,
   LoginCommand,
+  ResetPasswordCommand,
   SignUpCommand,
   VerifyEmailCommand,
 } from './commands';
@@ -118,6 +122,7 @@ export class AuthController {
   }
 
   @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
   @ApiNotFoundResponse({ example: UserError.UserNotFound })
@@ -127,6 +132,32 @@ export class AuthController {
     const result = await this.commandBus.execute(
       new ForgotPasswordCommand(dto),
     );
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Patch('reset-password')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    examples: {
+      ValidationFailed: {
+        summary: 'Validation failed',
+        value: CommonError.ValidationFailed,
+      },
+      InvalidToken: {
+        summary: 'Invalid token',
+        value: AuthError.InvalidToken,
+      },
+    },
+  })
+  public async resetPassword(
+    @Body() dto: ResetPasswordRequestDto,
+  ): Promise<void> {
+    const result = await this.commandBus.execute(new ResetPasswordCommand(dto));
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
