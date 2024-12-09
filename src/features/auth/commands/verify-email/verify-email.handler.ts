@@ -11,9 +11,9 @@ import { Logger } from '@nestjs/common';
 export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
   private readonly logger = new Logger(VerifyEmailHandler.name);
 
-  constructor(private readonly em: EntityManager) {}
+  public constructor(private readonly em: EntityManager) {}
 
-  async execute(
+  public async execute(
     command: VerifyEmailCommand,
   ): Promise<Result<void, ResultError>> {
     const { token } = command.dto;

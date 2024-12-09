@@ -11,28 +11,28 @@ export enum UserRole {
 @Entity()
 export class User extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
-  id!: string;
+  public readonly id!: string;
 
   @Property({ length: 16 })
-  userName: string;
+  public readonly userName: string;
 
   @Property({ unique: true, length: 256 })
   @Index()
-  email: string;
+  public email: string;
 
   @Property({ length: 128 })
-  password!: string;
+  public readonly password!: string;
 
   @Enum(() => UserRole)
-  role: UserRole;
+  public readonly role: UserRole;
 
   @Property({ default: false })
-  isVerified!: boolean;
+  public isVerified!: boolean;
 
   @Property({ default: true })
-  isActive!: boolean;
+  public isActive!: boolean;
 
-  constructor(
+  public constructor(
     fullName: string,
     email: string,
     role: UserRole,

@@ -12,7 +12,7 @@ export class SignUpRequestDto {
   @ApiProperty()
   @IsEmail()
   @MaxLength(256)
-  readonly email: string;
+  public readonly email: string;
 
   @ApiProperty()
   @IsString()
@@ -21,17 +21,17 @@ export class SignUpRequestDto {
       'Password can only contain letters, numbers and special characters',
   })
   @MinLength(8)
-  readonly password: string;
+  public readonly password: string;
 
   @ApiProperty()
   @IsString()
   @MinLength(3)
   @MaxLength(16)
-  readonly userName: string;
+  public readonly userName: string;
 
   @ApiProperty({
     enum: ['candidate', 'employer'],
   })
   @IsEnum(['candidate', 'employer'])
-  readonly role: 'candidate' | 'employer';
+  public readonly role: 'candidate' | 'employer';
 }

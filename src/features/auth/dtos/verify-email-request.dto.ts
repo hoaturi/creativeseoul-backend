@@ -4,5 +4,5 @@ import { ApiProperty } from '@nestjs/swagger';
 export class VerifyEmailRequestDto {
   @ApiProperty()
   @IsString()
-  readonly token: string;
+  public readonly token: string;
 }

@@ -5,7 +5,7 @@ export class LoginCommandResult {
   public readonly tokens: TokenPair;
   public readonly user: AuthenticatedUserDto;
 
-  constructor(tokens: TokenPair, user: AuthenticatedUserDto) {
+  public constructor(tokens: TokenPair, user: AuthenticatedUserDto) {
     this.tokens = tokens;
     this.user = user;
   }

@@ -10,7 +10,7 @@ export abstract class BaseProcessor extends WorkerHost implements OnModuleInit {
     this.logger = new Logger(context);
   }
 
-  async onModuleInit() {
+  public async onModuleInit() {
     this.worker.on('failed', (job: Job, err: Error) => {
       this.logger.error(`Job ${job.id} of type ${job.name} failed. ${err}`);
     });

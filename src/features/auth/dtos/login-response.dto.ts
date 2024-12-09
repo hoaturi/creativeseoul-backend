@@ -4,10 +4,10 @@ import { AuthenticatedUserDto } from './authenticated-user.dto';
 
 export class LoginResponseDto {
   @ApiProperty()
-  accessToken: string;
+  public readonly accessToken: string;
 
   @ApiProperty()
-  user: AuthenticatedUserDto;
+  public readonly user: AuthenticatedUserDto;
 
   constructor(accessToken: string, user: AuthenticatedUserDto) {
     this.accessToken = accessToken;

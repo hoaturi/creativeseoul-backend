@@ -20,13 +20,15 @@ import * as crypto from 'crypto';
 export class SignUpHandler implements ICommandHandler<SignUpCommand> {
   private readonly logger = new Logger(SignUpHandler.name);
 
-  constructor(
+  public constructor(
     private readonly em: EntityManager,
     @InjectQueue(QueueType.EMAIL)
     private readonly emailQueue: Queue,
   ) {}
 
-  async execute(command: SignUpCommand): Promise<Result<void, ResultError>> {
+  public async execute(
+    command: SignUpCommand,
+  ): Promise<Result<void, ResultError>> {
     const { email, userName, password, role } = command.user;
 
     if (await this.checkEmailExists(email)) {

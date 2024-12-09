@@ -3,15 +3,15 @@ import { User, UserRole } from '../../../domain/user/user.entity';
 
 export class AuthenticatedUserDto {
   @ApiProperty()
-  id: string;
+  public readonly id: string;
   @ApiProperty()
-  fullName: string;
+  public readonly fullName: string;
   @ApiProperty()
-  email: string;
+  public readonly email: string;
   @ApiProperty()
-  role: UserRole;
+  public readonly role: UserRole;
 
-  constructor(user: Partial<User>) {
+  public constructor(user: Partial<User>) {
     this.id = user.id;
     this.fullName = user.userName;
     this.email = user.email;

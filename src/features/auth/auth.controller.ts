@@ -28,7 +28,7 @@ import { ConfigType } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
+  public constructor(
     private readonly commandBus: CommandBus,
     @Inject(applicationConfig.KEY)
     private readonly appConfig: ConfigType<typeof applicationConfig>,
@@ -42,7 +42,7 @@ export class AuthController {
     status: 409,
     description: 'Email already exists',
   })
-  async signUp(@Body() dto: SignUpRequestDto): Promise<void> {
+  public async signUp(@Body() dto: SignUpRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new SignUpCommand(dto));
 
     if (!result.isSuccess) {
@@ -60,7 +60,7 @@ export class AuthController {
     status: 400,
     description: 'Invalid token',
   })
-  async verifyEmail(@Body() dto: VerifyEmailRequestDto): Promise<void> {
+  public async verifyEmail(@Body() dto: VerifyEmailRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new VerifyEmailCommand(dto));
 
     if (!result.isSuccess) {
@@ -79,7 +79,7 @@ export class AuthController {
     status: 401,
     description: 'Invalid credentials',
   })
-  async login(
+  public async login(
     @Body() dto: LoginRequestDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<LoginResponseDto> {
@@ -110,7 +110,9 @@ export class AuthController {
     status: 404,
     description: 'User not found',
   })
-  async forgotPassword(@Body() dto: ForgotPasswordRequestDto): Promise<void> {
+  public async forgotPassword(
+    @Body() dto: ForgotPasswordRequestDto,
+  ): Promise<void> {
     const result = await this.commandBus.execute(
       new ForgotPasswordCommand(dto),
     );

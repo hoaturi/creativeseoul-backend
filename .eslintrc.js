@@ -27,5 +27,6 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    '@typescript-eslint/explicit-member-accessibility': 'error',
   },
 };

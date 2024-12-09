@@ -5,10 +5,10 @@ export class LoginRequestDto {
   @ApiProperty()
   @IsEmail()
   @MaxLength(256)
-  readonly email: string;
+  public readonly email: string;
 
   @ApiProperty()
   @IsString()
   @MinLength(8)
-  readonly password: string;
+  public readonly password: string;
 }

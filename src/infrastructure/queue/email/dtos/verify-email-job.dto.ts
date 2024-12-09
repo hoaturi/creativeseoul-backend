@@ -6,7 +6,7 @@ export class VerifyEmailJobDto {
   public readonly fullName: string;
   public readonly verificationToken: string;
 
-  constructor(user: User, verificationToken: string) {
+  public constructor(user: User, verificationToken: string) {
     this.userId = user.id;
     this.email = user.email;
     this.fullName = user.userName;

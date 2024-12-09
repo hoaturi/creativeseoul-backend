@@ -14,7 +14,7 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private readonly sesClient: SESClient;
 
-  constructor(
+  public constructor(
     @Inject(applicationConfig.KEY)
     private readonly appConfig: ConfigType<typeof applicationConfig>,
   ) {
@@ -27,22 +27,9 @@ export class EmailService {
     });
   }
 
-  async sendEmail(email: string, template: Template): Promise<void> {
-    const { templateType, templateData } = template;
-
-    const emailCommand = new SendTemplatedEmailCommand({
-      Destination: {
-        ToAddresses: [email],
-      },
-      Template: templateType,
-      TemplateData: JSON.stringify(templateData),
-      Source: this.appConfig.email.from,
-    });
-
-    await this.sesClient.send(emailCommand);
-  }
-
-  async sendVerificationEmail(payload: VerifyEmailJobDto): Promise<void> {
+  public async sendVerificationEmail(
+    payload: VerifyEmailJobDto,
+  ): Promise<void> {
     const templateData: VerificationTemplateData = {
       fullName: payload.fullName,
       verificationLink: `${this.appConfig.client.baseUrl}?token=${payload.verificationToken}`,
@@ -59,7 +46,9 @@ export class EmailService {
     );
   }
 
-  async sendForgotPasswordEmail(payload: ForgotPasswordJobDto): Promise<void> {
+  public async sendForgotPasswordEmail(
+    payload: ForgotPasswordJobDto,
+  ): Promise<void> {
     const templateData: ForgotPasswordTemplateData = {
       email: payload.email,
       passwordResetLink: `${this.appConfig.client.baseUrl}/reset-password?token=${payload.token}`,
@@ -74,5 +63,20 @@ export class EmailService {
       { userId: payload.userId },
       'email.forgot-password.success: Forgot password link sent',
     );
+  }
+
+  private async sendEmail(email: string, template: Template): Promise<void> {
+    const { templateType, templateData } = template;
+
+    const emailCommand = new SendTemplatedEmailCommand({
+      Destination: {
+        ToAddresses: [email],
+      },
+      Template: templateType,
+      TemplateData: JSON.stringify(templateData),
+      Source: this.appConfig.email.from,
+    });
+
+    await this.sesClient.send(emailCommand);
   }
 }

@@ -19,14 +19,14 @@ import { AuthenticatedUserDto } from '../../dtos/authenticated-user.dto';
 export class LoginHandler implements ICommandHandler<LoginCommand> {
   private readonly logger = new Logger(LoginHandler.name);
 
-  constructor(
+  public constructor(
     private readonly em: EntityManager,
     private readonly jwtService: JwtService,
     @Inject(applicationConfig.KEY)
     private readonly appConfig: ConfigType<typeof applicationConfig>,
   ) {}
 
-  async execute(
+  public async execute(
     command: LoginCommand,
   ): Promise<Result<LoginCommandResult, ResultError>> {
     const { email, password } = command.dto;

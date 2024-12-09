@@ -21,13 +21,13 @@ export class ForgotPasswordHandler
 {
   private readonly logger = new Logger(ForgotPasswordHandler.name);
 
-  constructor(
+  public constructor(
     private readonly em: EntityManager,
     @InjectQueue(QueueType.EMAIL)
     private readonly emailQueue: Queue,
   ) {}
 
-  async execute(
+  public async execute(
     command: ForgotPasswordCommand,
   ): Promise<Result<void, ResultError>> {
     const user = await this.em.findOne(User, { email: command.dto.email });

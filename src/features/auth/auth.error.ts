@@ -27,7 +27,7 @@ export class AuthError extends ResultError {
     'Email not verified',
   );
 
-  constructor(code: string, statusCode: number, description: string) {
+  public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
 }

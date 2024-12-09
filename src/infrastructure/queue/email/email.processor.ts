@@ -9,11 +9,11 @@ import { ForgotPasswordJobDto } from './dtos/forgot-password-job.dto';
 
 @Processor(QueueType.EMAIL)
 export class EmailProcessor extends BaseProcessor {
-  constructor(private readonly emailService: EmailService) {
+  public constructor(private readonly emailService: EmailService) {
     super(EmailProcessor.name);
   }
 
-  process(job: Job): Promise<void> {
+  public process(job: Job): Promise<void> {
     switch (job.name) {
       case EmailJobType.VERIFY_EMAIL:
         return this.verifyEmail(job);

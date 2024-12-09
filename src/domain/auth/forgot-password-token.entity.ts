@@ -20,9 +20,9 @@ export class ForgotPasswordToken extends BaseEntity {
   public readonly expiresAt!: Date;
 
   @Property({ nullable: true })
-  public readonly usedAt?: Date;
+  public usedAt?: Date;
 
-  constructor(user: User, token: string, expiresAt: Date) {
+  public constructor(user: User, token: string, expiresAt: Date) {
     super();
     this.user = user;
     this.token = token;

@@ -14,23 +14,23 @@ import { User } from '../user/user.entity';
 @Index({ properties: ['token', 'expiresAt', 'usedAt'] })
 export class EmailVerificationToken extends BaseEntity {
   @PrimaryKey()
-  id!: number;
+  public readonly id!: number;
 
   @ManyToOne(() => User, { cascade: [Cascade.REMOVE] })
   @Index()
-  user!: User;
+  public readonly user!: User;
 
   @Property()
   @Unique()
-  token!: string;
+  public readonly token!: string;
 
   @Property()
-  expiresAt!: Date;
+  public expiresAt!: Date;
 
   @Property({ nullable: true })
-  usedAt?: Date;
+  public usedAt?: Date;
 
-  constructor(user: User, token: string, expiresAt: Date) {
+  public constructor(user: User, token: string, expiresAt: Date) {
     super();
     this.user = user;
     this.token = token;
