@@ -21,10 +21,21 @@ import {
   SignUpCommand,
   VerifyEmailCommand,
 } from './commands';
-import { ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { applicationConfig } from '../../config/application.config';
 import { ConfigType } from '@nestjs/config';
+import { AuthApiErrorResponses } from './swagger/auth-api-error.responses';
+import { combineExamples } from '../common/swagger/combine-examples.util';
+import { CommonApiErrorResponses } from '../common/swagger/common-api-error.responses';
+import { UserApiErrorResponses } from '../user/swagger/user-api-error.responses';
 
 @Controller('auth')
 export class AuthController {
@@ -34,14 +45,10 @@ export class AuthController {
     private readonly appConfig: ConfigType<typeof applicationConfig>,
   ) {}
 
-  @Post('signup')
-  @ApiResponse({
-    status: 201,
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'Email already exists',
-  })
+  @Post('sign-up')
+  @ApiCreatedResponse()
+  @ApiBadRequestResponse(CommonApiErrorResponses.ValidationError)
+  @ApiConflictResponse(AuthApiErrorResponses.EmailAlreadyExists)
   public async signUp(@Body() dto: SignUpRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new SignUpCommand(dto));
 
@@ -53,13 +60,13 @@ export class AuthController {
   }
 
   @Patch('verify-email')
-  @ApiResponse({
-    status: 200,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid token',
-  })
+  @ApiOkResponse()
+  @ApiBadRequestResponse(
+    combineExamples(
+      CommonApiErrorResponses.ValidationError,
+      AuthApiErrorResponses.InvalidToken,
+    ),
+  )
   public async verifyEmail(@Body() dto: VerifyEmailRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new VerifyEmailCommand(dto));
 
@@ -71,14 +78,11 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     type: LoginResponseDto,
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Invalid credentials',
-  })
+  @ApiBadRequestResponse(CommonApiErrorResponses.ValidationError)
+  @ApiUnauthorizedResponse(AuthApiErrorResponses.InvalidCredentials)
   public async login(
     @Body() dto: LoginRequestDto,
     @Res({ passthrough: true }) res: Response,
@@ -103,13 +107,9 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  @ApiResponse({
-    status: 200,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
+  @ApiOkResponse()
+  @ApiBadRequestResponse(CommonApiErrorResponses.ValidationError)
+  @ApiNotFoundResponse(UserApiErrorResponses.UserNotFound)
   public async forgotPassword(
     @Body() dto: ForgotPasswordRequestDto,
   ): Promise<void> {

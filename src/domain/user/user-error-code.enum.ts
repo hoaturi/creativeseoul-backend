@@ -1,3 +1,3 @@
 export enum UserErrorCode {
-  UserNotFound = 'U001',
+  USER_NOT_FOUND = 'U001',
 }
