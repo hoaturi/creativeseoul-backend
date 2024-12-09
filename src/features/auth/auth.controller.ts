@@ -9,12 +9,18 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
+  ForgotPasswordRequestDto,
   LoginRequestDto,
   LoginResponseDto,
   SignUpRequestDto,
   VerifyEmailRequestDto,
 } from './dtos';
-import { LoginCommand, SignUpCommand, VerifyEmailCommand } from './commands';
+import {
+  ForgotPasswordCommand,
+  LoginCommand,
+  SignUpCommand,
+  VerifyEmailCommand,
+} from './commands';
 import { ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { applicationConfig } from '../../config/application.config';
@@ -94,5 +100,25 @@ export class AuthController {
       result.value.tokens.accessToken,
       result.value.user,
     );
+  }
+
+  @Post('forgot-password')
+  @ApiResponse({
+    status: 200,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
+  async forgotPassword(@Body() dto: ForgotPasswordRequestDto): Promise<void> {
+    const result = await this.commandBus.execute(
+      new ForgotPasswordCommand(dto),
+    );
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
   }
 }
