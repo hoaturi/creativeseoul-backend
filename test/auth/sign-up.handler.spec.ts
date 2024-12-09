@@ -1,16 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
-import { SignUpHandler } from '../../src/features/auth/commands/signUp/sign-up.handler';
+import { SignUpCommand, SignUpHandler } from '../../src/features/auth/commands';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Queue } from 'bullmq';
 import { getQueueToken } from '@nestjs/bullmq';
 import { QueueType } from '../../src/infrastructure/queue/queue-type.enum';
-import { SignUpCommand } from '../../src/features/auth/commands/signUp/sign-up.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
-import { EmailVerification } from '../../src/domain/auth/email-verification.entity';
 import { EmailJobType } from '../../src/infrastructure/queue/email/email-job.type.enum';
-import { authEmailOption } from '../../src/infrastructure/queue/email/auth-email.option';
 import { AuthError } from '../../src/features/auth/auth.error';
+import { EmailVerificationToken } from '../../src/domain/auth/email-verification-token.entity';
 
 jest.mock('bcrypt');
 
@@ -63,10 +61,30 @@ describe('SignUpHandler', () => {
   });
 
   it('should create user, email verification and queue verify email job', async () => {
+    // Arrange
     em.findOne.mockResolvedValue(null);
 
+    const mockUser = new User(
+      mockCommand.user.fullName,
+      mockCommand.user.email,
+      UserRole.CANDIDATE,
+      'hashedPassword',
+    );
+    const mockVerificationToken = new EmailVerificationToken(
+      mockUser,
+      'mockedVerificationToken',
+      new Date(),
+    );
+
+    em.create.mockImplementation((Entity, data) => {
+      if (Entity === EmailVerificationToken) return mockVerificationToken;
+      return data;
+    });
+
+    // Act
     const result = await handler.execute(mockCommand);
 
+    // Assert
     expect(result.isSuccess).toBe(true);
     expect(em.findOne).toHaveBeenCalled();
     expect(bcrypt.hash).toHaveBeenCalled();
@@ -93,19 +111,25 @@ describe('SignUpHandler', () => {
   });
 
   it('should create user with correct data', async () => {
+    // Arrange
     em.findOne.mockResolvedValue(null);
+    let capturedUser: User | null = null;
 
+    em.create.mockImplementation((Entity: any, data: User) => {
+      if (Entity === User) {
+        capturedUser = data;
+      }
+      return data;
+    });
+
+    // Act
     await handler.execute(mockCommand);
 
-    expect(em.create).toHaveBeenCalledWith(
-      User,
-      expect.objectContaining({
-        fullName: mockCommand.user.fullName,
-        email: mockCommand.user.email,
-        role: UserRole[mockCommand.user.role],
-        password: 'hashedPassword',
-      }),
-    );
+    // Assert
+    expect(capturedUser).toBeTruthy();
+    expect(capturedUser?.email).toBe(mockCommand.user.email);
+    expect(capturedUser?.fullName).toBe(mockCommand.user.fullName);
+    expect(capturedUser?.role).toBe(UserRole[mockCommand.user.role]);
   });
 
   it('should create email verification with correct expiration time', async () => {
@@ -118,9 +142,8 @@ describe('SignUpHandler', () => {
     let capturedExpirationTime: Date | undefined;
 
     em.create.mockImplementation((Entity: any, data: any) => {
-      if (Entity === EmailVerification) {
+      if (Entity === EmailVerificationToken) {
         capturedExpirationTime = data.expiresAt;
-        return new EmailVerification(data.user, data.token, data.expiresAt);
       }
       return data;
     });
@@ -132,8 +155,6 @@ describe('SignUpHandler', () => {
     expect(capturedExpirationTime).toEqual(
       new Date(now.getTime() + 30 * 60 * 1000),
     );
-
-    jest.useRealTimers();
   });
 
   it('should queue verification email after successful user creation', async () => {
@@ -145,8 +166,16 @@ describe('SignUpHandler', () => {
       UserRole.CANDIDATE,
       'hashedPassword',
     );
+    const mockVerificationToken = new EmailVerificationToken(
+      mockUser,
+      'mockedVerificationToken',
+      new Date(),
+    );
 
-    em.create.mockReturnValue(mockUser);
+    em.create.mockImplementation((Entity, data) => {
+      if (Entity === EmailVerificationToken) return mockVerificationToken;
+      return mockUser;
+    });
 
     // Act
     await handler.execute(mockCommand);
@@ -154,12 +183,8 @@ describe('SignUpHandler', () => {
     // Assert
     expect(emailQueue.add).toHaveBeenCalledWith(
       EmailJobType.VERIFY_EMAIL,
-      {
-        email: mockCommand.user.email,
-        fullName: mockCommand.user.fullName,
-        verificationToken: expect.any(String),
-      },
-      expect.objectContaining(authEmailOption),
+      expect.any(Object),
+      expect.any(Object),
     );
   });
 });

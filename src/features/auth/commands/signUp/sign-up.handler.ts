@@ -7,13 +7,14 @@ import { ResultError } from '../../../../common/result/result-error';
 import * as bcrypt from 'bcrypt';
 import { InjectQueue } from '@nestjs/bullmq';
 import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
-import { VerifyEmailJob } from '../../../../infrastructure/queue/email/email-job.interface';
+import { VerifyEmailJobDto } from '../../../../infrastructure/queue/email/dtos/verify-email-job.dto';
 import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
 import { Queue } from 'bullmq';
-import { authEmailOption } from '../../../../infrastructure/queue/email/auth-email.option';
-import { EmailVerification } from '../../../../domain/auth/email-verification.entity';
+import { authEmailJobOption } from '../../../../infrastructure/queue/email/auth-email-job.option';
 import { AuthError } from '../../auth.error';
 import { Logger } from '@nestjs/common';
+import { EmailVerificationToken } from '../../../../domain/auth/email-verification-token.entity';
+import * as crypto from 'crypto';
 
 @CommandHandler(SignUpCommand)
 export class SignUpHandler implements ICommandHandler<SignUpCommand> {
@@ -40,7 +41,7 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
 
     this.logger.log(
       { userId: user.id },
-      'auth.signup.success: Registered new user',
+      'auth.sign-up.success: Registered new user',
     );
 
     return Result.success();
@@ -58,40 +59,36 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
     password: string,
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = new User(fullName, email, UserRole[role], hashedPassword);
     this.em.create(User, user);
+
     return user;
   }
 
   private async createEmailVerification(
     user: User,
-  ): Promise<EmailVerification> {
-    const token = crypto.randomUUID();
-    const tokenExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
-    const emailVerification = new EmailVerification(
+  ): Promise<EmailVerificationToken> {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
+    return this.em.create(EmailVerificationToken, {
       user,
       token,
-      tokenExpiresAt,
-    );
-    this.em.create(EmailVerification, emailVerification);
-    return emailVerification;
+      expiresAt,
+    });
   }
 
   private async queueVerificationEmail(
     user: User,
     verificationToken: string,
   ): Promise<void> {
-    const verifyEmailJob: VerifyEmailJob = {
-      userId: user.id,
-      email: user.email,
-      fullName: user.fullName,
-      verificationToken,
-    };
+    const verifyEmailJob = new VerifyEmailJobDto(user, verificationToken);
 
     await this.emailQueue.add(
       EmailJobType.VERIFY_EMAIL,
       verifyEmailJob,
-      authEmailOption,
+      authEmailJobOption,
     );
   }
 }
