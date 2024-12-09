@@ -9,7 +9,7 @@ export class LoginResponseDto {
   @ApiProperty()
   public readonly user: AuthenticatedUserDto;
 
-  constructor(accessToken: string, user: AuthenticatedUserDto) {
+  public constructor(accessToken: string, user: AuthenticatedUserDto) {
     this.accessToken = accessToken;
     this.user = user;
   }

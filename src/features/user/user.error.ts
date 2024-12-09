@@ -4,12 +4,12 @@ import { HttpStatus } from '@nestjs/common';
 
 export class UserError extends ResultError {
   public static readonly UserNotFound = new ResultError(
-    UserErrorCode.UserNotFound,
+    UserErrorCode.USER_NOT_FOUND,
     HttpStatus.NOT_FOUND,
     'User not found',
   );
 
-  constructor(code: string, statusCode: number, description: string) {
+  public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
 }
