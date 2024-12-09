@@ -32,10 +32,9 @@ import {
 import { Response } from 'express';
 import { applicationConfig } from '../../config/application.config';
 import { ConfigType } from '@nestjs/config';
-import { AuthApiErrorResponses } from './swagger/auth-api-error.responses';
-import { combineExamples } from '../common/swagger/combine-examples.util';
-import { CommonApiErrorResponses } from '../common/swagger/common-api-error.responses';
-import { UserApiErrorResponses } from '../user/swagger/user-api-error.responses';
+import { CommonError } from '../common/common.error';
+import { AuthError } from './auth.error';
+import { UserError } from '../user/user.error';
 
 @Controller('auth')
 export class AuthController {
@@ -47,8 +46,12 @@ export class AuthController {
 
   @Post('sign-up')
   @ApiCreatedResponse()
-  @ApiBadRequestResponse(CommonApiErrorResponses.ValidationError)
-  @ApiConflictResponse(AuthApiErrorResponses.EmailAlreadyExists)
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  @ApiConflictResponse({
+    example: AuthError.EmailAlreadyExists,
+  })
   public async signUp(@Body() dto: SignUpRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new SignUpCommand(dto));
 
@@ -61,12 +64,11 @@ export class AuthController {
 
   @Patch('verify-email')
   @ApiOkResponse()
-  @ApiBadRequestResponse(
-    combineExamples(
-      CommonApiErrorResponses.ValidationError,
-      AuthApiErrorResponses.InvalidToken,
-    ),
-  )
+  @ApiBadRequestResponse({
+    example: {
+      oneOf: [CommonError.ValidationFailed, AuthError.InvalidToken],
+    },
+  })
   public async verifyEmail(@Body() dto: VerifyEmailRequestDto): Promise<void> {
     const result = await this.commandBus.execute(new VerifyEmailCommand(dto));
 
@@ -81,8 +83,10 @@ export class AuthController {
   @ApiOkResponse({
     type: LoginResponseDto,
   })
-  @ApiBadRequestResponse(CommonApiErrorResponses.ValidationError)
-  @ApiUnauthorizedResponse(AuthApiErrorResponses.InvalidCredentials)
+  @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
+  @ApiUnauthorizedResponse({
+    example: AuthError.InvalidCredentials,
+  })
   public async login(
     @Body() dto: LoginRequestDto,
     @Res({ passthrough: true }) res: Response,
@@ -108,8 +112,8 @@ export class AuthController {
 
   @Post('forgot-password')
   @ApiOkResponse()
-  @ApiBadRequestResponse(CommonApiErrorResponses.ValidationError)
-  @ApiNotFoundResponse(UserApiErrorResponses.UserNotFound)
+  @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
+  @ApiNotFoundResponse({ example: UserError.UserNotFound })
   public async forgotPassword(
     @Body() dto: ForgotPasswordRequestDto,
   ): Promise<void> {
