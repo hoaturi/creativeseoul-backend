@@ -1,14 +1,16 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthenticatedUser } from '../authenticated-user.interface';
+import { AuthError } from '../../../features/auth/auth.error';
 
 @Injectable()
-export class SessionGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   public canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -17,7 +19,10 @@ export class SessionGuard implements CanActivate {
     const user: AuthenticatedUser | undefined = request.session.user;
 
     if (user === undefined) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        AuthError.Unauthenticated,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return true;
