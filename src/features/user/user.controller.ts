@@ -4,6 +4,8 @@ import {
   Get,
   HttpException,
   Patch,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -24,6 +26,7 @@ import { ChangeUsernameRequestDto } from './dtos/change-username-request.dto';
 import { ChangeUsernameCommand } from './commands/change-username/change-username.command';
 import { GetCurrentUserResponseDto } from './dtos/get-current-user-response.dto';
 import { GetCurrentUserQuery } from './query/get-current-user/get-current-user.query';
+import { Request, Response } from 'express';
 
 @UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
@@ -51,6 +54,11 @@ export class UserController {
   public async changePassword(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: ChangePasswordRequestDto,
+    @Req() req: Request,
+    @Res({
+      passthrough: true,
+    })
+    res: Response,
   ): Promise<void> {
     const result = await this.commandBus.execute(
       new ChangePasswordCommand(user.id, {
@@ -62,6 +70,13 @@ export class UserController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+
+    await new Promise<void>((resolve): void => {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        resolve();
+      });
+    });
 
     return result.value;
   }
