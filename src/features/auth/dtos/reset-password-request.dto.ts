@@ -1,6 +1,7 @@
-import { IsString, Matches, MinLength } from 'class-validator';
+import { IsString } from 'class-validator';
 import { MatchesProperty } from '../../../common/decorators/matches-property.decorator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsPassword } from '../../../common/decorators/is-password.decorator';
 
 export class ResetPasswordRequestDto {
   @ApiProperty()
@@ -8,12 +9,7 @@ export class ResetPasswordRequestDto {
   public readonly token: string;
 
   @ApiProperty()
-  @IsString()
-  @Matches(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/, {
-    message:
-      'Password can only contain letters, numbers and special characters',
-  })
-  @MinLength(8)
+  @IsPassword()
   public readonly password: string;
 
   @ApiProperty()

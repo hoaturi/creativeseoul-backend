@@ -2,11 +2,11 @@ import {
   IsEmail,
   IsEnum,
   IsString,
-  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsPassword } from '../../../common/decorators/is-password.decorator';
 
 export class SignUpRequestDto {
   @ApiProperty()
@@ -15,12 +15,7 @@ export class SignUpRequestDto {
   public readonly email: string;
 
   @ApiProperty()
-  @IsString()
-  @Matches(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/, {
-    message:
-      'Password can only contain letters, numbers and special characters',
-  })
-  @MinLength(8)
+  @IsPassword()
   public readonly password: string;
 
   @ApiProperty()
