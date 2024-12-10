@@ -11,7 +11,7 @@ import { AuthError } from '../../auth.error';
 import { applicationConfig } from '../../../../config/application.config';
 import { ConfigType } from '@nestjs/config';
 import { TokenPair } from './token-pair.interface';
-import { JwtPayload } from '../../../../domain/auth/jwt-payload.interface';
+import { JwtPayload } from '../../../../infrastructure/security/jwt-payload.interface';
 import { LoginCommandResult } from './login-command.result';
 import { AuthenticatedUserDto } from '../../dtos/authenticated-user.dto';
 
