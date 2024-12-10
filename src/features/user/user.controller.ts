@@ -1,11 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   Patch,
   UseGuards,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ChangePasswordRequestDto } from './dtos/change-password-request.dto';
 import { ChangePasswordCommand } from './commands/change-password/change-password.command';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
@@ -21,12 +22,17 @@ import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { ChangeUsernameRequestDto } from './dtos/change-username-request.dto';
 import { ChangeUsernameCommand } from './commands/change-username/change-username.command';
+import { GetCurrentUserResponseDto } from './dtos/get-current-user-response.dto';
+import { GetCurrentUserQuery } from './query/get-current-user/get-current-user.query';
 
 @UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
 @Controller('user')
 export class UserController {
-  public constructor(private readonly commandBus: CommandBus) {}
+  public constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBUs: QueryBus,
+  ) {}
 
   @Patch('change-password')
   @ApiOkResponse()
@@ -76,6 +82,24 @@ export class UserController {
   ): Promise<void> {
     const result = await this.commandBus.execute(
       new ChangeUsernameCommand(user.id, dto.username),
+    );
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('current')
+  @ApiOkResponse({
+    type: GetCurrentUserResponseDto,
+  })
+  public async getCurrentUser(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<GetCurrentUserResponseDto> {
+    const result = await this.queryBUs.execute(
+      new GetCurrentUserQuery(user.id),
     );
 
     if (!result.isSuccess) {
