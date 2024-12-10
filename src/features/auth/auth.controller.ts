@@ -13,7 +13,6 @@ import { CommandBus } from '@nestjs/cqrs';
 import {
   ForgotPasswordRequestDto,
   LoginRequestDto,
-  LoginResponseDto,
   ResetPasswordRequestDto,
   SignUpRequestDto,
   VerifyEmailRequestDto,
@@ -90,9 +89,8 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiOkResponse({
-    type: LoginResponseDto,
-  })
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
   @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
   @ApiUnauthorizedResponse({
     example: AuthError.InvalidCredentials,

@@ -27,6 +27,12 @@ export class AuthError extends ResultError {
     'Email not verified',
   );
 
+  public static readonly Unauthenticated = new AuthError(
+    AuthErrorCode.UNAUTHENTICATED,
+    HttpStatus.UNAUTHORIZED,
+    'Unauthenticated',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

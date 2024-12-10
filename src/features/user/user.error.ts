@@ -9,6 +9,12 @@ export class UserError extends ResultError {
     'User not found',
   );
 
+  public static readonly CurrentPasswordMismatch = new ResultError(
+    UserErrorCode.CURRENT_PASSWORD_MISMATCH,
+    HttpStatus.BAD_REQUEST,
+    'Current password does not match',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

@@ -13,6 +13,7 @@ import { EmailModule } from './infrastructure/services/email/email.module';
 import { LoggerModule } from 'nestjs-pino';
 import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
+import { UserModule } from './features/user/user.module';
 
 @Module({
   imports: [
@@ -40,8 +41,9 @@ import { CqrsModule } from '@nestjs/cqrs';
     CqrsModule.forRoot(),
     MikroOrmModule.forRoot(mikroOrmConfig),
     BullModule.forRoot(bullMqConfig),
-    AuthModule,
     EmailModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailProcessor],
