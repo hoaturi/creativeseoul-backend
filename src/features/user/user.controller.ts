@@ -16,11 +16,13 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserError } from './user.error';
-import { SessionGuard } from '../../infrastructure/security/guards/session.guard';
+import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
+import { ChangeUsernameRequestDto } from './dtos/change-username-request.dto';
+import { ChangeUsernameCommand } from './commands/change-username/change-username.command';
 
-@UseGuards(SessionGuard)
+@UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
 @Controller('user')
 export class UserController {
@@ -49,6 +51,31 @@ export class UserController {
         currentPassword: dto.currentPassword,
         newPassword: dto.newPassword,
       }),
+    );
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Patch('change-username')
+  @ApiOkResponse()
+  @ApiBadRequestResponse({
+    examples: {
+      ValidationFailed: {
+        summary: 'Validation failed',
+        value: CommonError.ValidationFailed,
+      },
+    },
+  })
+  public async changeUsername(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: ChangeUsernameRequestDto,
+  ): Promise<void> {
+    const result = await this.commandBus.execute(
+      new ChangeUsernameCommand(user.id, dto.username),
     );
 
     if (!result.isSuccess) {

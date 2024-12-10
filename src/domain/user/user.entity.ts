@@ -14,7 +14,7 @@ export class User extends BaseEntity {
   public readonly id!: string;
 
   @Property({ length: 16 })
-  public readonly userName: string;
+  public userName: string;
 
   @Property({ unique: true, length: 256 })
   @Index()
