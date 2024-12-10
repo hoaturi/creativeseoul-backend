@@ -1,6 +1,6 @@
 import { UserRole } from '../../domain/user/user.entity';
 
-export interface JwtPayload {
-  userId: string;
+export interface AuthenticatedUser {
+  id: string;
   role: UserRole;
 }

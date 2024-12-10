@@ -7,7 +7,7 @@ import {
   Inject,
   Patch,
   Post,
-  Res,
+  Session,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -33,7 +33,6 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Response } from 'express';
 import { applicationConfig } from '../../config/application.config';
 import { ConfigType } from '@nestjs/config';
 import { CommonError } from '../common/common.error';
@@ -100,25 +99,18 @@ export class AuthController {
   })
   public async login(
     @Body() dto: LoginRequestDto,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<LoginResponseDto> {
+    @Session() session: Record<string, any>,
+  ): Promise<void> {
     const result = await this.commandBus.execute(new LoginCommand(dto));
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
 
-    res.cookie('refreshToken', result.value.tokens.refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'none',
-      maxAge: this.appConfig.jwt.refreshExpirationInMs,
-    });
-
-    return new LoginResponseDto(
-      result.value.tokens.accessToken,
-      result.value.user,
-    );
+    session.user = {
+      id: result.value.user.id,
+      role: result.value.user.role,
+    };
   }
 
   @Post('forgot-password')

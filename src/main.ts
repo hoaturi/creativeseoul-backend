@@ -3,11 +3,18 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
+import { sessionConfig } from './config/session.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+
+  app.use(cookieParser());
+
+  app.use(session(sessionConfig()));
 
   if (process.env.NODE_ENV === 'development') {
     app.useLogger(app.get(Logger));
