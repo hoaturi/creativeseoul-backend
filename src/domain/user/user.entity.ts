@@ -14,17 +14,17 @@ export class User extends BaseEntity {
   public readonly id!: string;
 
   @Property({ length: 16 })
-  public userName: string;
+  public username!: string;
 
   @Property({ unique: true, length: 256 })
   @Index()
-  public email: string;
+  public email!: string;
 
   @Property({ length: 128 })
   public password!: string;
 
   @Enum(() => UserRole)
-  public readonly role: UserRole;
+  public readonly role!: UserRole;
 
   @Property({ default: false })
   public isVerified!: boolean;
@@ -33,13 +33,13 @@ export class User extends BaseEntity {
   public isActive!: boolean;
 
   public constructor(
-    fullName: string,
+    username: string,
     email: string,
     role: UserRole,
     password: string,
   ) {
     super();
-    this.userName = fullName;
+    this.username = username;
     this.email = email;
     this.role = role;
     this.password = password;

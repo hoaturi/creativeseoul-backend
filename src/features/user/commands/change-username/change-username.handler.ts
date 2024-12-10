@@ -19,10 +19,10 @@ export class ChangeUsernameHandler {
     const user = await this.em.findOneOrFail(
       User,
       { id: userId },
-      { fields: ['userName'] },
+      { fields: ['username'] },
     );
 
-    user.userName = userName;
+    user.username = userName;
 
     await this.em.flush();
 

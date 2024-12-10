@@ -126,7 +126,7 @@ describe('SignUpHandler', () => {
     // Assert
     expect(capturedUser).toBeTruthy();
     expect(capturedUser?.email).toBe(mockCommand.user.email);
-    expect(capturedUser?.userName).toBe(mockCommand.user.userName);
+    expect(capturedUser?.username).toBe(mockCommand.user.userName);
     expect(capturedUser?.role).toBe(
       UserRole[mockCommand.user.role.toUpperCase()],
     );

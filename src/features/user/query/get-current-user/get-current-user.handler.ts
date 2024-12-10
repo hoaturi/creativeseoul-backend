@@ -22,11 +22,11 @@ export class GetCurrentUserHandler
     const user = await this.em.findOneOrFail(
       User,
       { id: userId },
-      { fields: ['userName', 'role'] },
+      { fields: ['username', 'role'] },
     );
 
     return Result.success(
-      new GetCurrentUserResponseDto(user.userName, user.role),
+      new GetCurrentUserResponseDto(user.username, user.role),
     );
   }
 }

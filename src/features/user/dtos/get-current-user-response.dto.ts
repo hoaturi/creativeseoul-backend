@@ -3,15 +3,15 @@ import { UserRole } from '../../../domain/user/user.entity';
 
 export class GetCurrentUserResponseDto {
   @ApiProperty()
-  public readonly userName: string;
+  public readonly username: string;
 
   @ApiProperty({
     enum: UserRole,
   })
   public readonly role: UserRole;
 
-  public constructor(userName: string, role: UserRole) {
-    this.userName = userName;
+  public constructor(username: string, role: UserRole) {
+    this.username = username;
     this.role = role;
   }
 }
