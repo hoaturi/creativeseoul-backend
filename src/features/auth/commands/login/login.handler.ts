@@ -30,7 +30,11 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     command: LoginCommand,
   ): Promise<Result<LoginCommandResult, ResultError>> {
     const { email, password } = command.dto;
-    const user = await this.em.findOne(User, { email });
+    const user = await this.em.findOne(
+      User,
+      { email },
+      { fields: ['id', 'password', 'role', 'isVerified'] },
+    );
 
     if (!user) {
       return Result.failure(AuthError.InvalidCredentials);

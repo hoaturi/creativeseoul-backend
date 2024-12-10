@@ -21,11 +21,17 @@ export class ResetPasswordHandler
   ): Promise<Result<void, ResultError>> {
     const { token, password } = command;
 
-    const resetToken = await this.em.findOne(ForgotPasswordToken, {
-      token,
-      usedAt: null,
-      expiresAt: { $gt: new Date() },
-    });
+    const resetToken = await this.em.findOne(
+      ForgotPasswordToken,
+      {
+        token,
+        usedAt: null,
+        expiresAt: { $gt: new Date() },
+      },
+      {
+        fields: ['id', 'usedAt', 'user'],
+      },
+    );
 
     if (!resetToken) {
       this.logger.log(

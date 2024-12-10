@@ -53,10 +53,8 @@ describe('SignUpHandler', () => {
     em = module.get(EntityManager);
     emailQueue = module.get(getQueueToken(QueueType.EMAIL));
 
-    // Reset all mocks before each test
     jest.clearAllMocks();
 
-    // Mock bcrypt hash
     (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
   });
 

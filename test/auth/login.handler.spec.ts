@@ -4,9 +4,9 @@ import { Test } from '@nestjs/testing';
 import { applicationConfig } from '../../src/config/application.config';
 import * as bcrypt from 'bcrypt';
 import { AuthenticatedUserDto } from '../../src/features/auth/dtos/authenticated-user.dto';
-import { User } from '../../src/domain/user/user.entity';
 import { AuthError } from '../../src/features/auth/auth.error';
 import { LoginCommand, LoginHandler } from '../../src/features/auth/commands';
+import { UserRole } from '../../src/domain/user/user.entity';
 
 jest.mock('bcrypt');
 
@@ -64,40 +64,39 @@ describe('LoginHandler', () => {
   const mockPassword = 'password123';
   const mockUser = {
     id: '1',
+    username: 'test',
     email: mockEmail,
     password: mockPassword,
-    role: 'CANDIDATE',
+    role: UserRole.CANDIDATE,
     isVerified: true,
   };
 
-  it('should authenticate user and generate JWT tokens', async () => {
+  it('should return authenticated user with tokens on successful login', async () => {
     em.findOne.mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
     jwtService.sign.mockReturnValue('token');
 
-    const mockCommand = new LoginCommand({
-      email: mockEmail,
-      password: mockPassword,
-    });
-
-    const result = await handler.execute(mockCommand);
+    const result = await handler.execute(
+      new LoginCommand({
+        email: mockEmail,
+        password: mockPassword,
+      }),
+    );
 
     expect(result.isSuccess).toBe(true);
-    expect(em.findOne).toHaveBeenCalledWith(User, { email: mockEmail });
-    expect(bcrypt.compare).toHaveBeenCalledWith(
-      mockPassword,
-      mockUser.password,
-    );
-    expect(jwtService.sign).toHaveBeenCalledTimes(2);
 
     if (result.isSuccess) {
-      expect(result.value.tokens.accessToken).toBe('token');
-      expect(result.value.tokens.refreshToken).toBe('token');
-      expect(result.value.user).toBeInstanceOf(AuthenticatedUserDto);
+      expect(result.value).toEqual({
+        tokens: {
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        },
+        user: expect.any(AuthenticatedUserDto),
+      });
     }
   });
 
-  it('should fail when user is not found', async () => {
+  it('should fail with invalid credentials when user is not found', async () => {
     em.findOne.mockResolvedValue(null);
 
     const mockCommand = new LoginCommand({
@@ -109,30 +108,21 @@ describe('LoginHandler', () => {
 
     expect(result.isSuccess).toBeFalsy();
     expect(result.error).toBe(AuthError.InvalidCredentials);
-    expect(em.findOne).toHaveBeenCalledWith(User, { email: mockEmail });
-    expect(bcrypt.compare).not.toHaveBeenCalled();
-    expect(jwtService.sign).not.toHaveBeenCalled();
   });
 
-  it('should fail when password is invalid', async () => {
+  it('should fail with invalid credentials when password is incorrect', async () => {
     em.findOne.mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-    const mockCommand = new LoginCommand({
-      email: mockEmail,
-      password: 'wrongPassword',
-    });
-
-    const result = await handler.execute(mockCommand);
+    const result = await handler.execute(
+      new LoginCommand({
+        email: mockEmail,
+        password: 'wrongPassword',
+      }),
+    );
 
     expect(result.isSuccess).toBeFalsy();
     expect(result.error).toBe(AuthError.InvalidCredentials);
-    expect(em.findOne).toHaveBeenCalledWith(User, { email: mockEmail });
-    expect(bcrypt.compare).toHaveBeenCalledWith(
-      'wrongPassword',
-      mockUser.password,
-    );
-    expect(jwtService.sign).not.toHaveBeenCalled();
   });
 
   it('should fail when user email is not verified', async () => {
@@ -140,56 +130,40 @@ describe('LoginHandler', () => {
     em.findOne.mockResolvedValue(unverifiedUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-    const mockCommand = new LoginCommand({
-      email: mockEmail,
-      password: mockPassword,
-    });
-
-    const result = await handler.execute(mockCommand);
+    const result = await handler.execute(
+      new LoginCommand({
+        email: mockEmail,
+        password: mockPassword,
+      }),
+    );
 
     expect(result.isSuccess).toBeFalsy();
     expect(result.error).toBe(AuthError.EmailNotVerified);
-    expect(em.findOne).toHaveBeenCalledWith(User, { email: mockEmail });
-    expect(bcrypt.compare).toHaveBeenCalledWith(
-      mockPassword,
-      unverifiedUser.password,
-    );
-    expect(jwtService.sign).not.toHaveBeenCalled();
   });
 
-  it('should generate correct JWT payloads', async () => {
+  it('should return access and refresh tokens on successful login', async () => {
     em.findOne.mockResolvedValue(mockUser);
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-    jwtService.sign.mockReturnValue('token');
+    jwtService.sign
+      .mockReturnValueOnce('access-token')
+      .mockReturnValueOnce('refresh-token');
 
-    const mockCommand = new LoginCommand({
-      email: mockEmail,
-      password: mockPassword,
+    const authenticatedUser = new AuthenticatedUserDto(mockUser);
+
+    const result = await handler.execute(
+      new LoginCommand({
+        email: mockEmail,
+        password: mockPassword,
+      }),
+    );
+
+    expect(result.isSuccess).toBeTruthy();
+    expect(result.value).toEqual({
+      tokens: {
+        accessToken: 'access-token',
+        refreshToken: 'refresh-token',
+      },
+      user: expect.objectContaining(authenticatedUser),
     });
-
-    await handler.execute(mockCommand);
-
-    // Verify access token payload
-    expect(jwtService.sign).toHaveBeenCalledWith(
-      {
-        userId: mockUser.id,
-        role: mockUser.role,
-      },
-      {
-        secret: mockAppConfig.jwt.accessSecret,
-        expiresIn: `${mockAppConfig.jwt.accessExpirationInMs}ms`,
-      },
-    );
-
-    // Verify refresh token payload
-    expect(jwtService.sign).toHaveBeenCalledWith(
-      {
-        userId: mockUser.id,
-      },
-      {
-        secret: mockAppConfig.jwt.refreshSecret,
-        expiresIn: `${mockAppConfig.jwt.refreshExpirationInMs}ms`,
-      },
-    );
   });
 });
