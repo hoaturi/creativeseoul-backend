@@ -5,7 +5,7 @@ export class AuthenticatedUserDto {
   @ApiProperty()
   public readonly id: string;
   @ApiProperty()
-  public readonly fullName: string;
+  public readonly userName: string;
   @ApiProperty()
   public readonly email: string;
   @ApiProperty()
@@ -13,7 +13,7 @@ export class AuthenticatedUserDto {
 
   public constructor(user: Partial<User>) {
     this.id = user.id;
-    this.fullName = user.userName;
+    this.userName = user.userName;
     this.email = user.email;
     this.role = user.role;
   }
