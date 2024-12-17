@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SignUpCommand } from './sign-up.command';
+import { SignupCommand } from './signup.command';
 import { User, UserRole } from '../../../../domain/user/user.entity';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
@@ -16,9 +16,9 @@ import { Logger } from '@nestjs/common';
 import { EmailVerificationToken } from '../../../../domain/auth/email-verification-token.entity';
 import * as crypto from 'crypto';
 
-@CommandHandler(SignUpCommand)
-export class SignUpHandler implements ICommandHandler<SignUpCommand> {
-  private readonly logger = new Logger(SignUpHandler.name);
+@CommandHandler(SignupCommand)
+export class SignupHandler implements ICommandHandler<SignupCommand> {
+  private readonly logger = new Logger(SignupHandler.name);
 
   public constructor(
     private readonly em: EntityManager,
@@ -27,7 +27,7 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
   ) {}
 
   public async execute(
-    command: SignUpCommand,
+    command: SignupCommand,
   ): Promise<Result<void, ResultError>> {
     const { email, userName, password, role } = command.user;
 
@@ -43,7 +43,7 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand> {
 
     this.logger.log(
       { userId: user.id },
-      'auth.sign-up.success: Registered new user',
+      'auth.signup.success: Registered new user',
     );
 
     return Result.success();

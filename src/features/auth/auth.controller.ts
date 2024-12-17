@@ -21,7 +21,7 @@ import {
   ForgotPasswordCommand,
   LoginCommand,
   ResetPasswordCommand,
-  SignUpCommand,
+  SignupCommand,
   VerifyEmailCommand,
 } from './commands';
 import {
@@ -55,7 +55,7 @@ export class AuthController {
     example: AuthError.EmailAlreadyExists,
   })
   public async signUp(@Body() dto: SignUpRequestDto): Promise<void> {
-    const result = await this.commandBus.execute(new SignUpCommand(dto));
+    const result = await this.commandBus.execute(new SignupCommand(dto));
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
