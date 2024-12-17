@@ -7,7 +7,10 @@ import {
   Inject,
   Patch,
   Post,
+  Req,
+  Res,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -37,6 +40,8 @@ import { ConfigType } from '@nestjs/config';
 import { CommonError } from '../common/common.error';
 import { AuthError } from './auth.error';
 import { UserError } from '../user/user.error';
+import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -109,6 +114,28 @@ export class AuthController {
       id: result.value.user.id,
       role: result.value.user.role,
     };
+  }
+
+  @Post('logout')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  public async logout(
+    @Req() req: Request,
+    @Res({
+      passthrough: true,
+    })
+    res: Response,
+  ): Promise<void> {
+    await new Promise<void>((resolve): void => {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        resolve();
+      });
+    });
   }
 
   @Post('forgot-password')
