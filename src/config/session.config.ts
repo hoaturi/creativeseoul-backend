@@ -13,6 +13,7 @@ export const sessionConfig = () => {
   const redisStore = new RedisStore({
     client: redisClient,
     prefix: 'session:',
+    ttl: 60 * 60 * 24 * 7,
   });
 
   return {
@@ -23,7 +24,7 @@ export const sessionConfig = () => {
     cookie: {
       secure: false,
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 30,
+      maxAge: 60 * 60 * 24 * 7,
     },
   };
 };
