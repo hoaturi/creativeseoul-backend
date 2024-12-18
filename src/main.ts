@@ -6,6 +6,7 @@ import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { sessionConfig } from './config/session.config';
+import { GlobalExceptionFilter } from './common/exceptions/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,7 +14,6 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-
   app.use(session(sessionConfig()));
 
   if (process.env.NODE_ENV === 'development') {
@@ -32,6 +32,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new GlobalExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
 
