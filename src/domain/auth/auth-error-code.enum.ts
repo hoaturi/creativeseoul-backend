@@ -4,4 +4,5 @@ export enum AuthErrorCode {
   INVALID_TOKEN = 'AU003',
   EMAIL_NOT_VERIFIED = 'AU004',
   UNAUTHENTICATED = 'AU005',
+  UNAUTHORIZED = 'AU006',
 }

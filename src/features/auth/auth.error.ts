@@ -33,6 +33,12 @@ export class AuthError extends ResultError {
     'Unauthenticated',
   );
 
+  public static readonly Unauthorized = new AuthError(
+    AuthErrorCode.UNAUTHORIZED,
+    HttpStatus.FORBIDDEN,
+    'Unauthorized',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
