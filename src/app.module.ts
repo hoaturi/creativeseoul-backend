@@ -14,6 +14,7 @@ import { LoggerModule } from 'nestjs-pino';
 import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
+import { CandidateModule } from './features/candidate/candidate.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { UserModule } from './features/user/user.module';
     EmailModule,
     AuthModule,
     UserModule,
+    CandidateModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailProcessor],
