@@ -17,8 +17,6 @@ export class GetCurrentUserHandler
   ): Promise<Result<GetCurrentUserResponseDto, ResultError>> {
     const { userId } = query;
 
-    console.log('userId', userId);
-
     const user = await this.em.findOneOrFail(
       User,
       { id: userId },
