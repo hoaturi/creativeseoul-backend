@@ -1,6 +1,5 @@
 import { Module, Provider } from '@nestjs/common';
 import { AuthController } from './auth.controller';
-import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bullmq';
 import { QueueType } from '../../infrastructure/queue/queue-type.enum';
 import {
@@ -20,7 +19,7 @@ const handlers: Provider[] = [
 ];
 
 @Module({
-  imports: [JwtModule, BullModule.registerQueue({ name: QueueType.EMAIL })],
+  imports: [BullModule.registerQueue({ name: QueueType.EMAIL })],
   controllers: [AuthController],
   providers: [...handlers],
 })
