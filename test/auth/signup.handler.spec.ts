@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
-import { SignUpCommand, SignUpHandler } from '../../src/features/auth/commands';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Queue } from 'bullmq';
 import { getQueueToken } from '@nestjs/bullmq';
@@ -9,11 +8,12 @@ import { User, UserRole } from '../../src/domain/user/user.entity';
 import { EmailJobType } from '../../src/infrastructure/queue/email/email-job.type.enum';
 import { AuthError } from '../../src/features/auth/auth.error';
 import { EmailVerificationToken } from '../../src/domain/auth/email-verification-token.entity';
+import { SignupCommand, SignupHandler } from '../../src/features/auth/commands';
 
 jest.mock('bcrypt');
 
-describe('SignUpHandler', () => {
-  let handler: SignUpHandler;
+describe('SignupHandler', () => {
+  let handler: SignupHandler;
   let em: jest.Mocked<EntityManager>;
   let emailQueue: jest.Mocked<Queue>;
 
@@ -27,7 +27,7 @@ describe('SignUpHandler', () => {
     add: jest.fn(),
   };
 
-  const mockCommand = new SignUpCommand({
+  const mockCommand = new SignupCommand({
     email: 'test@example.com',
     userName: 'Test User',
     password: 'password123',
@@ -37,7 +37,7 @@ describe('SignUpHandler', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SignUpHandler,
+        SignupHandler,
         {
           provide: EntityManager,
           useValue: mockEntityManager,
@@ -49,7 +49,7 @@ describe('SignUpHandler', () => {
       ],
     }).compile();
 
-    handler = module.get<SignUpHandler>(SignUpHandler);
+    handler = module.get<SignupHandler>(SignupHandler);
     em = module.get(EntityManager);
     emailQueue = module.get(getQueueToken(QueueType.EMAIL));
 
