@@ -51,7 +51,7 @@ export class AuthController {
     private readonly appConfig: ConfigType<typeof applicationConfig>,
   ) {}
 
-  @Post('sign-up')
+  @Post('signup')
   @ApiCreatedResponse()
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,

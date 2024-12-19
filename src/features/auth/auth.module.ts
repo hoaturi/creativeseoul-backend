@@ -6,12 +6,12 @@ import {
   ForgotPasswordHandler,
   LoginHandler,
   ResetPasswordHandler,
-  SignupCommand,
+  SignupHandler,
   VerifyEmailHandler,
 } from './commands';
 
 const handlers: Provider[] = [
-  SignupCommand,
+  SignupHandler,
   VerifyEmailHandler,
   LoginHandler,
   ForgotPasswordHandler,
