@@ -1,16 +1,19 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
@@ -23,10 +26,16 @@ import { CreateCandidateProfileCommand } from './commands/create-candidate-profi
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { UserRole } from '../../domain/user/user.entity';
 import { CandidateError } from './candidate.error';
+import { GetCandidateListResponseDto } from './dtos/get-candidate-list-response.dto';
+import { GetCandidateListQuery } from './query/get-candidate-list.query';
+import { GetCandidateListQueryDto } from './dtos/get-candidate-list-query.dto';
 
 @Controller('candidate')
 export class CandidateController {
-  public constructor(private readonly commandBus: CommandBus) {}
+  public constructor(
+    private readonly commandBus: CommandBus,
+    private queryBus: QueryBus,
+  ) {}
 
   @Post()
   @Roles(UserRole.CANDIDATE)
@@ -51,6 +60,32 @@ export class CandidateController {
     const command = new CreateCandidateProfileCommand(user.id, dto);
 
     const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get()
+  @ApiOkResponse({
+    type: GetCandidateListResponseDto,
+  })
+  public async getCandidateList(
+    @Query() queryDto: GetCandidateListQueryDto,
+  ): Promise<GetCandidateListResponseDto> {
+    const query = new GetCandidateListQuery(
+      queryDto.page,
+      queryDto.search,
+      queryDto.categories,
+      queryDto.employment_types,
+      queryDto.work_location_types,
+      queryDto.states,
+      queryDto.languages,
+    );
+
+    const result = await this.queryBus.execute(query);
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
