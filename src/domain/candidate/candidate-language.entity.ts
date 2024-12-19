@@ -6,7 +6,11 @@ import { LANGUAGE_PROFICIENCY_LEVELS } from '../common/constants';
 
 @Entity()
 export class CandidateLanguage {
-  @ManyToOne(() => Candidate, { primary: true, cascade: [Cascade.REMOVE] })
+  @ManyToOne(() => Candidate, {
+    primary: true,
+    nullable: false,
+    cascade: [Cascade.REMOVE],
+  })
   public candidate!: Candidate;
 
   @ManyToOne(() => Language, { primary: true })
