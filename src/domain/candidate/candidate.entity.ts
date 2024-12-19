@@ -13,6 +13,7 @@ import { JobCategory } from '../common/entities/job-category.entity';
 import { WorkLocationType } from '../common/entities/work-location-type.entity';
 import { EmploymentType } from '../common/entities/employment-type.entity';
 import { CandidateLanguage } from './candidate-language.entity';
+import { State } from '../common/entities/state.entity';
 
 @Entity()
 export class Candidate extends BaseEntity {
@@ -24,9 +25,6 @@ export class Candidate extends BaseEntity {
 
   @Property({ length: 64 })
   public fullName!: string;
-
-  @Property({ length: 128 })
-  public location!: string;
 
   @Property({ length: 128 })
   public title!: string;
@@ -46,11 +44,14 @@ export class Candidate extends BaseEntity {
   @ManyToMany(() => WorkLocationType)
   public preferredWorkLocations = new Collection<WorkLocationType>(this);
 
-  @OneToMany(() => CandidateLanguage, (cl) => cl.candidate)
-  public languages = new Collection<CandidateLanguage>(this);
+  @ManyToMany(() => State)
+  public preferredStates = new Collection<State>(this);
 
   @ManyToMany(() => EmploymentType)
   public preferredEmploymentTypes = new Collection<EmploymentType>(this);
+
+  @OneToMany(() => CandidateLanguage, (cl) => cl.candidate)
+  public languages = new Collection<CandidateLanguage>(this);
 
   @Property()
   public isAvailable!: boolean;
@@ -58,7 +59,7 @@ export class Candidate extends BaseEntity {
   public constructor(
     user: User,
     fullName: string,
-    location: string,
+
     title: string,
     bio: string,
     isAvailable: boolean,
@@ -68,7 +69,6 @@ export class Candidate extends BaseEntity {
     super();
     this.user = user;
     this.fullName = fullName;
-    this.location = location;
     this.title = title;
     this.bio = bio;
     this.isAvailable = isAvailable;

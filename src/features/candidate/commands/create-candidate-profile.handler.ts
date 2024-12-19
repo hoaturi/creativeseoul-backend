@@ -18,6 +18,7 @@ import {
   LanguageDto,
 } from '../dtos/create-candidate-profile-request.dto';
 import { CandidateError } from '../candidate.error';
+import { State } from '../../../domain/common/entities/state.entity';
 
 @CommandHandler(CreateCandidateProfileCommand)
 export class CreateCandidateProfileHandler
@@ -38,7 +39,7 @@ export class CreateCandidateProfileHandler
     }
 
     const preferences = await this.fetchPreferences(dto);
-    const profile = this.createProfile(user, dto);
+    const profile = await this.createProfile(user, dto);
     await this.attachPreferences(profile, preferences, dto);
 
     await this.em.flush();
@@ -81,6 +82,7 @@ export class CreateCandidateProfileHandler
     const uniqueCategories = [...new Set(dto.preferredCategories)];
     const uniqueLocations = [...new Set(dto.preferredWorkLocations)];
     const uniqueEmploymentTypes = [...new Set(dto.preferredEmploymentTypes)];
+    const uniqueStates = [...new Set(dto.preferredStates)];
 
     const uniqueLanguages = Array.from(
       dto.languages
@@ -91,29 +93,29 @@ export class CreateCandidateProfileHandler
         .values(),
     );
 
-    const [categories, locations, employmentTypes, languages] =
+    const [categories, locations, employmentTypes, states, languages] =
       await Promise.all([
         this.em.find(JobCategory, { id: { $in: uniqueCategories } }),
         this.em.find(WorkLocationType, { id: { $in: uniqueLocations } }),
         this.em.find(EmploymentType, { id: { $in: uniqueEmploymentTypes } }),
+        this.em.find(State, { id: { $in: uniqueStates } }),
         this.em.find(Language, {
           id: { $in: uniqueLanguages.map((lang) => lang.languageId) },
         }),
       ]);
 
-    return { categories, locations, employmentTypes, languages };
+    return { categories, locations, employmentTypes, states, languages };
   }
 
-  private createProfile(
+  private async createProfile(
     user: User,
     dto: CreateCandidateProfileRequestDto,
-  ): Candidate {
+  ): Promise<Candidate> {
     return this.em.create(
       Candidate,
       new Candidate(
         user,
         dto.fullName,
-        dto.location,
         dto.title,
         dto.bio,
         dto.isAvailable,
@@ -129,15 +131,18 @@ export class CreateCandidateProfileHandler
       categories: JobCategory[];
       locations: WorkLocationType[];
       employmentTypes: EmploymentType[];
+      states: State[];
       languages: Language[];
     },
     dto: CreateCandidateProfileRequestDto,
   ): Promise<void> {
-    const { categories, locations, employmentTypes, languages } = preferences;
+    const { categories, locations, employmentTypes, states, languages } =
+      preferences;
 
     profile.preferredCategories.add(categories);
     profile.preferredWorkLocations.add(locations);
     profile.preferredEmploymentTypes.add(employmentTypes);
+    profile.preferredStates.add(states);
 
     const candidateLanguages = languages.map((language) => {
       const proficiency = dto.languages.find(

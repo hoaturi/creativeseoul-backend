@@ -3,3 +3,4 @@ export * from './language-proficiency-level.constant';
 export * from './work-location-type.constant';
 export * from './employment-type.constant';
 export * from './language.constant';
+export * from './state.constant';

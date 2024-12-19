@@ -11,6 +11,7 @@ import { LANGUAGE_PROFICIENCY_LEVELS } from '../../src/domain/common/constants';
 import { CustomException } from '../../src/common/exceptions/custom.exception';
 import { CandidateError } from '../../src/features/candidate/candidate.error';
 import { Candidate } from '../../src/domain/candidate/candidate.entity';
+import { State } from '../../src/domain/common/entities/state.entity';
 
 describe('CreateCandidateProfileHandler', () => {
   let handler: CreateCandidateProfileHandler;
@@ -19,7 +20,6 @@ describe('CreateCandidateProfileHandler', () => {
   const mockUserId = 'user-id';
   const mockProfileDto = {
     fullName: 'John Doe',
-    location: 'New York',
     title: 'Software Engineer',
     bio: 'Experienced developer',
     isAvailable: true,
@@ -28,6 +28,7 @@ describe('CreateCandidateProfileHandler', () => {
     preferredCategories: [1, 2],
     preferredWorkLocations: [1],
     preferredEmploymentTypes: [1, 2],
+    preferredStates: [1],
     languages: [
       { languageId: 1, proficiency: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
       { languageId: 2, proficiency: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
@@ -71,11 +72,14 @@ describe('CreateCandidateProfileHandler', () => {
       { id: 1, name: 'Category 1' } as JobCategory,
       { id: 2, name: 'Category 2' } as JobCategory,
     ];
-    const mockLocations = [{ id: 1, name: 'Location 1' } as WorkLocationType];
+    const mockLocationTypes = [
+      { id: 1, name: 'Location Type1' } as WorkLocationType,
+    ];
     const mockEmploymentTypes = [
       { id: 1, name: 'Type 1' } as EmploymentType,
       { id: 2, name: 'Type 2' } as EmploymentType,
     ];
+    const mockStates = [{ id: 1, name: 'State 1' } as State];
     const mockLanguages = [
       { id: 1, name: 'Language 1' } as Language,
       { id: 2, name: 'Language 2' } as Language,
@@ -84,14 +88,16 @@ describe('CreateCandidateProfileHandler', () => {
     em.findOne.mockResolvedValueOnce(mockUser); // User lookup
     em.findOne.mockResolvedValueOnce(null); // No existing profile
     em.find.mockResolvedValueOnce(mockCategories);
-    em.find.mockResolvedValueOnce(mockLocations);
+    em.find.mockResolvedValueOnce(mockLocationTypes);
     em.find.mockResolvedValueOnce(mockEmploymentTypes);
+    em.find.mockResolvedValueOnce(mockStates);
     em.find.mockResolvedValueOnce(mockLanguages);
 
     const mockCandidate = {
       preferredCategories: { add: jest.fn() },
       preferredWorkLocations: { add: jest.fn() },
       preferredEmploymentTypes: { add: jest.fn() },
+      preferredStates: { add: jest.fn() },
       languages: { add: jest.fn() },
     };
     em.create.mockReturnValueOnce(mockCandidate);
@@ -107,11 +113,12 @@ describe('CreateCandidateProfileHandler', () => {
       mockCategories,
     );
     expect(mockCandidate.preferredWorkLocations.add).toHaveBeenCalledWith(
-      mockLocations,
+      mockLocationTypes,
     );
     expect(mockCandidate.preferredEmploymentTypes.add).toHaveBeenCalledWith(
       mockEmploymentTypes,
     );
+    expect(mockCandidate.preferredStates.add).toHaveBeenCalledWith(mockStates);
     expect(mockCandidate.languages.add).toHaveBeenCalled();
   });
 
@@ -169,6 +176,7 @@ describe('CreateCandidateProfileHandler', () => {
       preferredCategories: [1, 1, 2, 2],
       preferredWorkLocations: [1, 1],
       preferredEmploymentTypes: [1, 2],
+      preferredStates: [1, 1],
       languages: [
         { languageId: 1, proficiency: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
         { languageId: 1, proficiency: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
@@ -184,6 +192,7 @@ describe('CreateCandidateProfileHandler', () => {
       { id: 1, name: 'Type 1' } as EmploymentType,
       { id: 2, name: 'Type 2' } as EmploymentType,
     ];
+    const mockStates = [{ id: 1, name: 'State 1' } as State];
     const mockLanguages = [{ id: 1, name: 'Language 1' } as Language];
 
     em.findOne.mockResolvedValueOnce(mockUser);
@@ -191,12 +200,14 @@ describe('CreateCandidateProfileHandler', () => {
     em.find.mockResolvedValueOnce(mockCategories);
     em.find.mockResolvedValueOnce(mockLocations);
     em.find.mockResolvedValueOnce(mockEmploymentTypes);
+    em.find.mockResolvedValueOnce(mockStates);
     em.find.mockResolvedValueOnce(mockLanguages);
 
     const mockCandidate = {
       preferredCategories: { add: jest.fn() },
       preferredWorkLocations: { add: jest.fn() },
       preferredEmploymentTypes: { add: jest.fn() },
+      preferredStates: { add: jest.fn() },
       languages: { add: jest.fn() },
     };
     em.create.mockReturnValueOnce(mockCandidate);

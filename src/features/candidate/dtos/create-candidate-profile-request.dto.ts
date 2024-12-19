@@ -15,6 +15,7 @@ import {
   VALID_JOB_CATEGORY_IDS,
   VALID_LANGUAGE_IDS,
   VALID_LANGUAGE_PROFICIENCY_LEVEL_IDS,
+  VALID_STATE_IDS,
   VALID_WORK_LOCATION_TYPE_IDS,
 } from '../../../domain/common/constants';
 import { Type } from 'class-transformer';
@@ -36,12 +37,6 @@ export class CreateCandidateProfileRequestDto {
   @MinLength(3)
   @MaxLength(64)
   public fullName!: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(3)
-  @MaxLength(128)
-  public location!: string;
 
   @ApiProperty()
   @IsString()
@@ -71,6 +66,11 @@ export class CreateCandidateProfileRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
   public preferredWorkLocations!: number[];
+
+  @ApiProperty()
+  @IsNumber({}, { each: true })
+  @IsIn(VALID_STATE_IDS, { each: true })
+  public preferredStates!: number[];
 
   @ApiProperty({ type: [LanguageDto] })
   @IsArray()
