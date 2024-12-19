@@ -1,5 +1,6 @@
 import { Seeder } from '@mikro-orm/seeder';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { State } from '../../domain/common/entities/state.entity';
 import { JobCategory } from '../../domain/common/entities/job-category.entity';
 import { EmploymentType } from '../../domain/common/entities/employment-type.entity';
 import { Language } from '../../domain/common/entities/language.entity';
@@ -8,6 +9,7 @@ import {
   EMPLOYMENT_TYPES,
   JOB_CATEGORIES,
   LANGUAGES,
+  STATES,
   WORK_LOCATION_TYPES,
 } from '../../domain/common/constants';
 
@@ -31,6 +33,8 @@ export class BaseSeeder extends Seeder {
         new WorkLocationType(location.name, location.slug),
       ),
     );
+
+    STATES.map((state) => em.create(State, new State(state.name, state.slug)));
 
     await em.flush();
   }
