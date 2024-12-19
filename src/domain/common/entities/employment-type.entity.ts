@@ -5,7 +5,7 @@ export class EmploymentType {
   @PrimaryKey()
   public readonly id!: number;
 
-  @Property()
+  @Property({ unique: true })
   public name!: string;
 
   @Property()

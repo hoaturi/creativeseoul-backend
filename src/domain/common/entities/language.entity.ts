@@ -5,7 +5,7 @@ export class Language {
   @PrimaryKey()
   public readonly id!: number;
 
-  @Property()
+  @Property({ unique: true })
   public name!: string;
 
   @Property()
