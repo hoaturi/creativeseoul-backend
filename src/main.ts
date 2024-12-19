@@ -16,7 +16,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(session(sessionConfig()));
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'production') {
     app.useLogger(app.get(Logger));
   }
 
