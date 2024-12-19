@@ -19,11 +19,14 @@ import {
 } from '../dtos/create-candidate-profile-request.dto';
 import { CandidateError } from '../candidate.error';
 import { State } from '../../../domain/common/entities/state.entity';
+import { Logger } from '@nestjs/common';
 
 @CommandHandler(CreateCandidateProfileCommand)
 export class CreateCandidateProfileHandler
   implements ICommandHandler<CreateCandidateProfileCommand>
 {
+  private readonly logger = new Logger(CreateCandidateProfileHandler.name);
+
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
@@ -43,6 +46,12 @@ export class CreateCandidateProfileHandler
     await this.attachPreferences(profile, preferences, dto);
 
     await this.em.flush();
+
+    this.logger.log(
+      { userId: user.id, profileId: profile.id },
+      'candidate.create-candidate-profile.success: Candidate profile created successfully',
+    );
+
     return Result.success();
   }
 
