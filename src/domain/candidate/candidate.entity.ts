@@ -1,11 +1,13 @@
 import {
   Collection,
   Entity,
+  FullTextType,
   ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryKey,
   Property,
+  WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
 import { BaseEntity } from '../base.entity';
 import { User } from '../user/user.entity';
@@ -14,6 +16,7 @@ import { WorkLocationType } from '../common/entities/work-location-type.entity';
 import { EmploymentType } from '../common/entities/employment-type.entity';
 import { CandidateLanguage } from './candidate-language.entity';
 import { State } from '../common/entities/state.entity';
+import { Index } from '@mikro-orm/core';
 
 @Entity()
 export class Candidate extends BaseEntity {
@@ -55,6 +58,20 @@ export class Candidate extends BaseEntity {
 
   @Property()
   public isAvailable!: boolean;
+
+  @Index({ type: 'fulltext' })
+  @Property({
+    type: new FullTextType('english'),
+    onCreate: (candidate: Candidate) => ({
+      A: candidate.title,
+      B: candidate.bio,
+    }),
+    onUpdate: (candidate: Candidate) => ({
+      A: candidate.title,
+      B: candidate.bio,
+    }),
+  })
+  public searchVector!: WeightedFullTextValue;
 
   public constructor(
     user: User,
