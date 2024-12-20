@@ -10,22 +10,24 @@ export class CandidateListItemDto {
   @ApiProperty()
   public readonly bio: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    nullable: true,
+  })
   public readonly profilePictureUrl?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   public readonly preferredCategories: number[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   public readonly preferredWorkLocations: number[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   public readonly preferredStates: number[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   public readonly preferredEmploymentTypes: number[];
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   public readonly languages: number[];
 
   public constructor(
@@ -52,8 +54,13 @@ export class CandidateListItemDto {
 }
 
 export class GetCandidateListResponseDto {
-  public constructor(
-    public readonly candidates: CandidateListItemDto[],
-    public readonly total: number,
-  ) {}
+  @ApiProperty({ type: [CandidateListItemDto] })
+  public readonly candidates: CandidateListItemDto[];
+
+  @ApiProperty()
+  public readonly total: number;
+  public constructor(candidates: CandidateListItemDto[], total: number) {
+    this.candidates = candidates;
+    this.total = total;
+  }
 }

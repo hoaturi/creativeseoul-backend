@@ -26,25 +26,39 @@ export class GetCandidateResponseDto {
   @ApiProperty()
   public readonly bio: string;
 
-  @ApiProperty()
-  public readonly profilePictureUrl: string;
+  @ApiProperty({
+    nullable: true,
+  })
+  public readonly profilePictureUrl?: string;
 
-  @ApiProperty()
-  public readonly resumeUrl: string;
+  @ApiProperty({
+    nullable: true,
+  })
+  public readonly resumeUrl?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   public readonly preferredCategories: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   public readonly preferredWorkLocations: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   public readonly preferredStates: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   public readonly preferredEmploymentTypes: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [CandidateLanguageListItemDto],
+  })
   public readonly languages: CandidateLanguageListItemDto[];
 
   public constructor(

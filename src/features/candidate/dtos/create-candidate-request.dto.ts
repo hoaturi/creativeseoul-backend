@@ -51,27 +51,37 @@ export class CreateCandidateRequestDto {
   @MaxLength(1024)
   public bio!: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsOptional()
   @IsUrl()
   public profilePictureUrl?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsOptional()
   @IsUrl()
   public resumeUrl?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   @IsNumber({}, { each: true })
   @IsIn(VALID_JOB_CATEGORY_IDS, { each: true })
   public preferredCategories!: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
   public preferredWorkLocations!: number[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   @IsNumber({}, { each: true })
   @IsIn(VALID_STATE_IDS, { each: true })
   public preferredStates!: number[];
@@ -83,7 +93,9 @@ export class CreateCandidateRequestDto {
   @ArrayMinSize(1)
   public languages!: LanguageDto[];
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [Number],
+  })
   @IsNumber({}, { each: true })
   @IsIn(VALID_EMPLOYMENT_TYPE_IDS, { each: true })
   public preferredEmploymentTypes!: number[];
