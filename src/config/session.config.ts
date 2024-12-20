@@ -24,7 +24,7 @@ export const sessionConfig = () => {
     cookie: {
       secure: false,
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 24 * 7 * 1000,
     },
   };
 };
