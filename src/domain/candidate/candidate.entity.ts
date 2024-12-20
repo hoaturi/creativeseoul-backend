@@ -53,7 +53,9 @@ export class Candidate extends BaseEntity {
   @ManyToMany(() => EmploymentType)
   public preferredEmploymentTypes = new Collection<EmploymentType>(this);
 
-  @OneToMany(() => CandidateLanguage, (cl) => cl.candidate)
+  @OneToMany(() => CandidateLanguage, (cl) => cl.candidate, {
+    orphanRemoval: true,
+  })
   public languages = new Collection<CandidateLanguage>(this);
 
   @Property()

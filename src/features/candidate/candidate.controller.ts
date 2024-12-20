@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -33,6 +34,9 @@ import { GetCandidateListQuery } from './query/get-candidate-list/get-candidate-
 import { GetCandidateListQueryDto } from './dtos/get-candidate-list-query.dto';
 import { GetCandidateQuery } from './query/get-candidate/get-candidate.query';
 import { GetCandidateResponseDto } from './dtos/get-candidate-response.dto';
+import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
+import { UpdateCandidateCommand } from './commands/update-candidate/update-candidate.command';
+import { UpdateCandidateRequestDto } from './dtos/update-candidate-request.dto';
 
 @Controller('candidate')
 export class CandidateController {
@@ -43,7 +47,7 @@ export class CandidateController {
 
   @Post()
   @Roles(UserRole.CANDIDATE)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiCreatedResponse()
   @ApiUnauthorizedResponse({
     example: AuthError.Unauthenticated,
@@ -57,7 +61,7 @@ export class CandidateController {
   @ApiConflictResponse({
     example: CandidateError.ProfileAlreadyExists,
   })
-  public async createCandidateProfile(
+  public async createCandidate(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateCandidateRequestDto,
   ): Promise<void> {
@@ -115,6 +119,37 @@ export class CandidateController {
     console.log(user);
     const query = new GetCandidateQuery(candidateId, user?.id);
     const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Patch()
+  @Roles(UserRole.CANDIDATE)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiNotFoundResponse({
+    example: CandidateError.ProfileNotFound,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async updateCandidate(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: UpdateCandidateRequestDto,
+  ): Promise<void> {
+    const command = new UpdateCandidateCommand(user.id, dto);
+
+    const result = await this.commandBus.execute(command);
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
