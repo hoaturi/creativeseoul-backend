@@ -21,10 +21,10 @@ import {
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
-import { CreateCandidateProfileRequestDto } from './dtos/create-candidate-profile-request.dto';
+import { CreateCandidateRequestDto } from './dtos/create-candidate-request.dto';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { CreateCandidateProfileCommand } from './commands/create-cnadidate-profile/create-candidate-profile.command';
+import { CreateCandidateCommand } from './commands/create-candidate/create-candidate.command';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { UserRole } from '../../domain/user/user.entity';
 import { CandidateError } from './candidate.error';
@@ -59,9 +59,9 @@ export class CandidateController {
   })
   public async createCandidateProfile(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: CreateCandidateProfileRequestDto,
+    @Body() dto: CreateCandidateRequestDto,
   ): Promise<void> {
-    const command = new CreateCandidateProfileCommand(user.id, dto);
+    const command = new CreateCandidateCommand(user.id, dto);
 
     const result = await this.commandBus.execute(command);
 

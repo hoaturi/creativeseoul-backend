@@ -2,8 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsIn,
   IsNumber,
+  IsOptional,
   IsString,
   IsUrl,
   MaxLength,
@@ -29,10 +31,10 @@ export class LanguageDto {
   @ApiProperty()
   @IsNumber()
   @IsIn(VALID_LANGUAGE_PROFICIENCY_LEVEL_IDS)
-  public proficiency!: number;
+  public proficiencyLevel!: number;
 }
 
-export class CreateCandidateProfileRequestDto {
+export class CreateCandidateRequestDto {
   @ApiProperty()
   @MinLength(3)
   @MaxLength(64)
@@ -50,10 +52,12 @@ export class CreateCandidateProfileRequestDto {
   public bio!: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsUrl()
   public profilePictureUrl?: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsUrl()
   public resumeUrl?: string;
 
@@ -85,5 +89,6 @@ export class CreateCandidateProfileRequestDto {
   public preferredEmploymentTypes!: number[];
 
   @ApiProperty()
+  @IsBoolean()
   public isAvailable!: boolean;
 }

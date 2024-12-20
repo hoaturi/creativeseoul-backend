@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { CreateCandidateProfileCommand } from './create-candidate-profile.command';
+import { CreateCandidateCommand } from './create-candidate.command';
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
 import { Language } from '../../../../domain/common/entities/language.entity';
@@ -14,23 +14,23 @@ import { CustomException } from '../../../../common/exceptions/custom.exception'
 import { CandidateErrorCode } from '../../../../domain/candidate/candidate-error-code.enum';
 import { UserErrorCode } from '../../../../domain/user/user-error-code.enum';
 import {
-  CreateCandidateProfileRequestDto,
+  CreateCandidateRequestDto,
   LanguageDto,
-} from '../../dtos/create-candidate-profile-request.dto';
+} from '../../dtos/create-candidate-request.dto';
 import { CandidateError } from '../../candidate.error';
 import { State } from '../../../../domain/common/entities/state.entity';
 import { Logger } from '@nestjs/common';
 
-@CommandHandler(CreateCandidateProfileCommand)
-export class CreateCandidateProfileHandler
-  implements ICommandHandler<CreateCandidateProfileCommand>
+@CommandHandler(CreateCandidateCommand)
+export class CreateCandidateHandler
+  implements ICommandHandler<CreateCandidateCommand>
 {
-  private readonly logger = new Logger(CreateCandidateProfileHandler.name);
+  private readonly logger = new Logger(CreateCandidateHandler.name);
 
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
-    command: CreateCandidateProfileCommand,
+    command: CreateCandidateCommand,
   ): Promise<Result<void, ResultError>> {
     const { dto, userId } = command;
 
@@ -87,7 +87,7 @@ export class CreateCandidateProfileHandler
     return !!existingProfile;
   }
 
-  private async fetchPreferences(dto: CreateCandidateProfileRequestDto) {
+  private async fetchPreferences(dto: CreateCandidateRequestDto) {
     const uniqueCategories = [...new Set(dto.preferredCategories)];
     const uniqueLocations = [...new Set(dto.preferredWorkLocations)];
     const uniqueEmploymentTypes = [...new Set(dto.preferredEmploymentTypes)];
@@ -118,7 +118,7 @@ export class CreateCandidateProfileHandler
 
   private async createProfile(
     user: User,
-    dto: CreateCandidateProfileRequestDto,
+    dto: CreateCandidateRequestDto,
   ): Promise<Candidate> {
     return this.em.create(
       Candidate,
@@ -143,7 +143,7 @@ export class CreateCandidateProfileHandler
       states: State[];
       languages: Language[];
     },
-    dto: CreateCandidateProfileRequestDto,
+    dto: CreateCandidateRequestDto,
   ): Promise<void> {
     const { categories, locations, employmentTypes, states, languages } =
       preferences;
@@ -156,7 +156,7 @@ export class CreateCandidateProfileHandler
     const candidateLanguages = languages.map((language) => {
       const proficiency = dto.languages.find(
         (lang) => lang.languageId === language.id,
-      )!.proficiency;
+      )!.proficiencyLevel;
       return new CandidateLanguage(profile, language, proficiency);
     });
 

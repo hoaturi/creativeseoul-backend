@@ -1,7 +1,7 @@
-import { CreateCandidateProfileHandler } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate-profile.handler';
+import { CreateCandidateHandler } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
-import { CreateCandidateProfileCommand } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate-profile.command';
+import { CreateCandidateCommand } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
 import { JobCategory } from '../../src/domain/common/entities/job-category.entity';
 import { WorkLocationType } from '../../src/domain/common/entities/work-location-type.entity';
@@ -14,7 +14,7 @@ import { Candidate } from '../../src/domain/candidate/candidate.entity';
 import { State } from '../../src/domain/common/entities/state.entity';
 
 describe('CreateCandidateProfileHandler', () => {
-  let handler: CreateCandidateProfileHandler;
+  let handler: CreateCandidateHandler;
   let em: jest.Mocked<EntityManager>;
 
   const mockUserId = 'user-id';
@@ -45,7 +45,7 @@ describe('CreateCandidateProfileHandler', () => {
 
     const module = await Test.createTestingModule({
       providers: [
-        CreateCandidateProfileHandler,
+        CreateCandidateHandler,
         {
           provide: EntityManager,
           useValue: mockedEntityManager,
@@ -53,9 +53,7 @@ describe('CreateCandidateProfileHandler', () => {
       ],
     }).compile();
 
-    handler = module.get<CreateCandidateProfileHandler>(
-      CreateCandidateProfileHandler,
-    );
+    handler = module.get<CreateCandidateHandler>(CreateCandidateHandler);
     em = module.get(EntityManager);
 
     jest.clearAllMocks();
@@ -103,7 +101,7 @@ describe('CreateCandidateProfileHandler', () => {
     em.create.mockReturnValueOnce(mockCandidate);
 
     const result = await handler.execute(
-      new CreateCandidateProfileCommand(mockUserId, mockProfileDto),
+      new CreateCandidateCommand(mockUserId, mockProfileDto),
     );
 
     // Assert
@@ -128,9 +126,7 @@ describe('CreateCandidateProfileHandler', () => {
 
     // Act & Assert
     await expect(
-      handler.execute(
-        new CreateCandidateProfileCommand(mockUserId, mockProfileDto),
-      ),
+      handler.execute(new CreateCandidateCommand(mockUserId, mockProfileDto)),
     ).rejects.toThrow(CustomException);
     expect(em.flush).not.toHaveBeenCalled();
   });
@@ -142,9 +138,7 @@ describe('CreateCandidateProfileHandler', () => {
 
     // Act & Assert
     await expect(
-      handler.execute(
-        new CreateCandidateProfileCommand(mockUserId, mockProfileDto),
-      ),
+      handler.execute(new CreateCandidateCommand(mockUserId, mockProfileDto)),
     ).rejects.toThrow(CustomException);
     expect(em.flush).not.toHaveBeenCalled();
   });
@@ -157,7 +151,7 @@ describe('CreateCandidateProfileHandler', () => {
 
     // Act & Assert
     const result = await handler.execute(
-      new CreateCandidateProfileCommand(mockUserId, mockProfileDto),
+      new CreateCandidateCommand(mockUserId, mockProfileDto),
     );
     expect(result.isSuccess).toBeFalsy();
     expect(result.error).toBe(CandidateError.ProfileAlreadyExists);
@@ -214,7 +208,7 @@ describe('CreateCandidateProfileHandler', () => {
 
     // Act
     const result = await handler.execute(
-      new CreateCandidateProfileCommand(mockUserId, dtoWithDuplicates),
+      new CreateCandidateCommand(mockUserId, dtoWithDuplicates),
     );
 
     // Assert
