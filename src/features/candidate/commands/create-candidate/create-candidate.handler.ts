@@ -13,10 +13,7 @@ import { ResultError } from '../../../../common/result/result-error';
 import { CustomException } from '../../../../common/exceptions/custom.exception';
 import { CandidateErrorCode } from '../../../../domain/candidate/candidate-error-code.enum';
 import { UserErrorCode } from '../../../../domain/user/user-error-code.enum';
-import {
-  CreateCandidateRequestDto,
-  LanguageDto,
-} from '../../dtos/create-candidate-request.dto';
+import { CreateCandidateRequestDto } from '../../dtos/create-candidate-request.dto';
 import { CandidateError } from '../../candidate.error';
 import { State } from '../../../../domain/common/entities/state.entity';
 import { Logger } from '@nestjs/common';
@@ -93,15 +90,6 @@ export class CreateCandidateHandler
     const uniqueEmploymentTypes = [...new Set(dto.preferredEmploymentTypes)];
     const uniqueStates = [...new Set(dto.preferredStates)];
 
-    const uniqueLanguages = Array.from(
-      dto.languages
-        .reduce((map, lang) => {
-          map.set(lang.languageId, lang);
-          return map;
-        }, new Map<number, LanguageDto>())
-        .values(),
-    );
-
     const [categories, locations, employmentTypes, states, languages] =
       await Promise.all([
         this.em.find(JobCategory, { id: { $in: uniqueCategories } }),
@@ -109,7 +97,7 @@ export class CreateCandidateHandler
         this.em.find(EmploymentType, { id: { $in: uniqueEmploymentTypes } }),
         this.em.find(State, { id: { $in: uniqueStates } }),
         this.em.find(Language, {
-          id: { $in: uniqueLanguages.map((lang) => lang.languageId) },
+          id: { $in: dto.languages.map((lang) => lang.languageId) },
         }),
       ]);
 
@@ -154,10 +142,10 @@ export class CreateCandidateHandler
     profile.preferredStates.add(states);
 
     const candidateLanguages = languages.map((language) => {
-      const proficiency = dto.languages.find(
+      const langDto = dto.languages.find(
         (lang) => lang.languageId === language.id,
-      )!.proficiencyLevel;
-      return new CandidateLanguage(profile, language, proficiency);
+      );
+      return new CandidateLanguage(profile, language, langDto.proficiencyLevel);
     });
 
     profile.languages.add(candidateLanguages);

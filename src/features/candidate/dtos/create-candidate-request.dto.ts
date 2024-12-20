@@ -21,35 +21,36 @@ import {
   VALID_WORK_LOCATION_TYPE_IDS,
 } from '../../../domain/common/constants';
 import { Type } from 'class-transformer';
+import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
 
 export class LanguageDto {
   @ApiProperty()
   @IsNumber()
   @IsIn(VALID_LANGUAGE_IDS, { each: true })
-  public languageId!: number;
+  public languageId: number;
 
   @ApiProperty()
   @IsNumber()
   @IsIn(VALID_LANGUAGE_PROFICIENCY_LEVEL_IDS)
-  public proficiencyLevel!: number;
+  public proficiencyLevel: number;
 }
 
 export class CreateCandidateRequestDto {
   @ApiProperty()
   @MinLength(3)
   @MaxLength(64)
-  public fullName!: string;
+  public fullName: string;
 
   @ApiProperty()
   @IsString()
   @MinLength(8)
   @MaxLength(128)
-  public title!: string;
+  public title: string;
 
   @ApiProperty()
   @IsString()
   @MaxLength(1024)
-  public bio!: string;
+  public bio: string;
 
   @ApiProperty({
     required: false,
@@ -70,37 +71,42 @@ export class CreateCandidateRequestDto {
   })
   @IsNumber({}, { each: true })
   @IsIn(VALID_JOB_CATEGORY_IDS, { each: true })
-  public preferredCategories!: number[];
+  @ArrayMinSize(1)
+  public preferredCategories: number[];
 
   @ApiProperty({
     type: [Number],
   })
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
-  public preferredWorkLocations!: number[];
+  @ArrayMinSize(1)
+  public preferredWorkLocations: number[];
 
   @ApiProperty({
     type: [Number],
   })
   @IsNumber({}, { each: true })
   @IsIn(VALID_STATE_IDS, { each: true })
-  public preferredStates!: number[];
-
-  @ApiProperty({ type: [LanguageDto] })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => LanguageDto)
   @ArrayMinSize(1)
-  public languages!: LanguageDto[];
+  public preferredStates: number[];
 
   @ApiProperty({
     type: [Number],
   })
   @IsNumber({}, { each: true })
   @IsIn(VALID_EMPLOYMENT_TYPE_IDS, { each: true })
-  public preferredEmploymentTypes!: number[];
+  @ArrayMinSize(1)
+  public preferredEmploymentTypes: number[];
+
+  @ApiProperty({ type: [LanguageDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => LanguageDto)
+  @ArrayMinSize(1)
+  @HasUniqueLanguages()
+  public languages: LanguageDto[];
 
   @ApiProperty()
   @IsBoolean()
-  public isAvailable!: boolean;
+  public isAvailable: boolean;
 }

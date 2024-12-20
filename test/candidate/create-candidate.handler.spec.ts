@@ -18,7 +18,8 @@ describe('CreateCandidateProfileHandler', () => {
   let em: jest.Mocked<EntityManager>;
 
   const mockUserId = 'user-id';
-  const mockProfileDto = {
+
+  const createMockDto = (partial = {}) => ({
     fullName: 'John Doe',
     title: 'Software Engineer',
     bio: 'Experienced developer',
@@ -33,197 +34,168 @@ describe('CreateCandidateProfileHandler', () => {
       { languageId: 1, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
       { languageId: 2, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
     ],
-  };
+    ...partial,
+  });
+
+  const createMockEntities = () => ({
+    categories: [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+    ] as JobCategory[],
+    locationTypes: [{ id: 1, name: 'Location Type1' }] as WorkLocationType[],
+    employmentTypes: [
+      { id: 1, name: 'Type 1' },
+      { id: 2, name: 'Type 2' },
+    ] as EmploymentType[],
+    states: [{ id: 1, name: 'State 1' }] as State[],
+    languages: [
+      { id: 1, name: 'Language 1' },
+      { id: 2, name: 'Language 2' },
+    ] as Language[],
+  });
+
+  const createMockUser = (role = UserRole.CANDIDATE) =>
+    ({
+      id: mockUserId,
+      role,
+    }) as User;
+
+  const createMockCandidate = () => ({
+    preferredCategories: { add: jest.fn() },
+    preferredWorkLocations: { add: jest.fn() },
+    preferredEmploymentTypes: { add: jest.fn() },
+    preferredStates: { add: jest.fn() },
+    languages: { add: jest.fn() },
+  });
 
   beforeEach(async () => {
-    const mockedEntityManager = {
-      findOne: jest.fn(),
-      find: jest.fn(),
-      create: jest.fn(),
-      flush: jest.fn(),
-    };
-
     const module = await Test.createTestingModule({
       providers: [
         CreateCandidateHandler,
         {
           provide: EntityManager,
-          useValue: mockedEntityManager,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            create: jest.fn(),
+            flush: jest.fn(),
+          },
         },
       ],
     }).compile();
 
     handler = module.get<CreateCandidateHandler>(CreateCandidateHandler);
     em = module.get(EntityManager);
-
     jest.clearAllMocks();
   });
 
-  it('should successfully create a candidate profile', async () => {
-    // Arrange
-    const mockUser = {
-      id: mockUserId,
-      role: UserRole.CANDIDATE,
-    } as User;
+  describe('successful profile creation', () => {
+    beforeEach(() => {
+      const mockUser = createMockUser();
+      const mockEntities = createMockEntities();
+      const mockCandidate = createMockCandidate();
 
-    const mockCategories = [
-      { id: 1, name: 'Category 1' } as JobCategory,
-      { id: 2, name: 'Category 2' } as JobCategory,
-    ];
-    const mockLocationTypes = [
-      { id: 1, name: 'Location Type1' } as WorkLocationType,
-    ];
-    const mockEmploymentTypes = [
-      { id: 1, name: 'Type 1' } as EmploymentType,
-      { id: 2, name: 'Type 2' } as EmploymentType,
-    ];
-    const mockStates = [{ id: 1, name: 'State 1' } as State];
-    const mockLanguages = [
-      { id: 1, name: 'Language 1' } as Language,
-      { id: 2, name: 'Language 2' } as Language,
-    ];
+      em.findOne
+        .mockResolvedValueOnce(mockUser) // User lookup
+        .mockResolvedValueOnce(null); // No existing profile
 
-    em.findOne.mockResolvedValueOnce(mockUser); // User lookup
-    em.findOne.mockResolvedValueOnce(null); // No existing profile
-    em.find.mockResolvedValueOnce(mockCategories);
-    em.find.mockResolvedValueOnce(mockLocationTypes);
-    em.find.mockResolvedValueOnce(mockEmploymentTypes);
-    em.find.mockResolvedValueOnce(mockStates);
-    em.find.mockResolvedValueOnce(mockLanguages);
+      em.find
+        .mockResolvedValueOnce(mockEntities.categories)
+        .mockResolvedValueOnce(mockEntities.locationTypes)
+        .mockResolvedValueOnce(mockEntities.employmentTypes)
+        .mockResolvedValueOnce(mockEntities.states)
+        .mockResolvedValueOnce(mockEntities.languages);
 
-    const mockCandidate = {
-      preferredCategories: { add: jest.fn() },
-      preferredWorkLocations: { add: jest.fn() },
-      preferredEmploymentTypes: { add: jest.fn() },
-      preferredStates: { add: jest.fn() },
-      languages: { add: jest.fn() },
-    };
-    em.create.mockReturnValueOnce(mockCandidate);
+      em.create.mockReturnValue(mockCandidate);
+    });
 
-    const result = await handler.execute(
-      new CreateCandidateCommand(mockUserId, mockProfileDto),
-    );
+    it('should successfully create a candidate profile with all preferences', async () => {
+      const result = await handler.execute(
+        new CreateCandidateCommand(mockUserId, createMockDto()),
+      );
 
-    // Assert
-    expect(result.isSuccess).toBeTruthy();
-    expect(em.flush).toHaveBeenCalled();
-    expect(mockCandidate.preferredCategories.add).toHaveBeenCalledWith(
-      mockCategories,
-    );
-    expect(mockCandidate.preferredWorkLocations.add).toHaveBeenCalledWith(
-      mockLocationTypes,
-    );
-    expect(mockCandidate.preferredEmploymentTypes.add).toHaveBeenCalledWith(
-      mockEmploymentTypes,
-    );
-    expect(mockCandidate.preferredStates.add).toHaveBeenCalledWith(mockStates);
-    expect(mockCandidate.languages.add).toHaveBeenCalled();
-  });
+      expect(result.isSuccess).toBeTruthy();
+      expect(em.flush).toHaveBeenCalled();
 
-  it('should throw an exception does not exist', async () => {
-    // Arrange
-    em.findOne.mockResolvedValueOnce(null);
+      // Verify all collections were added
+      const candidate = em.create.mock.results[0].value;
+      const collections = [
+        'preferredCategories',
+        'preferredWorkLocations',
+        'preferredEmploymentTypes',
+        'preferredStates',
+        'languages',
+      ];
 
-    // Act & Assert
-    await expect(
-      handler.execute(new CreateCandidateCommand(mockUserId, mockProfileDto)),
-    ).rejects.toThrow(CustomException);
-    expect(em.flush).not.toHaveBeenCalled();
-  });
+      collections.forEach((collection) => {
+        expect(candidate[collection].add).toHaveBeenCalled();
+      });
+    });
 
-  it('should throw an error when user is not a candidate', async () => {
-    // Arrange
-    const mockUser = { id: mockUserId, role: UserRole.EMPLOYER } as User;
-    em.findOne.mockResolvedValueOnce(mockUser);
+    it('should handle duplicate preferences in input arrays', async () => {
+      const dtoWithDuplicates = createMockDto({
+        preferredCategories: [1, 1, 2, 2],
+        preferredWorkLocations: [1, 1],
+        preferredEmploymentTypes: [1, 2],
+        preferredStates: [1, 1],
+      });
 
-    // Act & Assert
-    await expect(
-      handler.execute(new CreateCandidateCommand(mockUserId, mockProfileDto)),
-    ).rejects.toThrow(CustomException);
-    expect(em.flush).not.toHaveBeenCalled();
-  });
+      const result = await handler.execute(
+        new CreateCandidateCommand(mockUserId, dtoWithDuplicates),
+      );
 
-  it('should throw an error when profile already exists', async () => {
-    // Arrange
-    const mockUser = { id: mockUserId, role: UserRole.CANDIDATE } as User;
-    em.findOne.mockResolvedValueOnce(mockUser); // User lookup
-    em.findOne.mockResolvedValueOnce({ id: 'existing-profile' } as Candidate); // Existing profile
+      expect(result.isSuccess).toBeTruthy();
 
-    // Act & Assert
-    const result = await handler.execute(
-      new CreateCandidateCommand(mockUserId, mockProfileDto),
-    );
-    expect(result.isSuccess).toBeFalsy();
-    expect(result.error).toBe(CandidateError.ProfileAlreadyExists);
-    expect(em.flush).not.toHaveBeenCalled();
-  });
+      const candidate = em.create.mock.results[0].value;
+      expect(candidate.preferredCategories.add).toHaveBeenCalled();
 
-  it('should handle duplicate preferences in input arrays', async () => {
-    // Arrange
-    const mockUser = {
-      id: mockUserId,
-      role: UserRole.CANDIDATE,
-    } as User;
+      expect(em.find).toHaveBeenCalledWith(JobCategory, {
+        id: { $in: [1, 2] },
+      });
+    });
 
-    const dtoWithDuplicates = {
-      ...mockProfileDto,
-      preferredCategories: [1, 1, 2, 2],
-      preferredWorkLocations: [1, 1],
-      preferredEmploymentTypes: [1, 2],
-      preferredStates: [1, 1],
-      languages: [
-        {
-          languageId: 1,
-          proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED,
-        },
-        { languageId: 1, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
-      ],
-    };
+    describe('validation failures', () => {
+      it('should throw an exception when user does not exist', async () => {
+        em.findOne.mockResolvedValue(null);
 
-    const mockCategories = [
-      { id: 1, name: 'Category 1' } as JobCategory,
-      { id: 2, name: 'Category 2' } as JobCategory,
-    ];
-    const mockLocations = [{ id: 1, name: 'Location 1' } as WorkLocationType];
-    const mockEmploymentTypes = [
-      { id: 1, name: 'Type 1' } as EmploymentType,
-      { id: 2, name: 'Type 2' } as EmploymentType,
-    ];
-    const mockStates = [{ id: 1, name: 'State 1' } as State];
-    const mockLanguages = [{ id: 1, name: 'Language 1' } as Language];
+        await expect(
+          handler.execute(
+            new CreateCandidateCommand(mockUserId, createMockDto()),
+          ),
+        ).rejects.toThrow(CustomException);
 
-    em.findOne.mockResolvedValueOnce(mockUser);
-    em.findOne.mockResolvedValueOnce(null);
-    em.find.mockResolvedValueOnce(mockCategories);
-    em.find.mockResolvedValueOnce(mockLocations);
-    em.find.mockResolvedValueOnce(mockEmploymentTypes);
-    em.find.mockResolvedValueOnce(mockStates);
-    em.find.mockResolvedValueOnce(mockLanguages);
+        expect(em.flush).not.toHaveBeenCalled();
+      });
 
-    const mockCandidate = {
-      preferredCategories: { add: jest.fn() },
-      preferredWorkLocations: { add: jest.fn() },
-      preferredEmploymentTypes: { add: jest.fn() },
-      preferredStates: { add: jest.fn() },
-      languages: { add: jest.fn() },
-    };
-    em.create.mockReturnValueOnce(mockCandidate);
+      it('should throw an error when user is not a candidate', async () => {
+        const mockUser = createMockUser(UserRole.EMPLOYER);
+        em.findOne.mockResolvedValue(mockUser);
 
-    // Act
-    const result = await handler.execute(
-      new CreateCandidateCommand(mockUserId, dtoWithDuplicates),
-    );
+        await expect(
+          handler.execute(
+            new CreateCandidateCommand(mockUserId, createMockDto()),
+          ),
+        ).rejects.toThrow(CustomException);
 
-    // Assert
-    expect(result.isSuccess).toBeTruthy();
-    expect(mockCandidate.preferredCategories.add).toHaveBeenCalledWith(
-      mockCategories,
-    );
-    expect(mockCandidate.languages.add).toHaveBeenCalled();
-    // Verify only unique values were processed
-    expect(em.find).toHaveBeenCalledWith(JobCategory, { id: { $in: [1, 2] } });
-    expect(em.find).toHaveBeenCalledWith(Language, {
-      id: { $in: [1] },
+        expect(em.flush).not.toHaveBeenCalled();
+      });
+
+      it('should return failure when profile already exists', async () => {
+        const mockUser = createMockUser();
+        const existingProfile = { id: 'existing-profile' } as Candidate;
+
+        em.findOne
+          .mockResolvedValueOnce(mockUser)
+          .mockResolvedValueOnce(existingProfile);
+
+        const result = await handler.execute(
+          new CreateCandidateCommand(mockUserId, createMockDto()),
+        );
+
+        expect(result.isSuccess).toBeFalsy();
+        expect(result.error).toBe(CandidateError.ProfileAlreadyExists);
+        expect(em.flush).not.toHaveBeenCalled();
+      });
     });
   });
 });
