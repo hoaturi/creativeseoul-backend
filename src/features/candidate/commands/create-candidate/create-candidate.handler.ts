@@ -85,17 +85,16 @@ export class CreateCandidateHandler
   }
 
   private async fetchPreferences(dto: CreateCandidateRequestDto) {
-    const uniqueCategories = [...new Set(dto.preferredCategories)];
-    const uniqueLocations = [...new Set(dto.preferredWorkLocations)];
-    const uniqueEmploymentTypes = [...new Set(dto.preferredEmploymentTypes)];
-    const uniqueStates = [...new Set(dto.preferredStates)];
-
     const [categories, locations, employmentTypes, states, languages] =
       await Promise.all([
-        this.em.find(JobCategory, { id: { $in: uniqueCategories } }),
-        this.em.find(WorkLocationType, { id: { $in: uniqueLocations } }),
-        this.em.find(EmploymentType, { id: { $in: uniqueEmploymentTypes } }),
-        this.em.find(State, { id: { $in: uniqueStates } }),
+        this.em.find(JobCategory, { id: { $in: dto.preferredCategories } }),
+        this.em.find(WorkLocationType, {
+          id: { $in: dto.preferredWorkLocations },
+        }),
+        this.em.find(EmploymentType, {
+          id: { $in: dto.preferredEmploymentTypes },
+        }),
+        this.em.find(State, { id: { $in: dto.preferredStates } }),
         this.em.find(Language, {
           id: { $in: dto.languages.map((lang) => lang.languageId) },
         }),

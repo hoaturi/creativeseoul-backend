@@ -22,6 +22,7 @@ import {
 } from '../../../domain/common/constants';
 import { Type } from 'class-transformer';
 import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
+import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
 
 export class LanguageDto {
   @ApiProperty()
@@ -69,6 +70,8 @@ export class CreateCandidateRequestDto {
   @ApiProperty({
     type: [Number],
   })
+  @IsArray()
+  @RemoveDuplicates()
   @IsNumber({}, { each: true })
   @IsIn(VALID_JOB_CATEGORY_IDS, { each: true })
   @ArrayMinSize(1)
@@ -77,6 +80,8 @@ export class CreateCandidateRequestDto {
   @ApiProperty({
     type: [Number],
   })
+  @IsArray()
+  @RemoveDuplicates()
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
   @ArrayMinSize(1)
@@ -85,6 +90,8 @@ export class CreateCandidateRequestDto {
   @ApiProperty({
     type: [Number],
   })
+  @IsArray()
+  @RemoveDuplicates()
   @IsNumber({}, { each: true })
   @IsIn(VALID_STATE_IDS, { each: true })
   @ArrayMinSize(1)
@@ -93,6 +100,8 @@ export class CreateCandidateRequestDto {
   @ApiProperty({
     type: [Number],
   })
+  @IsArray()
+  @RemoveDuplicates()
   @IsNumber({}, { each: true })
   @IsIn(VALID_EMPLOYMENT_TYPE_IDS, { each: true })
   @ArrayMinSize(1)
