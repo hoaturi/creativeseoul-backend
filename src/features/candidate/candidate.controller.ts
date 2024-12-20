@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpException,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -13,6 +14,7 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -29,6 +31,8 @@ import { CandidateError } from './candidate.error';
 import { GetCandidateListResponseDto } from './dtos/get-candidate-list-response.dto';
 import { GetCandidateListQuery } from './query/get-candidate-list/get-candidate-list.query';
 import { GetCandidateListQueryDto } from './dtos/get-candidate-list-query.dto';
+import { GetCandidateQuery } from './query/get-candidate/get-candidate.query';
+import { GetCandidateResponseDto } from './dtos/get-candidate-response.dto';
 
 @Controller('candidate')
 export class CandidateController {
@@ -85,6 +89,31 @@ export class CandidateController {
       queryDto.languages,
     );
 
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get(':id')
+  @ApiOkResponse({
+    type: GetCandidateResponseDto,
+  })
+  @ApiNotFoundResponse({
+    example: CandidateError.ProfileNotFound,
+  })
+  @ApiForbiddenResponse({
+    example: CandidateError.ProfileNotAvailable,
+  })
+  public async GetCandidate(
+    @Param('id') candidateId: string,
+    @CurrentUser() user?: AuthenticatedUser,
+  ): Promise<GetCandidateResponseDto> {
+    console.log(user);
+    const query = new GetCandidateQuery(candidateId, user?.id);
     const result = await this.queryBus.execute(query);
 
     if (!result.isSuccess) {

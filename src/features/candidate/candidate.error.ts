@@ -9,6 +9,18 @@ export class CandidateError extends ResultError {
     'Profile already exists',
   );
 
+  public static readonly ProfileNotFound = new CandidateError(
+    CandidateErrorCode.PROFILE_NOT_FOUND,
+    HttpStatus.NOT_FOUND,
+    'Profile not found',
+  );
+
+  public static readonly ProfileNotAvailable = new CandidateError(
+    CandidateErrorCode.PROFILE_NOT_AVAILABLE,
+    HttpStatus.FORBIDDEN,
+    'Profile not available',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
