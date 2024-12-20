@@ -32,14 +32,14 @@ describe('ChangeUsernameHandler', () => {
   it('should successfully change the username', async () => {
     const mockUser = {
       id: 'user-id',
-      userName: 'old-username',
+      username: 'old-username',
     };
 
     (em.findOneOrFail as jest.Mock).mockResolvedValue(mockUser);
 
     await handler.execute(new ChangeUsernameCommand('user-id', 'new-username'));
 
-    expect(mockUser.userName).toBe('new-username');
+    expect(mockUser.username).toBe('new-username');
     expect(em.flush).toHaveBeenCalled();
   });
 });
