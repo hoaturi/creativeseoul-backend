@@ -55,10 +55,13 @@ describe('LoginHandler', () => {
     );
 
     expect(result.isSuccess).toBe(true);
-    if (result.isSuccess) {
-      expect(result.value).toBeInstanceOf(LoginCommandResult);
-      expect(result.value.user).toEqual(mockUser);
-    }
+    expect(result.value).toBeInstanceOf(LoginCommandResult);
+    expect(result.value).toEqual({
+      user: {
+        id: mockUser.id,
+        role: mockUser.role,
+      },
+    });
   });
 
   it('should fail with invalid credentials when user is not found', async () => {
