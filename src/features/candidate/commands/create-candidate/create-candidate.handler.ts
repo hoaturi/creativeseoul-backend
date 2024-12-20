@@ -31,8 +31,10 @@ export class CreateCandidateHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, userId } = command;
 
-    const user = await this.validateUser(userId);
-    const hasExistingProfile = await this.checkExistingProfile(user);
+    const [user, hasExistingProfile] = await Promise.all([
+      this.validateUser(userId),
+      this.checkExistingProfile(userId),
+    ]);
 
     if (hasExistingProfile) {
       return Result.failure(CandidateError.ProfileAlreadyExists);
@@ -74,10 +76,10 @@ export class CreateCandidateHandler
     return user;
   }
 
-  private async checkExistingProfile(user: User): Promise<boolean> {
+  private async checkExistingProfile(userId: string): Promise<boolean> {
     const existingProfile = await this.em.findOne(
       Candidate,
-      { user },
+      { user: { id: userId } },
       { fields: ['id'] },
     );
 
