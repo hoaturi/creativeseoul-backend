@@ -1,24 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { CreateCandidateProfileCommand } from './create-candidate-profile.command';
-import { WorkLocationType } from '../../../domain/common/entities/work-location-type.entity';
-import { EmploymentType } from '../../../domain/common/entities/employment-type.entity';
-import { Language } from '../../../domain/common/entities/language.entity';
-import { Candidate } from '../../../domain/candidate/candidate.entity';
-import { User, UserRole } from '../../../domain/user/user.entity';
-import { JobCategory } from '../../../domain/common/entities/job-category.entity';
-import { CandidateLanguage } from '../../../domain/candidate/candidate-language.entity';
-import { Result } from '../../../common/result/result';
-import { ResultError } from '../../../common/result/result-error';
-import { CustomException } from '../../../common/exceptions/custom.exception';
-import { CandidateErrorCode } from '../../../domain/candidate/candidate-error-code.enum';
-import { UserErrorCode } from '../../../domain/user/user-error-code.enum';
+import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
+import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
+import { Language } from '../../../../domain/common/entities/language.entity';
+import { Candidate } from '../../../../domain/candidate/candidate.entity';
+import { User, UserRole } from '../../../../domain/user/user.entity';
+import { JobCategory } from '../../../../domain/common/entities/job-category.entity';
+import { CandidateLanguage } from '../../../../domain/candidate/candidate-language.entity';
+import { Result } from '../../../../common/result/result';
+import { ResultError } from '../../../../common/result/result-error';
+import { CustomException } from '../../../../common/exceptions/custom.exception';
+import { CandidateErrorCode } from '../../../../domain/candidate/candidate-error-code.enum';
+import { UserErrorCode } from '../../../../domain/user/user-error-code.enum';
 import {
   CreateCandidateProfileRequestDto,
   LanguageDto,
-} from '../dtos/create-candidate-profile-request.dto';
-import { CandidateError } from '../candidate.error';
-import { State } from '../../../domain/common/entities/state.entity';
+} from '../../dtos/create-candidate-profile-request.dto';
+import { CandidateError } from '../../candidate.error';
+import { State } from '../../../../domain/common/entities/state.entity';
 import { Logger } from '@nestjs/common';
 
 @CommandHandler(CreateCandidateProfileCommand)

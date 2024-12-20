@@ -22,12 +22,12 @@ import { CommonError } from '../common/common.error';
 import { CreateCandidateProfileRequestDto } from './dtos/create-candidate-profile-request.dto';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { CreateCandidateProfileCommand } from './commands/create-candidate-profile.command';
+import { CreateCandidateProfileCommand } from './commands/create-cnadidate-profile/create-candidate-profile.command';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { UserRole } from '../../domain/user/user.entity';
 import { CandidateError } from './candidate.error';
 import { GetCandidateListResponseDto } from './dtos/get-candidate-list-response.dto';
-import { GetCandidateListQuery } from './query/get-candidate-list.query';
+import { GetCandidateListQuery } from './query/get-candidate-list/get-candidate-list.query';
 import { GetCandidateListQueryDto } from './dtos/get-candidate-list-query.dto';
 
 @Controller('candidate')

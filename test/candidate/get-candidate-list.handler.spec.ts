@@ -1,7 +1,7 @@
-import { GetCandidateListHandler } from '../../src/features/candidate/query/get-candidate-list.handler';
+import { GetCandidateListHandler } from '../../src/features/candidate/query/get-candidate-list/get-candidate-list.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
-import { GetCandidateListQuery } from '../../src/features/candidate/query/get-candidate-list.query';
+import { GetCandidateListQuery } from '../../src/features/candidate/query/get-candidate-list/get-candidate-list.query';
 import { Collection } from '@mikro-orm/core';
 
 describe('GetCandidateListHandler', () => {

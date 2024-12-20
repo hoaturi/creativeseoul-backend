@@ -1,7 +1,7 @@
-import { CreateCandidateProfileHandler } from '../../src/features/candidate/commands/create-candidate-profile.handler';
+import { CreateCandidateProfileHandler } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate-profile.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
-import { CreateCandidateProfileCommand } from '../../src/features/candidate/commands/create-candidate-profile.command';
+import { CreateCandidateProfileCommand } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate-profile.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
 import { JobCategory } from '../../src/domain/common/entities/job-category.entity';
 import { WorkLocationType } from '../../src/domain/common/entities/work-location-type.entity';

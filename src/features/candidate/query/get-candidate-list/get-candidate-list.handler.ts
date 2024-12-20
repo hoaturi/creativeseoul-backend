@@ -1,13 +1,13 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetCandidateListQuery } from './get-candidate-list.query';
-import { Result } from '../../../common/result/result';
+import { Result } from '../../../../common/result/result';
 import {
   CandidateListItemDto,
   GetCandidateListResponseDto,
-} from '../dtos/get-candidate-list-response.dto';
-import { ResultError } from '../../../common/result/result-error';
+} from '../../dtos/get-candidate-list-response.dto';
+import { ResultError } from '../../../../common/result/result-error';
 import { EntityManager, FilterQuery } from '@mikro-orm/postgresql';
-import { Candidate } from '../../../domain/candidate/candidate.entity';
+import { Candidate } from '../../../../domain/candidate/candidate.entity';
 
 @QueryHandler(GetCandidateListQuery)
 export class GetCandidateListHandler

@@ -1,7 +1,7 @@
 import { Query } from '@nestjs/cqrs';
-import { Result } from '../../../common/result/result';
-import { GetCandidateListResponseDto } from '../dtos/get-candidate-list-response.dto';
-import { ResultError } from '../../../common/result/result-error';
+import { Result } from '../../../../common/result/result';
+import { GetCandidateListResponseDto } from '../../dtos/get-candidate-list-response.dto';
+import { ResultError } from '../../../../common/result/result-error';
 
 export class GetCandidateListQuery extends Query<
   Result<GetCandidateListResponseDto, ResultError>
