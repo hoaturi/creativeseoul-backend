@@ -44,7 +44,7 @@ export class GetCandidateResponseDto {
   @ApiProperty({
     type: [Number],
   })
-  public readonly preferredWorkLocations: number[];
+  public readonly preferredWorkLocationTypes: number[];
 
   @ApiProperty({
     type: [Number],
@@ -69,7 +69,7 @@ export class GetCandidateResponseDto {
     profilePictureUrl: string,
     resumeUrl: string,
     preferredCategories: number[],
-    preferredWorkLocations: number[],
+    preferredWorkLocationTypes: number[],
     preferredStates: number[],
     preferredEmploymentTypes: number[],
     languages: CandidateLanguageListItemDto[],
@@ -81,7 +81,7 @@ export class GetCandidateResponseDto {
     this.profilePictureUrl = profilePictureUrl;
     this.resumeUrl = resumeUrl;
     this.preferredCategories = preferredCategories;
-    this.preferredWorkLocations = preferredWorkLocations;
+    this.preferredWorkLocationTypes = preferredWorkLocationTypes;
     this.preferredStates = preferredStates;
     this.preferredEmploymentTypes = preferredEmploymentTypes;
     this.languages = languages;

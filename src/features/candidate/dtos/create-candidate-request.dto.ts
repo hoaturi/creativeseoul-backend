@@ -85,7 +85,7 @@ export class CreateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
   @ArrayMinSize(1)
-  public preferredWorkLocations: number[];
+  public preferredWorkLocationTypes: number[];
 
   @ApiProperty({
     type: [Number],

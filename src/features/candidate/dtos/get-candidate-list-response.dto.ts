@@ -19,7 +19,7 @@ export class CandidateListItemDto {
   public readonly preferredCategories: number[];
 
   @ApiProperty({ type: [Number] })
-  public readonly preferredWorkLocations: number[];
+  public readonly preferredWorkLocationTypes: number[];
 
   @ApiProperty({ type: [Number] })
   public readonly preferredStates: number[];
@@ -36,7 +36,7 @@ export class CandidateListItemDto {
     bio: string,
     profilePictureUrl: string,
     preferredCategories: number[],
-    preferredWorkLocations: number[],
+    preferredWorkLocationTypes: number[],
     preferredStates: number[],
     preferredEmploymentTypes: number[],
     languages: number[],
@@ -46,7 +46,7 @@ export class CandidateListItemDto {
     this.bio = bio;
     this.profilePictureUrl = profilePictureUrl;
     this.preferredCategories = preferredCategories;
-    this.preferredWorkLocations = preferredWorkLocations;
+    this.preferredWorkLocationTypes = preferredWorkLocationTypes;
     this.preferredStates = preferredStates;
     this.preferredEmploymentTypes = preferredEmploymentTypes;
     this.languages = languages;

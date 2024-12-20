@@ -37,7 +37,7 @@ describe('GetCandidateHandler', () => {
       isAvailable: true,
       user: { id: 'user-id' },
       preferredCategories: { getIdentifiers: () => ['category-1'] },
-      preferredWorkLocations: { getIdentifiers: () => ['location-1'] },
+      preferredWorkLocationTypes: { getIdentifiers: () => ['location-1'] },
       preferredStates: { getIdentifiers: () => ['state-1'] },
       preferredEmploymentTypes: { getIdentifiers: () => ['type-1'] },
       languages: {
@@ -69,7 +69,7 @@ describe('GetCandidateHandler', () => {
         profilePictureUrl: profile.profilePictureUrl,
         resumeUrl: profile.resumeUrl,
         preferredCategories: ['category-1'],
-        preferredWorkLocations: ['location-1'],
+        preferredWorkLocationTypes: ['location-1'],
         preferredStates: ['state-1'],
         preferredEmploymentTypes: ['type-1'],
         languages: [
@@ -142,7 +142,7 @@ function createTestCandidate(params: {
     isAvailable: params.isAvailable,
     user: { id: params.userId || 'default-user' },
     preferredCategories: { getIdentifiers: () => [] },
-    preferredWorkLocations: { getIdentifiers: () => [] },
+    preferredWorkLocationTypes: { getIdentifiers: () => [] },
     preferredStates: { getIdentifiers: () => [] },
     preferredEmploymentTypes: { getIdentifiers: () => [] },
     languages: { getItems: () => [] },

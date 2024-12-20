@@ -29,7 +29,7 @@ export class GetCandidateHandler implements IQueryHandler<GetCandidateQuery> {
         populate: [
           'preferredCategories',
           'preferredEmploymentTypes',
-          'preferredWorkLocations',
+          'preferredWorkLocationTypes',
           'preferredStates',
           'languages',
         ],
@@ -61,7 +61,7 @@ export class GetCandidateHandler implements IQueryHandler<GetCandidateQuery> {
       candidate.profilePictureUrl,
       candidate.resumeUrl,
       candidate.preferredCategories.getIdentifiers(),
-      candidate.preferredWorkLocations.getIdentifiers(),
+      candidate.preferredWorkLocationTypes.getIdentifiers(),
       candidate.preferredStates.getIdentifiers(),
       candidate.preferredEmploymentTypes.getIdentifiers(),
       candidate.languages.getItems().map((language) => {

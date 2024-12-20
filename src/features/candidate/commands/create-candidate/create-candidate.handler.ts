@@ -85,11 +85,11 @@ export class CreateCandidateHandler
   }
 
   private async fetchPreferences(dto: CreateCandidateRequestDto) {
-    const [categories, locations, employmentTypes, states, languages] =
+    const [categories, locationTypes, employmentTypes, states, languages] =
       await Promise.all([
         this.em.find(JobCategory, { id: { $in: dto.preferredCategories } }),
         this.em.find(WorkLocationType, {
-          id: { $in: dto.preferredWorkLocations },
+          id: { $in: dto.preferredWorkLocationTypes },
         }),
         this.em.find(EmploymentType, {
           id: { $in: dto.preferredEmploymentTypes },
@@ -100,7 +100,7 @@ export class CreateCandidateHandler
         }),
       ]);
 
-    return { categories, locations, employmentTypes, states, languages };
+    return { categories, locationTypes, employmentTypes, states, languages };
   }
 
   private async createProfile(
@@ -125,18 +125,18 @@ export class CreateCandidateHandler
     profile: Candidate,
     preferences: {
       categories: JobCategory[];
-      locations: WorkLocationType[];
+      locationTypes: WorkLocationType[];
       employmentTypes: EmploymentType[];
       states: State[];
       languages: Language[];
     },
     dto: CreateCandidateRequestDto,
   ): Promise<void> {
-    const { categories, locations, employmentTypes, states, languages } =
+    const { categories, locationTypes, employmentTypes, states, languages } =
       preferences;
 
     profile.preferredCategories.add(categories);
-    profile.preferredWorkLocations.add(locations);
+    profile.preferredWorkLocationTypes.add(locationTypes);
     profile.preferredEmploymentTypes.add(employmentTypes);
     profile.preferredStates.add(states);
 

@@ -45,7 +45,7 @@ export class Candidate extends BaseEntity {
   public preferredCategories = new Collection<JobCategory>(this);
 
   @ManyToMany(() => WorkLocationType)
-  public preferredWorkLocations = new Collection<WorkLocationType>(this);
+  public preferredWorkLocationTypes = new Collection<WorkLocationType>(this);
 
   @ManyToMany(() => State)
   public preferredStates = new Collection<State>(this);

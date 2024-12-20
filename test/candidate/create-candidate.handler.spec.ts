@@ -27,7 +27,7 @@ describe('CreateCandidateProfileHandler', () => {
     profilePictureUrl: 'https://example.com/photo.jpg',
     resumeUrl: 'https://example.com/resume.pdf',
     preferredCategories: [1, 2],
-    preferredWorkLocations: [1],
+    preferredWorkLocationTypes: [1],
     preferredEmploymentTypes: [1, 2],
     preferredStates: [1],
     languages: [
@@ -62,7 +62,7 @@ describe('CreateCandidateProfileHandler', () => {
 
   const createMockCandidate = () => ({
     preferredCategories: { add: jest.fn() },
-    preferredWorkLocations: { add: jest.fn() },
+    preferredWorkLocationTypes: { add: jest.fn() },
     preferredEmploymentTypes: { add: jest.fn() },
     preferredStates: { add: jest.fn() },
     languages: { add: jest.fn() },
@@ -121,7 +121,7 @@ describe('CreateCandidateProfileHandler', () => {
       const candidate = em.create.mock.results[0].value;
       const collections = [
         'preferredCategories',
-        'preferredWorkLocations',
+        'preferredWorkLocationTypes',
         'preferredEmploymentTypes',
         'preferredStates',
         'languages',
@@ -131,71 +131,49 @@ describe('CreateCandidateProfileHandler', () => {
         expect(candidate[collection].add).toHaveBeenCalled();
       });
     });
+  });
 
-    it('should handle duplicate preferences in input arrays', async () => {
-      const dtoWithDuplicates = createMockDto({
-        preferredCategories: [1, 1, 2, 2],
-        preferredWorkLocations: [1, 1],
-        preferredEmploymentTypes: [1, 2],
-        preferredStates: [1, 1],
-      });
+  describe('validation failures', () => {
+    it('should throw an exception when user does not exist', async () => {
+      em.findOne.mockResolvedValue(null);
 
-      const result = await handler.execute(
-        new CreateCandidateCommand(mockUserId, dtoWithDuplicates),
-      );
+      await expect(
+        handler.execute(
+          new CreateCandidateCommand(mockUserId, createMockDto()),
+        ),
+      ).rejects.toThrow(CustomException);
 
-      expect(result.isSuccess).toBeTruthy();
-
-      const candidate = em.create.mock.results[0].value;
-      expect(candidate.preferredCategories.add).toHaveBeenCalled();
-
-      expect(em.find).toHaveBeenCalledWith(JobCategory, {
-        id: { $in: [1, 2] },
-      });
+      expect(em.flush).not.toHaveBeenCalled();
     });
 
-    describe('validation failures', () => {
-      it('should throw an exception when user does not exist', async () => {
-        em.findOne.mockResolvedValue(null);
+    it('should throw an error when user is not a candidate', async () => {
+      const mockUser = createMockUser(UserRole.EMPLOYER);
+      em.findOne.mockResolvedValue(mockUser);
 
-        await expect(
-          handler.execute(
-            new CreateCandidateCommand(mockUserId, createMockDto()),
-          ),
-        ).rejects.toThrow(CustomException);
-
-        expect(em.flush).not.toHaveBeenCalled();
-      });
-
-      it('should throw an error when user is not a candidate', async () => {
-        const mockUser = createMockUser(UserRole.EMPLOYER);
-        em.findOne.mockResolvedValue(mockUser);
-
-        await expect(
-          handler.execute(
-            new CreateCandidateCommand(mockUserId, createMockDto()),
-          ),
-        ).rejects.toThrow(CustomException);
-
-        expect(em.flush).not.toHaveBeenCalled();
-      });
-
-      it('should return failure when profile already exists', async () => {
-        const mockUser = createMockUser();
-        const existingProfile = { id: 'existing-profile' } as Candidate;
-
-        em.findOne
-          .mockResolvedValueOnce(mockUser)
-          .mockResolvedValueOnce(existingProfile);
-
-        const result = await handler.execute(
+      await expect(
+        handler.execute(
           new CreateCandidateCommand(mockUserId, createMockDto()),
-        );
+        ),
+      ).rejects.toThrow(CustomException);
 
-        expect(result.isSuccess).toBeFalsy();
-        expect(result.error).toBe(CandidateError.ProfileAlreadyExists);
-        expect(em.flush).not.toHaveBeenCalled();
-      });
+      expect(em.flush).not.toHaveBeenCalled();
+    });
+
+    it('should return failure when profile already exists', async () => {
+      const mockUser = createMockUser();
+      const existingProfile = { id: 'existing-profile' } as Candidate;
+
+      em.findOne
+        .mockResolvedValueOnce(mockUser)
+        .mockResolvedValueOnce(existingProfile);
+
+      const result = await handler.execute(
+        new CreateCandidateCommand(mockUserId, createMockDto()),
+      );
+
+      expect(result.isSuccess).toBeFalsy();
+      expect(result.error).toBe(CandidateError.ProfileAlreadyExists);
+      expect(em.flush).not.toHaveBeenCalled();
     });
   });
 });

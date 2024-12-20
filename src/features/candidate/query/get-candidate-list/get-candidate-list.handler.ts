@@ -39,7 +39,7 @@ export class GetCandidateListHandler
     }
 
     if (query.workLocationTypes?.length) {
-      conditions.preferredWorkLocations = { $in: query.workLocationTypes };
+      conditions.preferredWorkLocationTypes = { $in: query.workLocationTypes };
     }
 
     if (query.states?.length) {
@@ -56,7 +56,7 @@ export class GetCandidateListHandler
       {
         populate: [
           'preferredCategories',
-          'preferredWorkLocations',
+          'preferredWorkLocationTypes',
           'preferredStates',
           'preferredEmploymentTypes',
           'languages',
@@ -84,7 +84,7 @@ export class GetCandidateListHandler
         c.bio,
         c.profilePictureUrl,
         c.preferredCategories.getIdentifiers(),
-        c.preferredWorkLocations.getIdentifiers(),
+        c.preferredWorkLocationTypes.getIdentifiers(),
         c.preferredStates.getIdentifiers(),
         c.preferredEmploymentTypes.getIdentifiers(),
         c.languages.map((l) => l.language.id),

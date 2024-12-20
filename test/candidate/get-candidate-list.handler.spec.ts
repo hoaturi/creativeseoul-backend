@@ -32,7 +32,7 @@ describe('GetCandidateListHandler', () => {
     preferredCategories: {
       getIdentifiers: () => [1],
     } as unknown as Collection<any>,
-    preferredWorkLocations: {
+    preferredWorkLocationTypes: {
       getIdentifiers: () => [1],
     } as unknown as Collection<any>,
     preferredStates: {
@@ -133,7 +133,7 @@ describe('GetCandidateListHandler', () => {
     expect(response.total).toBe(1);
     const candidate = response.candidates[0];
     expect(candidate.preferredCategories).toContain(1);
-    expect(candidate.preferredWorkLocations).toContain(1);
+    expect(candidate.preferredWorkLocationTypes).toContain(1);
     expect(candidate.languages).toContain(1);
   });
 
@@ -157,7 +157,9 @@ describe('GetCandidateListHandler', () => {
         preferredCategories: expect.arrayContaining([expect.any(Number)]),
         preferredEmploymentTypes: expect.arrayContaining([expect.any(Number)]),
         preferredStates: expect.arrayContaining([expect.any(Number)]),
-        preferredWorkLocations: expect.arrayContaining([expect.any(Number)]),
+        preferredWorkLocationTypes: expect.arrayContaining([
+          expect.any(Number),
+        ]),
         languages: expect.arrayContaining([expect.any(Number)]),
       }),
     );
