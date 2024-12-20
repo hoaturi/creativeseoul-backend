@@ -1,7 +1,5 @@
-import { CreateCandidateHandler } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
-import { CreateCandidateCommand } from '../../src/features/candidate/commands/create-cnadidate-profile/create-candidate.command';
 import { User, UserRole } from '../../src/domain/user/user.entity';
 import { JobCategory } from '../../src/domain/common/entities/job-category.entity';
 import { WorkLocationType } from '../../src/domain/common/entities/work-location-type.entity';
@@ -12,6 +10,8 @@ import { CustomException } from '../../src/common/exceptions/custom.exception';
 import { CandidateError } from '../../src/features/candidate/candidate.error';
 import { Candidate } from '../../src/domain/candidate/candidate.entity';
 import { State } from '../../src/domain/common/entities/state.entity';
+import { CreateCandidateHandler } from '../../src/features/candidate/commands/create-candidate/create-candidate.handler';
+import { CreateCandidateCommand } from '../../src/features/candidate/commands/create-candidate/create-candidate.command';
 
 describe('CreateCandidateProfileHandler', () => {
   let handler: CreateCandidateHandler;
@@ -30,8 +30,8 @@ describe('CreateCandidateProfileHandler', () => {
     preferredEmploymentTypes: [1, 2],
     preferredStates: [1],
     languages: [
-      { languageId: 1, proficiency: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
-      { languageId: 2, proficiency: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
+      { languageId: 1, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
+      { languageId: 2, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
     ],
   };
 
@@ -172,8 +172,11 @@ describe('CreateCandidateProfileHandler', () => {
       preferredEmploymentTypes: [1, 2],
       preferredStates: [1, 1],
       languages: [
-        { languageId: 1, proficiency: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
-        { languageId: 1, proficiency: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
+        {
+          languageId: 1,
+          proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED,
+        },
+        { languageId: 1, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
       ],
     };
 
