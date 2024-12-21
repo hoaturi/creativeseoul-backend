@@ -3,11 +3,48 @@ import { Test } from '@nestjs/testing';
 import { GetCandidateHandler } from '../../src/features/candidate/query/get-candidate/get-candidate.handler';
 import { GetCandidateQuery } from '../../src/features/candidate/query/get-candidate/get-candidate.query';
 import { CandidateError } from '../../src/features/candidate/candidate.error';
-import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
+import { ReferenceDataDto } from '../../src/features/common/dtos/reference-data.dto';
+import { LanguageWithLevelDto } from '../../src/features/common/dtos/language-with-level.dto';
 
 describe('GetCandidateHandler', () => {
   let handler: GetCandidateHandler;
   let em: jest.Mocked<EntityManager>;
+
+  const defaultReferenceData = {
+    category: new ReferenceDataDto(1, 'Engineering', 'engineering'),
+    workLocationType: new ReferenceDataDto(1, 'Remote', 'remote'),
+    state: new ReferenceDataDto(1, 'Seoul', 'seoul'),
+    employmentType: new ReferenceDataDto(1, 'FullTime', 'full-time'),
+    language: new LanguageWithLevelDto(1, 'English', 'english', 5),
+  };
+
+  const createMockCandidate = (
+    params: { isAvailable?: boolean; userId?: string } = {},
+  ) => ({
+    id: 'test-id',
+    fullName: 'John Doe',
+    title: 'Software Engineer',
+    bio: 'Test bio',
+    profilePictureUrl: 'test-url',
+    resumeUrl: 'test-resume',
+    isAvailable: params.isAvailable ?? true,
+    user: { id: params.userId || 'default-user' },
+    preferredCategories: {
+      getItems: () => [defaultReferenceData.category],
+    },
+    preferredWorkLocationTypes: {
+      getItems: () => [defaultReferenceData.workLocationType],
+    },
+    preferredStates: {
+      getItems: () => [defaultReferenceData.state],
+    },
+    preferredEmploymentTypes: {
+      getItems: () => [defaultReferenceData.employmentType],
+    },
+    languages: {
+      getItems: () => [{ language: defaultReferenceData.language, level: 5 }],
+    },
+  });
 
   beforeEach(async () => {
     const mockEm = {
@@ -25,126 +62,78 @@ describe('GetCandidateHandler', () => {
     em = module.get<jest.Mocked<EntityManager>>(EntityManager);
   });
 
-  it('should return all required profile fields', async () => {
-    // Arrange
-    const profile = {
-      id: 'test-id',
-      fullName: 'John Doe',
-      title: 'Software Engineer',
-      bio: 'Test bio',
-      profilePictureUrl: 'test-url',
-      resumeUrl: 'test-resume',
-      isAvailable: true,
-      user: { id: 'user-id' },
-      preferredCategories: { getIdentifiers: () => ['category-1'] },
-      preferredWorkLocationTypes: { getIdentifiers: () => ['location-1'] },
-      preferredStates: { getIdentifiers: () => ['state-1'] },
-      preferredEmploymentTypes: { getIdentifiers: () => ['type-1'] },
-      languages: {
-        getItems: () => [
-          {
-            language: { id: 1 },
-            proficiencyLevel: LANGUAGE_LEVELS.ADVANCED,
-          },
-        ],
-      },
-    };
-    em.findOne.mockResolvedValue(profile);
+  const setupMockResponse = (
+    candidate: ReturnType<typeof createMockCandidate> | null,
+  ) => {
+    em.findOne.mockResolvedValue(candidate);
+  };
 
-    // Act
+  it('should return all required profile fields', async () => {
+    const mockCandidate = createMockCandidate();
+    setupMockResponse(mockCandidate);
+
     const result = await handler.execute(
       new GetCandidateQuery('test-id', 'user-id'),
     );
 
-    // Assert
-    expect(result.isSuccess).toBeTruthy();
-    const responseDto = result.value;
+    expect(result.isSuccess).toBe(true);
+    const response = result.value;
 
-    expect(responseDto).toEqual(
+    expect(response).toEqual(
       expect.objectContaining({
-        id: profile.id,
-        fullName: profile.fullName,
-        title: profile.title,
-        bio: profile.bio,
-        profilePictureUrl: profile.profilePictureUrl,
-        resumeUrl: profile.resumeUrl,
-        preferredCategories: ['category-1'],
-        preferredWorkLocationTypes: ['location-1'],
-        preferredStates: ['state-1'],
-        preferredEmploymentTypes: ['type-1'],
-        languages: [
-          {
-            languageId: 1,
-            proficiencyLevel: LANGUAGE_LEVELS.ADVANCED,
-          },
-        ],
+        id: mockCandidate.id,
+        fullName: mockCandidate.fullName,
+        title: mockCandidate.title,
+        bio: mockCandidate.bio,
+        profilePictureUrl: mockCandidate.profilePictureUrl,
+        resumeUrl: mockCandidate.resumeUrl,
+        preferredCategories: [defaultReferenceData.category],
+        preferredWorkLocationTypes: [defaultReferenceData.workLocationType],
+        preferredStates: [defaultReferenceData.state],
+        preferredEmploymentTypes: [defaultReferenceData.employmentType],
+        languages: [defaultReferenceData.language],
       }),
     );
   });
 
   it('should not allow viewing an unavailable profile as a different user', async () => {
-    // Arrange
-    const unavailableProfile = createTestCandidate({
+    const unavailableProfile = createMockCandidate({
       isAvailable: false,
       userId: 'owner-id',
     });
-    em.findOne.mockResolvedValue(unavailableProfile);
+    setupMockResponse(unavailableProfile);
 
-    // Act
     const result = await handler.execute(
       new GetCandidateQuery('any-id', 'different-user'),
     );
 
-    // Assert
-    expect(result.isSuccess).toBeFalsy();
+    expect(result.isSuccess).toBe(false);
     expect(result.error).toBe(CandidateError.ProfileNotAvailable);
   });
 
   it('should allow owners to view their unavailable profile', async () => {
-    // Arrange
     const ownerId = 'owner-id';
-    const unavailableProfile = createTestCandidate({
+    const unavailableProfile = createMockCandidate({
       isAvailable: false,
       userId: ownerId,
     });
-    em.findOne.mockResolvedValue(unavailableProfile);
+    setupMockResponse(unavailableProfile);
 
-    // Act
     const result = await handler.execute(
       new GetCandidateQuery('any-id', ownerId),
     );
 
-    // Assert
-    expect(result.isSuccess).toBeTruthy();
+    expect(result.isSuccess).toBe(true);
   });
 
   it('should handle non-existent profiles', async () => {
-    // Arrange
-    em.findOne.mockResolvedValue(null);
+    setupMockResponse(null);
 
-    // Act
     const result = await handler.execute(
       new GetCandidateQuery('non-existent', 'any-user'),
     );
 
-    // Assert
-    expect(result.isSuccess).toBeFalsy();
+    expect(result.isSuccess).toBe(false);
     expect(result.error).toBe(CandidateError.ProfileNotFound);
   });
 });
-
-function createTestCandidate(params: {
-  isAvailable: boolean;
-  userId?: string;
-}) {
-  return {
-    id: 'test-id',
-    isAvailable: params.isAvailable,
-    user: { id: params.userId || 'default-user' },
-    preferredCategories: { getIdentifiers: () => [] },
-    preferredWorkLocationTypes: { getIdentifiers: () => [] },
-    preferredStates: { getIdentifiers: () => [] },
-    preferredEmploymentTypes: { getIdentifiers: () => [] },
-    languages: { getItems: () => [] },
-  };
-}

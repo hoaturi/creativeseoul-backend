@@ -1,4 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { WorkLocationType } from '../../../domain/common/entities/work-location-type.entity';
+import { JobCategory } from '../../../domain/common/entities/job-category.entity';
+import { State } from '../../../domain/common/entities/state.entity';
+import { EmploymentType } from '../../../domain/common/entities/employment-type.entity';
+import { ReferenceDataDto } from '../../common/dtos/reference-data.dto';
+import { LanguageWithLevelDto } from '../../common/dtos/language-with-level.dto';
 
 export class CandidateListItemDto {
   @ApiProperty()
@@ -15,31 +21,31 @@ export class CandidateListItemDto {
   })
   public readonly profilePictureUrl?: string;
 
-  @ApiProperty({ type: [Number] })
-  public readonly preferredCategories: number[];
+  @ApiProperty({ type: [ReferenceDataDto] })
+  public readonly preferredCategories: ReferenceDataDto[];
 
-  @ApiProperty({ type: [Number] })
-  public readonly preferredWorkLocationTypes: number[];
+  @ApiProperty({ type: [ReferenceDataDto] })
+  public readonly preferredWorkLocationTypes: ReferenceDataDto[];
 
-  @ApiProperty({ type: [Number] })
-  public readonly preferredStates: number[];
+  @ApiProperty({ type: [ReferenceDataDto] })
+  public readonly preferredStates: ReferenceDataDto[];
 
-  @ApiProperty({ type: [Number] })
-  public readonly preferredEmploymentTypes: number[];
+  @ApiProperty({ type: [ReferenceDataDto] })
+  public readonly preferredEmploymentTypes: ReferenceDataDto[];
 
-  @ApiProperty({ type: [Number] })
-  public readonly languages: number[];
+  @ApiProperty({ type: [LanguageWithLevelDto] })
+  public readonly languages: LanguageWithLevelDto[];
 
   public constructor(
     id: string,
     title: string,
     bio: string,
     profilePictureUrl: string,
-    preferredCategories: number[],
-    preferredWorkLocationTypes: number[],
-    preferredStates: number[],
-    preferredEmploymentTypes: number[],
-    languages: number[],
+    preferredCategories: JobCategory[],
+    preferredWorkLocationTypes: WorkLocationType[],
+    preferredStates: State[],
+    preferredEmploymentTypes: EmploymentType[],
+    languages: LanguageWithLevelDto[],
   ) {
     this.id = id;
     this.title = title;

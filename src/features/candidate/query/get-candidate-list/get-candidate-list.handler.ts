@@ -8,6 +8,8 @@ import {
 import { ResultError } from '../../../../common/result/result-error';
 import { EntityManager, FilterQuery } from '@mikro-orm/postgresql';
 import { Candidate } from '../../../../domain/candidate/candidate.entity';
+import { LanguageWithLevelDto } from '../../../common/dtos/language-with-level.dto';
+import { ReferenceDataDto } from '../../../common/dtos/reference-data.dto';
 
 @QueryHandler(GetCandidateListQuery)
 export class GetCandidateListHandler
@@ -74,20 +76,44 @@ export class GetCandidateListHandler
     );
   }
 
+  private mapToReferenceDataDto(entity: {
+    id: number;
+    name: string;
+    slug: string;
+  }): ReferenceDataDto {
+    return new ReferenceDataDto(entity.id, entity.name, entity.slug);
+  }
+
   private mapCandidateToDto(
-    candidate: Partial<Candidate>[],
+    candidates: Partial<Candidate>[],
   ): CandidateListItemDto[] {
-    return candidate.map((c) => {
+    return candidates.map((candidate) => {
       return new CandidateListItemDto(
-        c.id,
-        c.title,
-        c.bio,
-        c.profilePictureUrl,
-        c.preferredCategories.getIdentifiers(),
-        c.preferredWorkLocationTypes.getIdentifiers(),
-        c.preferredStates.getIdentifiers(),
-        c.preferredEmploymentTypes.getIdentifiers(),
-        c.languages.map((l) => l.language.id),
+        candidate.id,
+        candidate.title,
+        candidate.bio,
+        candidate.profilePictureUrl,
+        candidate.preferredCategories
+          .getItems()
+          .map(this.mapToReferenceDataDto),
+        candidate.preferredWorkLocationTypes
+          .getItems()
+          .map(this.mapToReferenceDataDto),
+        candidate.preferredStates.getItems().map(this.mapToReferenceDataDto),
+        candidate.preferredEmploymentTypes
+          .getItems()
+          .map(this.mapToReferenceDataDto),
+        candidate.languages
+          .getItems()
+          .map(
+            (lang) =>
+              new LanguageWithLevelDto(
+                lang.language.id,
+                lang.language.name,
+                lang.language.slug,
+                lang.level,
+              ),
+          ),
       );
     });
   }

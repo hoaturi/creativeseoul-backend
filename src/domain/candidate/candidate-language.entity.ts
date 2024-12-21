@@ -17,15 +17,11 @@ export class CandidateLanguage {
   public language!: Language;
 
   @Enum(() => LANGUAGE_LEVELS)
-  public proficiencyLevel!: number;
+  public level!: number;
 
-  public constructor(
-    candidate: Candidate,
-    language: Language,
-    proficiencyLevel: number,
-  ) {
+  public constructor(candidate: Candidate, language: Language, level: number) {
     this.candidate = candidate;
     this.language = language;
-    this.proficiencyLevel = proficiencyLevel;
+    this.level = level;
   }
 }

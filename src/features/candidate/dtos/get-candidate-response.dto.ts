@@ -1,17 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-export class CandidateLanguageListItemDto {
-  @ApiProperty()
-  public readonly languageId: number;
-
-  @ApiProperty()
-  public readonly proficiencyLevel: number;
-
-  public constructor(languageId: number, proficiency: number) {
-    this.languageId = languageId;
-    this.proficiencyLevel = proficiency;
-  }
-}
+import { ReferenceDataDto } from '../../common/dtos/reference-data.dto';
+import { LanguageWithLevelDto } from '../../common/dtos/language-with-level.dto';
 
 export class GetCandidateResponseDto {
   @ApiProperty()
@@ -37,29 +26,29 @@ export class GetCandidateResponseDto {
   public readonly resumeUrl?: string;
 
   @ApiProperty({
-    type: [Number],
+    type: [ReferenceDataDto],
   })
-  public readonly preferredCategories: number[];
+  public readonly preferredCategories: ReferenceDataDto[];
 
   @ApiProperty({
-    type: [Number],
+    type: [ReferenceDataDto],
   })
-  public readonly preferredWorkLocationTypes: number[];
+  public readonly preferredWorkLocationTypes: ReferenceDataDto[];
 
   @ApiProperty({
-    type: [Number],
+    type: [ReferenceDataDto],
   })
-  public readonly preferredStates: number[];
+  public readonly preferredStates: ReferenceDataDto[];
 
   @ApiProperty({
-    type: [Number],
+    type: [ReferenceDataDto],
   })
-  public readonly preferredEmploymentTypes: number[];
+  public readonly preferredEmploymentTypes: ReferenceDataDto[];
 
   @ApiProperty({
-    type: [CandidateLanguageListItemDto],
+    type: [LanguageWithLevelDto],
   })
-  public readonly languages: CandidateLanguageListItemDto[];
+  public readonly languages: LanguageWithLevelDto[];
 
   public constructor(
     id: string,
@@ -68,11 +57,11 @@ export class GetCandidateResponseDto {
     bio: string,
     profilePictureUrl: string,
     resumeUrl: string,
-    preferredCategories: number[],
-    preferredWorkLocationTypes: number[],
-    preferredStates: number[],
-    preferredEmploymentTypes: number[],
-    languages: CandidateLanguageListItemDto[],
+    preferredCategories: ReferenceDataDto[],
+    preferredWorkLocationTypes: ReferenceDataDto[],
+    preferredStates: ReferenceDataDto[],
+    preferredEmploymentTypes: ReferenceDataDto[],
+    languages: LanguageWithLevelDto[],
   ) {
     this.id = id;
     this.fullName = fullName;

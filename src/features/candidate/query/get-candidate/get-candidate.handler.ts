@@ -1,15 +1,14 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetCandidateQuery } from './get-candidate.query';
 import { EntityManager } from '@mikro-orm/postgresql';
-import {
-  CandidateLanguageListItemDto,
-  GetCandidateResponseDto,
-} from '../../dtos/get-candidate-response.dto';
+import { GetCandidateResponseDto } from '../../dtos/get-candidate-response.dto';
 import { Candidate } from '../../../../domain/candidate/candidate.entity';
 import { CandidateError } from '../../candidate.error';
 import { Logger } from '@nestjs/common';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
+import { ReferenceDataDto } from '../../../common/dtos/reference-data.dto';
+import { LanguageWithLevelDto } from '../../../common/dtos/language-with-level.dto';
 
 @QueryHandler(GetCandidateQuery)
 export class GetCandidateHandler implements IQueryHandler<GetCandidateQuery> {
@@ -31,7 +30,7 @@ export class GetCandidateHandler implements IQueryHandler<GetCandidateQuery> {
           'preferredEmploymentTypes',
           'preferredWorkLocationTypes',
           'preferredStates',
-          'languages',
+          'languages.language',
         ],
       },
     );
@@ -52,6 +51,14 @@ export class GetCandidateHandler implements IQueryHandler<GetCandidateQuery> {
     return Result.success(this.mapCandidateToDto(candidate));
   }
 
+  private mapToReferenceDataDto(entity: {
+    id: number;
+    name: string;
+    slug: string;
+  }): ReferenceDataDto {
+    return new ReferenceDataDto(entity.id, entity.name, entity.slug);
+  }
+
   private mapCandidateToDto(candidate: Candidate): GetCandidateResponseDto {
     return new GetCandidateResponseDto(
       candidate.id,
@@ -60,16 +67,25 @@ export class GetCandidateHandler implements IQueryHandler<GetCandidateQuery> {
       candidate.bio,
       candidate.profilePictureUrl,
       candidate.resumeUrl,
-      candidate.preferredCategories.getIdentifiers(),
-      candidate.preferredWorkLocationTypes.getIdentifiers(),
-      candidate.preferredStates.getIdentifiers(),
-      candidate.preferredEmploymentTypes.getIdentifiers(),
-      candidate.languages.getItems().map((language) => {
-        return new CandidateLanguageListItemDto(
-          language.language.id,
-          language.proficiencyLevel,
-        );
-      }),
+      candidate.preferredCategories.getItems().map(this.mapToReferenceDataDto),
+      candidate.preferredWorkLocationTypes
+        .getItems()
+        .map(this.mapToReferenceDataDto),
+      candidate.preferredStates.getItems().map(this.mapToReferenceDataDto),
+      candidate.preferredEmploymentTypes
+        .getItems()
+        .map(this.mapToReferenceDataDto),
+      candidate.languages
+        .getItems()
+        .map(
+          (lang) =>
+            new LanguageWithLevelDto(
+              lang.language.id,
+              lang.language.name,
+              lang.language.slug,
+              lang.level,
+            ),
+        ),
     );
   }
 }
