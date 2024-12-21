@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 
 @UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
-@Controller('user')
+@Controller('users')
 export class UserController {
   public constructor(
     private readonly commandBus: CommandBus,

@@ -38,7 +38,7 @@ import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 import { UpdateCandidateCommand } from './commands/update-candidate/update-candidate.command';
 import { UpdateCandidateRequestDto } from './dtos/update-candidate-request.dto';
 
-@Controller('candidate')
+@Controller('candidates')
 export class CandidateController {
   public constructor(
     private readonly commandBus: CommandBus,
