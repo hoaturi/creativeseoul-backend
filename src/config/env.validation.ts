@@ -18,7 +18,22 @@ class EnvironmentVariables {
   public readonly AWS_SECRET_ACCESS_KEY: string;
 
   @IsString()
-  public readonly AWS_BUCKET_NAME: string;
+  public readonly CLOUDFLARE_R2_TOKEN: string;
+
+  @IsString()
+  public readonly CLOUDFLARE_R2_ACCESS_KEY: string;
+
+  @IsString()
+  public readonly CLOUDFLARE_R2_SECRET_ACCESS_KEY: string;
+
+  @IsString()
+  public readonly CLOUDFLARE_R2_ENDPOINT: string;
+
+  @IsString()
+  public readonly CLOUDFLARE_R2_BUCKET: string;
+
+  @IsString()
+  public readonly CLOUDFLARE_R2_REGION: string;
 
   @IsString()
   public readonly EMAIL_FROM: string;

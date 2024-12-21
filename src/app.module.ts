@@ -15,6 +15,7 @@ import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
 import { CandidateModule } from './features/candidate/candidate.module';
+import { UploadModule } from './features/upload/upload.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { CandidateModule } from './features/candidate/candidate.module';
     AuthModule,
     UserModule,
     CandidateModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailProcessor],
