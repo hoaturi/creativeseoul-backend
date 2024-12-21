@@ -16,7 +16,7 @@ import {
   VALID_EMPLOYMENT_TYPE_IDS,
   VALID_JOB_CATEGORY_IDS,
   VALID_LANGUAGE_IDS,
-  VALID_LANGUAGE_PROFICIENCY_LEVEL_IDS,
+  VALID_LANGUAGE_LEVEL_IDS,
   VALID_STATE_IDS,
   VALID_WORK_LOCATION_TYPE_IDS,
 } from '../../../domain/common/constants';
@@ -32,8 +32,8 @@ export class LanguageDto {
 
   @ApiProperty()
   @IsNumber()
-  @IsIn(VALID_LANGUAGE_PROFICIENCY_LEVEL_IDS)
-  public proficiencyLevel: number;
+  @IsIn(VALID_LANGUAGE_LEVEL_IDS)
+  public level: number;
 }
 
 export class CreateCandidateRequestDto {
@@ -75,7 +75,7 @@ export class CreateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_JOB_CATEGORY_IDS, { each: true })
   @ArrayMinSize(1)
-  public preferredCategories: number[];
+  public preferredCategoryIds: number[];
 
   @ApiProperty({
     type: [Number],
@@ -85,7 +85,7 @@ export class CreateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
   @ArrayMinSize(1)
-  public preferredWorkLocationTypes: number[];
+  public preferredWorkLocationTypeIds: number[];
 
   @ApiProperty({
     type: [Number],
@@ -95,7 +95,7 @@ export class CreateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_STATE_IDS, { each: true })
   @ArrayMinSize(1)
-  public preferredStates: number[];
+  public preferredStateIds: number[];
 
   @ApiProperty({
     type: [Number],
@@ -105,7 +105,7 @@ export class CreateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_EMPLOYMENT_TYPE_IDS, { each: true })
   @ArrayMinSize(1)
-  public preferredEmploymentTypes: number[];
+  public preferredEmploymentTypeIds: number[];
 
   @ApiProperty({ type: [LanguageDto] })
   @IsArray()

@@ -89,14 +89,14 @@ export class CreateCandidateHandler
   private async fetchPreferences(dto: CreateCandidateRequestDto) {
     const [categories, locationTypes, employmentTypes, states, languages] =
       await Promise.all([
-        this.em.find(JobCategory, { id: { $in: dto.preferredCategories } }),
+        this.em.find(JobCategory, { id: { $in: dto.preferredCategoryIds } }),
         this.em.find(WorkLocationType, {
-          id: { $in: dto.preferredWorkLocationTypes },
+          id: { $in: dto.preferredWorkLocationTypeIds },
         }),
         this.em.find(EmploymentType, {
-          id: { $in: dto.preferredEmploymentTypes },
+          id: { $in: dto.preferredEmploymentTypeIds },
         }),
-        this.em.find(State, { id: { $in: dto.preferredStates } }),
+        this.em.find(State, { id: { $in: dto.preferredStateIds } }),
         this.em.find(Language, {
           id: { $in: dto.languages.map((lang) => lang.languageId) },
         }),
@@ -146,7 +146,7 @@ export class CreateCandidateHandler
       const langDto = dto.languages.find(
         (lang) => lang.languageId === language.id,
       );
-      return new CandidateLanguage(profile, language, langDto.proficiencyLevel);
+      return new CandidateLanguage(profile, language, langDto.level);
     });
 
     profile.languages.add(candidateLanguages);

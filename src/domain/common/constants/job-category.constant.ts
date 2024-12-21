@@ -1,68 +1,48 @@
 export const JOB_CATEGORIES = [
   {
     id: 1,
-    name: 'Admin & Office',
-    slug: 'admin-office',
+    name: 'Creative & Design',
+    slug: 'creative-design',
   },
   {
     id: 2,
-    name: 'Au Pair & Home Help',
-    slug: 'au-pair-home-help',
+    name: 'Marketing',
+    slug: 'marketing',
   },
   {
     id: 3,
-    name: 'Customer Service',
-    slug: 'customer-service',
+    name: 'Content',
+    slug: 'content',
   },
   {
     id: 4,
-    name: 'Digital & Creative',
-    slug: 'digital-creative',
+    name: 'Engineering',
+    slug: 'engineering',
   },
   {
     id: 5,
-    name: 'Events & Promotions',
-    slug: 'events-promotions',
+    name: 'Product',
+    slug: 'product',
   },
   {
     id: 6,
-    name: 'Food & Beverage',
-    slug: 'food-beverage',
+    name: 'Animation & 3D',
+    slug: 'animation-3d',
   },
   {
     id: 7,
-    name: 'Healthcare',
-    slug: 'healthcare',
+    name: 'Visual Media',
+    slug: 'visual-media',
   },
   {
     id: 8,
-    name: 'Hospitality',
-    slug: 'hospitality',
+    name: 'Data',
+    slug: 'data',
   },
   {
     id: 9,
-    name: 'IT & Technology',
-    slug: 'it-technology',
-  },
-  {
-    id: 10,
-    name: 'Labourer & Trades',
-    slug: 'labourer-trades',
-  },
-  {
-    id: 11,
-    name: 'Retail & Sales',
-    slug: 'retail-sales',
-  },
-  {
-    id: 12,
-    name: 'Teaching & Education',
-    slug: 'teaching-education',
-  },
-  {
-    id: 13,
-    name: 'Tourism',
-    slug: 'tourism',
+    name: 'Music & Sound',
+    slug: 'music-sound',
   },
 ] as const;
 

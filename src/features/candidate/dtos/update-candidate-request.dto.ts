@@ -72,7 +72,7 @@ export class UpdateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_JOB_CATEGORY_IDS, { each: true })
   @ArrayMinSize(1)
-  public readonly preferredCategories?: number[];
+  public readonly preferredCategoryIds?: number[];
 
   @ApiProperty({
     required: false,
@@ -84,7 +84,7 @@ export class UpdateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_WORK_LOCATION_TYPE_IDS, { each: true })
   @ArrayMinSize(1)
-  public readonly preferredWorkLocationTypes?: number[];
+  public readonly preferredWorkLocationTypeIds?: number[];
 
   @ApiProperty({
     required: false,
@@ -96,7 +96,19 @@ export class UpdateCandidateRequestDto {
   @IsNumber({}, { each: true })
   @IsIn(VALID_STATE_IDS, { each: true })
   @ArrayMinSize(1)
-  public readonly preferredStates?: number[];
+  public readonly preferredStateIds?: number[];
+
+  @ApiProperty({
+    required: false,
+    type: [Number],
+  })
+  @IsOptional()
+  @IsArray()
+  @RemoveDuplicates()
+  @IsNumber({}, { each: true })
+  @IsIn(VALID_EMPLOYMENT_TYPE_IDS, { each: true })
+  @ArrayMinSize(1)
+  public readonly preferredEmploymentTypeIds?: number[];
 
   @ApiProperty({
     required: false,
@@ -109,18 +121,6 @@ export class UpdateCandidateRequestDto {
   @ArrayMinSize(1)
   @HasUniqueLanguages()
   public readonly languages?: LanguageDto[];
-
-  @ApiProperty({
-    required: false,
-    type: [Number],
-  })
-  @IsOptional()
-  @IsArray()
-  @RemoveDuplicates()
-  @IsNumber({}, { each: true })
-  @IsIn(VALID_EMPLOYMENT_TYPE_IDS, { each: true })
-  @ArrayMinSize(1)
-  public readonly preferredEmploymentTypes?: number[];
 
   @ApiProperty({
     required: false,

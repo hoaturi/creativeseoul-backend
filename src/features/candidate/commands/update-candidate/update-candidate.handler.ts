@@ -120,22 +120,22 @@ export class UpdateCandidateHandler
     const preferenceUpdates = [
       {
         collection: candidate.preferredCategories,
-        ids: dto.preferredCategories,
+        ids: dto.preferredCategoryIds,
         entity: JobCategory,
       },
       {
         collection: candidate.preferredWorkLocationTypes,
-        ids: dto.preferredWorkLocationTypes,
+        ids: dto.preferredWorkLocationTypeIds,
         entity: WorkLocationType,
       },
       {
         collection: candidate.preferredStates,
-        ids: dto.preferredStates,
+        ids: dto.preferredStateIds,
         entity: State,
       },
       {
         collection: candidate.preferredEmploymentTypes,
-        ids: dto.preferredEmploymentTypes,
+        ids: dto.preferredEmploymentTypeIds,
         entity: EmploymentType,
       },
     ];
@@ -165,7 +165,7 @@ export class UpdateCandidateHandler
       const candidateLanguage = new CandidateLanguage(
         candidate,
         languageRef,
-        lang.proficiencyLevel,
+        lang.level,
       );
 
       return this.em.create(CandidateLanguage, candidateLanguage);

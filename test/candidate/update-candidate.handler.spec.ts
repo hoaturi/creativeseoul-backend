@@ -1,4 +1,4 @@
-import { LANGUAGE_PROFICIENCY_LEVELS } from '../../src/domain/common/constants';
+import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
 import { UpdateCandidateHandler } from '../../src/features/candidate/commands/update-candidate/update-candidate.handler';
 import { Collection, EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
@@ -30,13 +30,13 @@ describe('UpdateCandidateHandler', () => {
     isAvailable: true,
     profilePictureUrl: 'https://example.com/photo.jpg',
     resumeUrl: 'https://example.com/resume.pdf',
-    preferredCategories: [1, 2],
-    preferredWorkLocationTypes: [1],
-    preferredEmploymentTypes: [1, 2],
-    preferredStates: [1],
+    preferredCategoryIds: [1, 2],
+    preferredWorkLocationTypeIds: [1],
+    preferredEmploymentTypeIds: [1, 2],
+    preferredStateIds: [1],
     languages: [
-      { languageId: 1, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
-      { languageId: 2, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
+      { languageId: 1, level: LANGUAGE_LEVELS.FLUENT },
+      { languageId: 2, level: LANGUAGE_LEVELS.NATIVE },
     ],
     ...partial,
   });

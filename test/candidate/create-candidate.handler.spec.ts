@@ -5,7 +5,7 @@ import { JobCategory } from '../../src/domain/common/entities/job-category.entit
 import { WorkLocationType } from '../../src/domain/common/entities/work-location-type.entity';
 import { EmploymentType } from '../../src/domain/common/entities/employment-type.entity';
 import { Language } from '../../src/domain/common/entities/language.entity';
-import { LANGUAGE_PROFICIENCY_LEVELS } from '../../src/domain/common/constants';
+import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
 import { CustomException } from '../../src/common/exceptions/custom.exception';
 import { CandidateError } from '../../src/features/candidate/candidate.error';
 import { Candidate } from '../../src/domain/candidate/candidate.entity';
@@ -26,13 +26,13 @@ describe('CreateCandidateProfileHandler', () => {
     isAvailable: true,
     profilePictureUrl: 'https://example.com/photo.jpg',
     resumeUrl: 'https://example.com/resume.pdf',
-    preferredCategories: [1, 2],
-    preferredWorkLocationTypes: [1],
-    preferredEmploymentTypes: [1, 2],
-    preferredStates: [1],
+    preferredCategoryIds: [1, 2],
+    preferredWorkLocationTypeIds: [1],
+    preferredEmploymentTypeIds: [1, 2],
+    preferredStateIds: [1],
     languages: [
-      { languageId: 1, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED },
-      { languageId: 2, proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.NATIVE },
+      { languageId: 1, level: LANGUAGE_LEVELS.FLUENT },
+      { languageId: 2, level: LANGUAGE_LEVELS.NATIVE },
     ],
     ...partial,
   });

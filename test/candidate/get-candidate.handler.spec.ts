@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { GetCandidateHandler } from '../../src/features/candidate/query/get-candidate/get-candidate.handler';
 import { GetCandidateQuery } from '../../src/features/candidate/query/get-candidate/get-candidate.query';
 import { CandidateError } from '../../src/features/candidate/candidate.error';
-import { LANGUAGE_PROFICIENCY_LEVELS } from '../../src/domain/common/constants';
+import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
 
 describe('GetCandidateHandler', () => {
   let handler: GetCandidateHandler;
@@ -44,7 +44,7 @@ describe('GetCandidateHandler', () => {
         getItems: () => [
           {
             language: { id: 1 },
-            proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED,
+            proficiencyLevel: LANGUAGE_LEVELS.ADVANCED,
           },
         ],
       },
@@ -75,7 +75,7 @@ describe('GetCandidateHandler', () => {
         languages: [
           {
             languageId: 1,
-            proficiencyLevel: LANGUAGE_PROFICIENCY_LEVELS.ADVANCED,
+            proficiencyLevel: LANGUAGE_LEVELS.ADVANCED,
           },
         ],
       }),
