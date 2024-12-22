@@ -5,5 +5,3 @@ export const LANGUAGE_LEVELS = {
   FLUENT: 4,
   NATIVE: 5,
 } as const;
-
-export const VALID_LANGUAGE_LEVEL_IDS = Object.values(LANGUAGE_LEVELS);

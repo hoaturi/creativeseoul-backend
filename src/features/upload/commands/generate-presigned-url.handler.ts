@@ -5,11 +5,11 @@ import {
 } from './generate-presigned-url.command';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../common/result/result';
-import { Candidate } from '../../../domain/candidate/candidate.entity';
-import { CandidateError } from '../../candidate/candidate.error';
 import { StorageService } from '../../../infrastructure/services/storage/storage.service';
 import { GeneratePresignedUrlResponseDto } from '../dtos/generate-presigned-url-response.dto';
 import { ResultError } from '../../../common/result/result-error';
+import { Member } from '../../../domain/member/member.entity';
+import { MemberError } from '../../member/member.error';
 
 @CommandHandler(GeneratePresignedUrlCommand)
 export class GeneratePresignedUrlHandler
@@ -26,11 +26,12 @@ export class GeneratePresignedUrlHandler
     switch (command.assetType) {
       case AssetType.Avatar:
       case AssetType.Resume: {
-        const candidate = await this.em.findOne(Candidate, {
+        const candidate = await this.em.findOne(Member, {
           user: command.userId,
         });
+
         if (!candidate) {
-          return Result.failure(CandidateError.ProfileNotFound);
+          return Result.failure(MemberError.NotFound);
         }
         break;
       }

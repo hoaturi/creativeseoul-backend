@@ -370,5 +370,3 @@ export const LANGUAGES = [
     slug: 'yiddish',
   },
 ] as const;
-
-export const VALID_LANGUAGE_IDS = LANGUAGES.map((loc) => loc.id);

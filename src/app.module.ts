@@ -16,6 +16,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
 import { CandidateModule } from './features/candidate/candidate.module';
 import { UploadModule } from './features/upload/upload.module';
+import { MemberModule } from './features/member/member.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { UploadModule } from './features/upload/upload.module';
     EmailModule,
     AuthModule,
     UserModule,
+    MemberModule,
     CandidateModule,
     UploadModule,
   ],

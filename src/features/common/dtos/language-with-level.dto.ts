@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ReferenceDataDto } from './reference-data.dto';
 
-export class LanguageWithLevelDto extends ReferenceDataDto {
+export class LanguageWithLevelDto {
+  @ApiProperty()
+  public readonly name: string;
+
   @ApiProperty()
   public readonly level: number;
 
-  public constructor(id: number, name: string, slug: string, level: number) {
-    super(id, name, slug);
+  public constructor(name: string, level: number) {
+    this.name = name;
     this.level = level;
   }
 }

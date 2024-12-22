@@ -20,7 +20,3 @@ export const EMPLOYMENT_TYPES = [
     slug: 'freelance',
   },
 ] as const;
-
-export const VALID_EMPLOYMENT_TYPE_IDS = Object.values(EMPLOYMENT_TYPES).map(
-  (type) => type.id,
-);

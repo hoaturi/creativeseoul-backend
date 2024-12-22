@@ -3,7 +3,7 @@ import {
   ValidationArguments,
   ValidationOptions,
 } from 'class-validator';
-import { LanguageDto } from '../../features/candidate/dtos/create-candidate-request.dto';
+import { LanguageDto } from '../../features/member/dtos/create-member-request.dto';
 
 export function HasUniqueLanguages(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {

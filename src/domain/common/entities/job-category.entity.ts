@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/postgresql';
 
 @Entity()
-export class JobCategory {
+export class Category {
   @PrimaryKey()
   public readonly id!: number;
 

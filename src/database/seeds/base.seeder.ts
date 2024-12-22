@@ -1,40 +1,57 @@
 import { Seeder } from '@mikro-orm/seeder';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { State } from '../../domain/common/entities/state.entity';
-import { JobCategory } from '../../domain/common/entities/job-category.entity';
-import { EmploymentType } from '../../domain/common/entities/employment-type.entity';
-import { Language } from '../../domain/common/entities/language.entity';
-import { WorkLocationType } from '../../domain/common/entities/work-location-type.entity';
+import { Category } from '../../domain/common/entities/job-category.entity';
 import {
+  COUNTRIES,
   EMPLOYMENT_TYPES,
   JOB_CATEGORIES,
   LANGUAGES,
-  STATES,
-  WORK_LOCATION_TYPES,
+  LOCATION_TYPES,
 } from '../../domain/common/constants';
+import { EmploymentType } from '../../domain/common/entities/employment-type.entity';
+import { Language } from '../../domain/common/entities/language.entity';
+import { WorkLocationType } from '../../domain/common/entities/work-location-type.entity';
+import { Country } from '../../domain/common/entities/country.entity';
 
 export class BaseSeeder extends Seeder {
   public async run(em: EntityManager): Promise<void> {
-    JOB_CATEGORIES.map((category) =>
-      em.create(JobCategory, new JobCategory(category.name, category.slug)),
-    );
+    async function seedMissingEntities<T>(
+      entityClass: new (...args: any[]) => T,
+      data: ReadonlyArray<{ readonly name: string; readonly slug: string }>,
+      constructor: new (name: string, slug: string) => T,
+      entityName: string,
+    ) {
+      let added = 0;
+      for (const item of data) {
+        const existing = await em.findOne(entityClass, { slug: item.slug });
+        if (!existing) {
+          em.create(entityClass, new constructor(item.name, item.slug));
+          added++;
+        }
+      }
+      console.log(`${entityName}: ${added} new records added`);
+    }
 
-    EMPLOYMENT_TYPES.map((type) =>
-      em.create(EmploymentType, new EmploymentType(type.name, type.slug)),
+    await seedMissingEntities(
+      Category,
+      JOB_CATEGORIES,
+      Category,
+      'Job Categories',
     );
-
-    LANGUAGES.map((language) =>
-      em.create(Language, new Language(language.name, language.slug)),
+    await seedMissingEntities(
+      EmploymentType,
+      EMPLOYMENT_TYPES,
+      EmploymentType,
+      'Employment Types',
     );
-
-    WORK_LOCATION_TYPES.map((location) =>
-      em.create(
-        WorkLocationType,
-        new WorkLocationType(location.name, location.slug),
-      ),
+    await seedMissingEntities(Language, LANGUAGES, Language, 'Languages');
+    await seedMissingEntities(
+      WorkLocationType,
+      LOCATION_TYPES,
+      WorkLocationType,
+      'Work Location Types',
     );
-
-    STATES.map((state) => em.create(State, new State(state.name, state.slug)));
+    await seedMissingEntities(Country, COUNTRIES, Country, 'Countries');
 
     await em.flush();
   }

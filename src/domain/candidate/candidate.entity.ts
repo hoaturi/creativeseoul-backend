@@ -1,97 +1,101 @@
+import { BaseEntity } from '../base.entity';
+import { Entity, Index, PrimaryKey } from '@mikro-orm/core';
 import {
   Collection,
-  Entity,
-  FullTextType,
+  Enum,
   ManyToMany,
-  OneToMany,
   OneToOne,
-  PrimaryKey,
   Property,
-  WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
-import { BaseEntity } from '../base.entity';
-import { User } from '../user/user.entity';
-import { JobCategory } from '../common/entities/job-category.entity';
-import { WorkLocationType } from '../common/entities/work-location-type.entity';
-import { EmploymentType } from '../common/entities/employment-type.entity';
-import { CandidateLanguage } from './candidate-language.entity';
-import { State } from '../common/entities/state.entity';
-import { Index } from '@mikro-orm/core';
+import {
+  EMPLOYMENT_TYPES,
+  HOURLY_RATE,
+  LOCATION_TYPES,
+  SALARY_RANGE,
+  SENIORITY_LEVELS,
+} from '../common/constants';
+import { Category } from '../common/entities/job-category.entity';
+import { Member } from '../member/member.entity';
 
 @Entity()
 export class Candidate extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @OneToOne()
-  public readonly user!: User;
-
-  @Property({ length: 64 })
-  public fullName!: string;
-
-  @Property({ length: 128 })
-  public title!: string;
+  @OneToOne(() => Member)
+  public member!: Member;
 
   @Property()
-  public bio!: string;
+  @Index()
+  public isOpenToWork!: boolean;
 
-  @Property()
-  public profilePictureUrl?: string;
+  @Property({ nullable: true })
+  @Enum(() => SENIORITY_LEVELS.map((s) => s.slug))
+  @Index()
+  public seniority?: string;
 
-  @Property()
+  @Property({ nullable: true })
+  @Enum(() => SALARY_RANGE.map((r) => r.slug))
+  @Index()
+  public salaryRange?: string;
+
+  @Property({ nullable: true })
+  @Enum(() => HOURLY_RATE.map((r) => r.slug))
+  @Index()
+  public hourlyRateRange?: string;
+
+  @Property({ type: 'array', nullable: true })
+  @Enum(() => LOCATION_TYPES.map((t) => t.slug))
+  @Index()
+  public locationTypes: string[];
+
+  @Property({ type: 'array', nullable: true })
+  @Enum(() => EMPLOYMENT_TYPES.map((t) => t.slug))
+  @Index()
+  public employmentTypes: string[];
+
+  @Property({ nullable: true })
   public resumeUrl?: string;
 
-  @ManyToMany(() => JobCategory)
-  public preferredCategories = new Collection<JobCategory>(this);
+  @Property()
+  public isContactable!: boolean;
 
-  @ManyToMany(() => WorkLocationType)
-  public preferredWorkLocationTypes = new Collection<WorkLocationType>(this);
+  @Property({ nullable: true })
+  public email?: string;
 
-  @ManyToMany(() => State)
-  public preferredStates = new Collection<State>(this);
+  @Property({ nullable: true })
+  public phone?: string;
 
-  @ManyToMany(() => EmploymentType)
-  public preferredEmploymentTypes = new Collection<EmploymentType>(this);
-
-  @OneToMany(() => CandidateLanguage, (cl) => cl.candidate, {
-    orphanRemoval: true,
-  })
-  public languages = new Collection<CandidateLanguage>(this);
+  @ManyToMany(() => Category)
+  public categories = new Collection<Category>(this);
 
   @Property()
-  public isAvailable!: boolean;
-
-  @Index({ type: 'fulltext' })
-  @Property({
-    type: new FullTextType('english'),
-    onCreate: (candidate: Candidate) => ({
-      A: candidate.title,
-      B: candidate.bio,
-    }),
-    onUpdate: (candidate: Candidate) => ({
-      A: candidate.title,
-      B: candidate.bio,
-    }),
-  })
-  public searchVector!: WeightedFullTextValue;
+  public readonly isPublic!: boolean;
 
   public constructor(
-    user: User,
-    fullName: string,
-
-    title: string,
-    bio: string,
-    isAvailable: boolean,
-    profilePictureUrl?: string,
+    isOpenToWork: boolean,
+    isContactable: boolean,
+    isPublic: boolean,
+    seniority?: string,
+    salaryRange?: string,
+    hourlyRateRange?: string,
+    locationTypes?: string[],
+    employmentTypes?: string[],
     resumeUrl?: string,
+    email?: string,
+    phone?: string,
   ) {
     super();
-    this.user = user;
-    this.fullName = fullName;
-    this.title = title;
-    this.bio = bio;
-    this.isAvailable = isAvailable;
-    this.profilePictureUrl = profilePictureUrl;
+    this.isOpenToWork = isOpenToWork;
+    this.isContactable = isContactable;
+    this.isPublic = isPublic;
+    this.seniority = seniority;
+    this.salaryRange = salaryRange;
+    this.hourlyRateRange = hourlyRateRange;
+    this.locationTypes = locationTypes;
+    this.employmentTypes = employmentTypes;
     this.resumeUrl = resumeUrl;
+    this.email = email;
+    this.phone = phone;
   }
 }

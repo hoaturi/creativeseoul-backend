@@ -1,4 +1,4 @@
-export const WORK_LOCATION_TYPES = [
+export const LOCATION_TYPES = [
   {
     id: 1,
     name: 'On-site',
@@ -15,7 +15,3 @@ export const WORK_LOCATION_TYPES = [
     slug: 'hybrid',
   },
 ] as const;
-
-export const VALID_WORK_LOCATION_TYPE_IDS = WORK_LOCATION_TYPES.map(
-  (type) => type.id,
-);
