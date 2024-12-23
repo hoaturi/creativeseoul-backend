@@ -12,29 +12,13 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import {
-  COUNTRIES,
-  LANGUAGE_LEVELS,
-  LANGUAGES,
-} from '../../../domain/common/constants';
+import { COUNTRIES } from '../../../domain/common/constants';
 import { Type } from 'class-transformer';
 import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
 import { IsAlphaSpace } from '../../../common/decorators/is-alpha-space.decorator';
-import { Trim } from '../../../common/decorators/trim.decorator';
 import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
-
-export class LanguageDto {
-  @ApiProperty()
-  @IsNumber()
-  @Max(LANGUAGES.length)
-  public readonly languageId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @Min(1)
-  @Max(LANGUAGE_LEVELS.NATIVE)
-  public readonly level: number;
-}
+import { Trim } from '../../../common/decorators/trim.decorator';
+import { MemberLanguageDto } from './member-language.dto';
 
 export class CreateMemberRequestDto {
   @ApiProperty()
@@ -89,11 +73,11 @@ export class CreateMemberRequestDto {
   @Max(COUNTRIES.length)
   public readonly countryId: number;
 
-  @ApiProperty({ type: [LanguageDto] })
+  @ApiProperty({ type: [MemberLanguageDto] })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => LanguageDto)
+  @Type(() => MemberLanguageDto)
   @ArrayMinSize(1)
   @HasUniqueLanguages()
-  public readonly languages: LanguageDto[];
+  public readonly languages: MemberLanguageDto[];
 }

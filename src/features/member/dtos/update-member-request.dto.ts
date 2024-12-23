@@ -12,13 +12,13 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { LanguageDto } from './member-language.dto';
 import { Type } from 'class-transformer';
 import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
 import { IsAlphaSpace } from '../../../common/decorators/is-alpha-space.decorator';
 import { COUNTRIES } from '../../../domain/common/constants';
 import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
 import { Trim } from '../../../common/decorators/trim.decorator';
+import { MemberLanguageDto } from './member-language.dto';
 
 export class UpdateMemberRequestDto {
   @ApiProperty({
@@ -84,13 +84,13 @@ export class UpdateMemberRequestDto {
 
   @ApiProperty({
     required: false,
-    type: [LanguageDto],
+    type: [MemberLanguageDto],
   })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => LanguageDto)
+  @Type(() => MemberLanguageDto)
   @ArrayMinSize(1)
   @HasUniqueLanguages()
-  public readonly languages?: LanguageDto[];
+  public readonly languages?: MemberLanguageDto[];
 }
