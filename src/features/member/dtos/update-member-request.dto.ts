@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMinSize,
   IsArray,
-  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -13,26 +12,22 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { LanguageDto } from './create-member-request.dto';
+import { LanguageDto } from './member-language.dto';
 import { Type } from 'class-transformer';
 import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
 import { IsAlphaSpace } from '../../../common/decorators/is-alpha-space.decorator';
 import { COUNTRIES } from '../../../domain/common/constants';
+import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
+import { Trim } from '../../../common/decorators/trim.decorator';
 
 export class UpdateMemberRequestDto {
   @ApiProperty({
     required: false,
   })
   @IsOptional()
-  @IsBoolean()
-  public readonly isPublic?: boolean;
-
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
   @MinLength(3)
   @MaxLength(64)
+  @Trim()
   public readonly fullName?: string;
 
   @ApiProperty({
@@ -40,7 +35,8 @@ export class UpdateMemberRequestDto {
   })
   @IsOptional()
   @MinLength(3)
-  @MaxLength(64)
+  @MaxLength(32)
+  @Trim()
   public readonly title?: string;
 
   @ApiProperty({
@@ -49,6 +45,7 @@ export class UpdateMemberRequestDto {
   @IsOptional()
   @IsString()
   @MaxLength(512)
+  @Trim()
   public readonly bio?: string;
 
   @ApiProperty({
@@ -56,14 +53,26 @@ export class UpdateMemberRequestDto {
   })
   @IsOptional()
   @IsUrl()
+  @Trim()
   public readonly avatarUrl?: string;
 
   @ApiProperty({
     required: false,
   })
   @IsOptional()
+  @IsArray()
+  @IsValidTags()
+  @Trim({ each: true })
+  public readonly tags?: string[];
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
   @IsAlphaSpace({ allowEmpty: true })
+  @MinLength(3)
   @MaxLength(32)
+  @Trim()
   public readonly city?: string;
 
   @ApiProperty()

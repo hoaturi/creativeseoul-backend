@@ -97,6 +97,7 @@ export class MemberController {
   }
 
   @Patch()
+  @UseGuards(AuthGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
     example: AuthError.Unauthenticated,

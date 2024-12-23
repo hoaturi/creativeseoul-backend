@@ -15,6 +15,7 @@ import { Language } from '../../../../domain/common/entities/language.entity';
 import { MemberLanguage } from '../../../../domain/member/member-language.entity';
 import { Member } from '../../../../domain/member/member.entity';
 import { MemberError } from '../../member.error';
+import { MemberScoringService } from '../../../../infrastructure/services/member-scoring/member-scoring.service';
 
 @CommandHandler(CreateMemberCommand)
 export class CreateMemberHandler
@@ -22,7 +23,10 @@ export class CreateMemberHandler
 {
   private readonly logger = new Logger(CreateMemberHandler.name);
 
-  public constructor(private readonly em: EntityManager) {}
+  public constructor(
+    private readonly em: EntityManager,
+    private readonly scoringService: MemberScoringService,
+  ) {}
 
   public async execute(
     command: CreateMemberCommand,
@@ -40,6 +44,13 @@ export class CreateMemberHandler
 
     const member = await this.createMember(user, dto);
 
+    const score = this.scoringService.calculateProfileScore(member);
+
+    console.log(score);
+
+    member.qualityScore = score;
+    member.promotedAt = new Date();
+
     await this.em.flush();
 
     this.logger.log(
@@ -52,7 +63,6 @@ export class CreateMemberHandler
 
   private async validateUser(userId: string): Promise<User> {
     const user = await this.em.findOne(User, { id: userId });
-
     if (!user) {
       throw new CustomException(
         UserErrorCode.USER_NOT_FOUND,
@@ -60,7 +70,6 @@ export class CreateMemberHandler
         'member.create-member.failed: User not found',
       );
     }
-
     return user;
   }
 
@@ -70,7 +79,6 @@ export class CreateMemberHandler
       { user: { id: userId } },
       { fields: ['id'] },
     );
-
     return !!existingProfile;
   }
 
@@ -90,19 +98,17 @@ export class CreateMemberHandler
         country,
         dto.title,
         dto.bio,
-        dto.isAvailable,
         dto.avatarUrl,
+        dto.tags,
       ),
     );
 
     const memberLanguages = dto.languages.map((language) => {
       const languageRef = this.em.getReference(Language, language.languageId);
-
       return new MemberLanguage(member, languageRef, language.level);
     });
 
     member.languages.add(memberLanguages);
-
     return member;
   }
 

@@ -7,7 +7,6 @@ import { Logger } from '@nestjs/common';
 import { CustomException } from '../../../../common/exceptions/custom.exception';
 import { UserErrorCode } from '../../../../domain/user/user-error-code.enum';
 import { User } from '../../../../domain/user/user.entity';
-import { LanguageDto } from '../../dtos/create-member-request.dto';
 import { Language } from '../../../../domain/common/entities/language.entity';
 import { UpdateMemberRequestDto } from '../../dtos/update-member-request.dto';
 import { City } from '../../../../domain/common/entities/city.entity';
@@ -16,14 +15,20 @@ import slugify from 'slugify';
 import { MemberError } from '../../member.error';
 import { Member } from '../../../../domain/member/member.entity';
 import { MemberLanguage } from '../../../../domain/member/member-language.entity';
+import { MemberScoringService } from '../../../../infrastructure/services/member-scoring/member-scoring.service';
+import { MemberLanguageDto } from '../../dtos/member-language.dto';
 
 @CommandHandler(UpdateMemberCommand)
 export class UpdateMemberHandler
   implements ICommandHandler<UpdateMemberCommand>
 {
   private readonly logger = new Logger(UpdateMemberHandler.name);
+  private readonly COOLDOWN_PERIOD = 3 * 24 * 60 * 60 * 1000;
 
-  public constructor(private readonly em: EntityManager) {}
+  public constructor(
+    private readonly em: EntityManager,
+    private readonly scoringService: MemberScoringService,
+  ) {}
 
   public async execute(
     command: UpdateMemberCommand,
@@ -42,6 +47,10 @@ export class UpdateMemberHandler
     await this.updateMember(member, dto);
     this.updateLanguages(member, dto.languages);
 
+    member.qualityScore = this.scoringService.calculateProfileScore(member);
+
+    this.handlePromotionUpdate(member);
+
     await this.em.flush();
 
     this.logger.log(
@@ -52,6 +61,19 @@ export class UpdateMemberHandler
     );
 
     return Result.success();
+  }
+
+  private handlePromotionUpdate(member: Member): void {
+    const now = new Date();
+
+    // Check if profile has never been promoted or if outside cooldown period
+    const canPromote =
+      !member.promotedAt ||
+      now.getTime() - member.promotedAt.getTime() >= this.COOLDOWN_PERIOD;
+
+    if (canPromote) {
+      member.promotedAt = now;
+    }
   }
 
   private async validateUser(userId: string): Promise<void> {
@@ -95,10 +117,10 @@ export class UpdateMemberHandler
       fullName: dto.fullName,
       title: dto.title,
       bio: dto.bio,
-      isPublic: dto.isPublic,
       avatarUrl: dto.avatarUrl,
       city,
       country,
+      tags: dto.tags,
     };
 
     Object.entries(updates).forEach(([key, value]) => {
@@ -108,7 +130,10 @@ export class UpdateMemberHandler
     });
   }
 
-  private updateLanguages(member: Member, languages: LanguageDto[] = []): void {
+  private updateLanguages(
+    member: Member,
+    languages: MemberLanguageDto[] = [],
+  ): void {
     if (!languages.length) {
       return;
     }
