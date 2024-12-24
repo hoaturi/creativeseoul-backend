@@ -8,8 +8,8 @@ import { Result } from '../../../common/result/result';
 import { StorageService } from '../../../infrastructure/services/storage/storage.service';
 import { GeneratePresignedUrlResponseDto } from '../dtos/generate-presigned-url-response.dto';
 import { ResultError } from '../../../common/result/result-error';
-import { Member } from '../../../domain/member/member.entity';
-import { MemberError } from '../../member/member.error';
+import { Candidate } from '../../../domain/candidate/candidate.entity';
+import { CandidateError } from '../../candidate/candidate.error';
 
 @CommandHandler(GeneratePresignedUrlCommand)
 export class GeneratePresignedUrlHandler
@@ -24,15 +24,15 @@ export class GeneratePresignedUrlHandler
     command: GeneratePresignedUrlCommand,
   ): Promise<Result<GeneratePresignedUrlResponseDto, ResultError>> {
     switch (command.assetType) {
-      case AssetType.Avatar:
       case AssetType.Resume: {
-        const candidate = await this.em.findOne(Member, {
+        const candidate = await this.em.findOne(Candidate, {
           user: command.userId,
         });
 
         if (!candidate) {
-          return Result.failure(MemberError.NotFound);
+          return Result.failure(CandidateError.NotFound);
         }
+
         break;
       }
     }
