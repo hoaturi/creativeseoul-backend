@@ -14,6 +14,7 @@ import { Index, ManyToOne } from '@mikro-orm/core';
 import { City } from '../common/entities/city.entity';
 import { Country } from '../common/entities/country.entity';
 import { BaseEntity } from '../base.entity';
+import { SocialLinks } from './social-links.interface';
 
 const generateSearchVector = (member: Member): WeightedFullTextValue => ({
   A: [member.title, member.tags?.join(' ')].filter(Boolean).join(' '),
@@ -50,17 +51,20 @@ export class Member extends BaseEntity {
   @Property({ nullable: true })
   public tags?: string[];
 
+  @OneToMany(() => MemberLanguage, (cl) => cl.member, {
+    orphanRemoval: true,
+  })
+  public readonly languages: Collection<MemberLanguage> =
+    new Collection<MemberLanguage>(this);
+
   @ManyToOne(() => City, { nullable: true })
   public city?: City;
 
   @ManyToOne(() => Country, { nullable: true })
   public country?: Country;
 
-  @OneToMany(() => MemberLanguage, (cl) => cl.member, {
-    orphanRemoval: true,
-  })
-  public readonly languages: Collection<MemberLanguage> =
-    new Collection<MemberLanguage>(this);
+  @Property({ type: 'jsonb', nullable: true })
+  public socialLinks?: SocialLinks;
 
   @Property()
   public qualityScore: number;

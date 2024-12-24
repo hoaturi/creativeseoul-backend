@@ -4,15 +4,11 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import { Logger } from '@nestjs/common';
-import { CustomException } from '../../../../common/exceptions/custom.exception';
-import { UserErrorCode } from '../../../../domain/user/user-error-code.enum';
-import { User } from '../../../../domain/user/user.entity';
 import { Language } from '../../../../domain/common/entities/language.entity';
 import { UpdateMemberRequestDto } from '../../dtos/update-member-request.dto';
 import { City } from '../../../../domain/common/entities/city.entity';
 import { Country } from '../../../../domain/common/entities/country.entity';
 import slugify from 'slugify';
-import { MemberError } from '../../member.error';
 import { Member } from '../../../../domain/member/member.entity';
 import { MemberLanguage } from '../../../../domain/member/member-language.entity';
 import { MemberScoringService } from '../../../../infrastructure/services/member-scoring/member-scoring.service';
@@ -35,14 +31,11 @@ export class UpdateMemberHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, userId } = command;
 
-    const [, member] = await Promise.all([
-      this.validateUser(userId),
-      this.findMember(userId),
-    ]);
-
-    if (!member) {
-      return Result.failure(MemberError.NotFound);
-    }
+    const member = await this.em.findOne(
+      Member,
+      { user: userId },
+      { populate: ['city', 'country', 'languages'] },
+    );
 
     await this.updateMember(member, dto);
     this.updateLanguages(member, dto.languages);
@@ -58,26 +51,6 @@ export class UpdateMemberHandler
     );
 
     return Result.success();
-  }
-
-  private async validateUser(userId: string): Promise<void> {
-    const user = await this.em.findOne(User, { id: userId });
-
-    if (!user) {
-      throw new CustomException(
-        UserErrorCode.USER_NOT_FOUND,
-        { userId },
-        'member.member-update.failed: User not found',
-      );
-    }
-  }
-
-  private async findMember(userId: string): Promise<Member | null> {
-    return await this.em.findOne(
-      Member,
-      { user: userId },
-      { populate: ['city', 'country', 'languages'] },
-    );
   }
 
   private async updateMember(
@@ -99,6 +72,7 @@ export class UpdateMemberHandler
     member.city = city;
     member.country = country;
     member.tags = dto.tags;
+    member.socialLinks = dto.socialLinks;
   }
 
   private updateLanguages(

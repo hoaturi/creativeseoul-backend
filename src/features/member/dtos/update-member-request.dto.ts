@@ -19,6 +19,7 @@ import { COUNTRIES } from '../../../domain/common/constants';
 import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
 import { Trim } from '../../../common/decorators/trim.decorator';
 import { MemberLanguageDto } from './member-language.dto';
+import { MemberSocialLinksDto } from './member-social-links.dto';
 
 export class UpdateMemberRequestDto {
   @ApiProperty()
@@ -52,6 +53,16 @@ export class UpdateMemberRequestDto {
   @Trim({ each: true })
   public readonly tags: string[] | null;
 
+  @ApiProperty({
+    type: [MemberLanguageDto],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => MemberLanguageDto)
+  @ArrayMinSize(1)
+  @HasUniqueLanguages()
+  public readonly languages: MemberLanguageDto[];
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -67,13 +78,10 @@ export class UpdateMemberRequestDto {
   @Max(COUNTRIES.length)
   public readonly countryId: number;
 
-  @ApiProperty({
-    type: [MemberLanguageDto],
+  @ApiPropertyOptional({
+    type: MemberSocialLinksDto,
   })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => MemberLanguageDto)
-  @ArrayMinSize(1)
-  @HasUniqueLanguages()
-  public readonly languages: MemberLanguageDto[];
+  @IsOptional()
+  @ValidateNested()
+  public readonly socialLinks?: MemberSocialLinksDto;
 }
