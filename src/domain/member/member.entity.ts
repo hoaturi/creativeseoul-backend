@@ -59,9 +59,10 @@ export class Member extends BaseEntity {
   @OneToMany(() => MemberLanguage, (cl) => cl.member, {
     orphanRemoval: true,
   })
-  public languages = new Collection<MemberLanguage>(this);
+  public readonly languages: Collection<MemberLanguage> =
+    new Collection<MemberLanguage>(this);
 
-  @Property({ type: 'float', default: 0 })
+  @Property()
   public qualityScore: number;
 
   @Property({ nullable: true })
