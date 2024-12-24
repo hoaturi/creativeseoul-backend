@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   HttpException,
-  Patch,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
@@ -20,15 +20,14 @@ import { AuthenticatedUser } from '../../infrastructure/security/authenticated-u
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { UserRole } from '../../domain/user/user.entity';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
-
-import { UpdateCandidateRequestDto } from './dtos/update-candidate-request.dto';
-import { UpdateCandidateCommand } from './commands/update-candidate/update-candidate.command';
+import { UpsertCandidateRequestDto } from './dtos/upsert-candidate-request.dto';
+import { UpsertCandidateCommand } from './commands/upsert-candidate/upsert-candidate.command';
 
 @Controller('candidates')
 export class CandidateController {
   public constructor(private readonly commandBus: CommandBus) {}
 
-  @Patch()
+  @Put('me')
   @Roles(UserRole.CANDIDATE)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse()
@@ -43,9 +42,9 @@ export class CandidateController {
   })
   public async updateCandidate(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: UpdateCandidateRequestDto,
+    @Body() dto: UpsertCandidateRequestDto,
   ): Promise<void> {
-    const command = new UpdateCandidateCommand(user.id, dto);
+    const command = new UpsertCandidateCommand(user.id, dto);
 
     const result = await this.commandBus.execute(command);
 

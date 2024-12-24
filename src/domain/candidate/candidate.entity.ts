@@ -3,7 +3,7 @@ import { Entity, Index, PrimaryKey } from '@mikro-orm/core';
 import {
   Collection,
   Enum,
-  ManyToMany,
+  OneToMany,
   OneToOne,
   Property,
 } from '@mikro-orm/postgresql';
@@ -12,27 +12,22 @@ import {
   HOURLY_RATE,
   LOCATION_TYPES,
   SALARY_RANGE,
-  SENIORITY_LEVELS,
 } from '../common/constants';
-import { Category } from '../common/entities/job-category.entity';
-import { Member } from '../member/member.entity';
+import { User } from '../user/user.entity';
+import { CandidateExperience } from './candidate-experience.entity';
+import { CandidateProject } from './candidate-project.entity';
 
 @Entity()
 export class Candidate extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @OneToOne(() => Member)
-  public member!: Member;
+  @OneToOne(() => User)
+  public user!: User;
 
   @Property()
   @Index()
   public isOpenToWork!: boolean;
-
-  @Property({ nullable: true })
-  @Enum(() => SENIORITY_LEVELS.map((s) => s.slug))
-  @Index()
-  public seniority?: string;
 
   @Property({ nullable: true })
   @Enum(() => SALARY_RANGE.map((r) => r.slug))
@@ -44,15 +39,27 @@ export class Candidate extends BaseEntity {
   @Index()
   public hourlyRateRange?: string;
 
-  @Property({ type: 'array', nullable: true })
+  @Property({ type: 'array' })
   @Enum(() => LOCATION_TYPES.map((t) => t.slug))
   @Index()
   public locationTypes: string[];
 
-  @Property({ type: 'array', nullable: true })
+  @Property({ type: 'array' })
   @Enum(() => EMPLOYMENT_TYPES.map((t) => t.slug))
   @Index()
   public employmentTypes: string[];
+
+  @OneToMany(() => CandidateExperience, (e) => e.candidate, {
+    orphanRemoval: true,
+  })
+  public readonly experiences: Collection<CandidateExperience> =
+    new Collection<CandidateExperience>(this);
+
+  @OneToMany(() => CandidateProject, (p) => p.candidate, {
+    orphanRemoval: true,
+  })
+  public readonly projects: Collection<CandidateProject> =
+    new Collection<CandidateProject>(this);
 
   @Property({ nullable: true })
   public resumeUrl?: string;
@@ -66,17 +73,17 @@ export class Candidate extends BaseEntity {
   @Property({ nullable: true })
   public phone?: string;
 
-  @ManyToMany(() => Category)
-  public categories = new Collection<Category>(this);
+  @Property({ type: 'array', nullable: true })
+  public readonly skills: string[];
 
   @Property()
   public readonly isPublic!: boolean;
 
   public constructor(
+    user: User,
     isOpenToWork: boolean,
     isContactable: boolean,
     isPublic: boolean,
-    seniority?: string,
     salaryRange?: string,
     hourlyRateRange?: string,
     locationTypes?: string[],
@@ -86,10 +93,10 @@ export class Candidate extends BaseEntity {
     phone?: string,
   ) {
     super();
+    this.user = user;
     this.isOpenToWork = isOpenToWork;
     this.isContactable = isContactable;
     this.isPublic = isPublic;
-    this.seniority = seniority;
     this.salaryRange = salaryRange;
     this.hourlyRateRange = hourlyRateRange;
     this.locationTypes = locationTypes;

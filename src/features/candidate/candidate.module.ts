@@ -1,12 +1,9 @@
-import { Module, Provider } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CandidateController } from './candidate.controller';
-import { GetCandidateHandler } from './query/get-candidate/get-candidate.handler';
-import { UpdateCandidateHandler } from './commands/update-candidate/update-candidate.handler';
-
-const handlers: Provider[] = [UpdateCandidateHandler, GetCandidateHandler];
+import { UpsertCandidateHandler } from './commands/upsert-candidate/upsert-candidate.handler';
 
 @Module({
   controllers: [CandidateController],
-  providers: [...handlers],
+  providers: [UpsertCandidateHandler],
 })
 export class CandidateModule {}
