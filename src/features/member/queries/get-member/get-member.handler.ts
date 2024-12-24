@@ -16,18 +16,23 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
   public async execute(
     query: GetMemberQuery,
   ): Promise<Result<GetMemberResponseDto, ResultError>> {
-    const { userId, memberId } = query;
+    const { id } = query;
 
-    const member = await this.em.findOne(Member, memberId, {
-      populate: ['country.name', 'city.name', 'languages'],
+    const member = await this.em.findOne(Member, id, {
+      populate: [
+        'fullName',
+        'title',
+        'bio',
+        'avatarUrl',
+        'country.name',
+        'city.name',
+        'languages.level',
+        'languages.language.name',
+      ],
     });
 
     if (!member) {
       return Result.failure(MemberError.NotFound);
-    }
-
-    if (!member.isPublic && member.user.id !== userId) {
-      return Result.failure(MemberError.NotAvailable);
     }
 
     const memberLocation = new LocationDto(
@@ -38,6 +43,8 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
     const memberLanguages = member.languages.map((language) => {
       return new LanguageWithLevelDto(language.language.name, language.level);
     });
+
+    console.log(memberLanguages);
 
     return Result.success(
       new GetMemberResponseDto(
