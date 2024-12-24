@@ -1,9 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
   HttpException,
-  Param,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -12,7 +10,6 @@ import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -62,9 +59,6 @@ export class MemberController {
   })
   @ApiForbiddenResponse({
     example: AuthError.Unauthorized,
-  })
-  @ApiNotFoundResponse({
-    example: MemberError.NotFound,
   })
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
