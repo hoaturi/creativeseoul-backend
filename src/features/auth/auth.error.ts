@@ -30,13 +30,13 @@ export class AuthError extends ResultError {
   public static readonly Unauthenticated = new AuthError(
     AuthErrorCode.UNAUTHENTICATED,
     HttpStatus.UNAUTHORIZED,
-    'Unauthenticated',
+    'User not authenticated',
   );
 
   public static readonly Unauthorized = new AuthError(
     AuthErrorCode.UNAUTHORIZED,
     HttpStatus.FORBIDDEN,
-    'Unauthorized',
+    'User not authorized',
   );
 
   public constructor(code: string, statusCode: number, description: string) {

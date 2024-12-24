@@ -3,7 +3,7 @@ import { UserErrorCode } from '../../domain/user/user-error-code.enum';
 import { HttpStatus } from '@nestjs/common';
 
 export class UserError extends ResultError {
-  public static readonly UserNotFound = new ResultError(
+  public static readonly NotFound = new ResultError(
     UserErrorCode.USER_NOT_FOUND,
     HttpStatus.NOT_FOUND,
     'User not found',

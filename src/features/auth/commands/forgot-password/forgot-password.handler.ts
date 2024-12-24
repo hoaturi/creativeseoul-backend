@@ -33,7 +33,7 @@ export class ForgotPasswordHandler
     const user = await this.em.findOne(User, { email: command.dto.email });
 
     if (!user) {
-      return Result.failure(UserError.UserNotFound);
+      return Result.failure(UserError.NotFound);
     }
 
     const token = crypto.randomBytes(32).toString('hex');

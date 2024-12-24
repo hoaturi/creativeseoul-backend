@@ -142,7 +142,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
-  @ApiNotFoundResponse({ example: UserError.UserNotFound })
+  @ApiNotFoundResponse({ example: UserError.NotFound })
   public async forgotPassword(
     @Body() dto: ForgotPasswordRequestDto,
   ): Promise<void> {
