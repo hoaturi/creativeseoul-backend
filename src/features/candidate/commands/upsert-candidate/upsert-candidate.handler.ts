@@ -54,6 +54,7 @@ export class UpsertCandidateHandler
         dto.hourlyRateRange,
         dto.locationTypes,
         dto.employmentTypes,
+        dto.skills,
         dto.resumeUrl,
         dto.email,
         dto.phone,
@@ -81,11 +82,13 @@ export class UpsertCandidateHandler
     candidate: Candidate,
     dto: UpsertCandidateRequestDto,
   ): Promise<void> {
+    candidate.isPublic = dto.isPublic;
     candidate.isOpenToWork = dto.isOpenToWork;
     candidate.salaryRange = dto.salaryRange;
     candidate.hourlyRateRange = dto.hourlyRateRange;
     candidate.employmentTypes = dto.employmentTypes;
     candidate.locationTypes = dto.locationTypes;
+    candidate.skills = dto.skills;
     candidate.resumeUrl = dto.resumeUrl;
     candidate.isContactable = dto.isContactable;
     candidate.email = dto.email;
