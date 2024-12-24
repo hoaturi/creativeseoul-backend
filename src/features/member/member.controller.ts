@@ -42,20 +42,13 @@ export class MemberController {
   @ApiOkResponse({
     type: GetMemberResponseDto,
   })
-  @ApiUnauthorizedResponse({
-    example: AuthError.Unauthenticated,
-  })
-  @ApiForbiddenResponse({
-    example: AuthError.Unauthorized,
-  })
   @ApiNotFoundResponse({
     example: MemberError.NotFound,
   })
   public async getMember(
-    @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
   ): Promise<GetMemberResponseDto> {
-    const query = new GetMemberQuery(user.id, id);
+    const query = new GetMemberQuery(id);
 
     const result = await this.queryBus.execute(query);
 

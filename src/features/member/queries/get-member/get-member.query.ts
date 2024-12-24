@@ -6,10 +6,7 @@ import { GetMemberResponseDto } from '../../dtos/get-member-response.dto';
 export class GetMemberQuery extends Query<
   Result<GetMemberResponseDto, ResultError>
 > {
-  public constructor(
-    public readonly userId: string,
-    public readonly memberId: string,
-  ) {
+  public constructor(public readonly id: string) {
     super();
   }
 }
