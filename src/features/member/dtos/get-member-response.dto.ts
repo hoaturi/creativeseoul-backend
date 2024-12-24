@@ -17,10 +17,14 @@ export class GetMemberResponseDto {
   })
   public readonly avatarUrl?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: LocationDto,
+  })
   public readonly location: LocationDto;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [LanguageWithLevelDto],
+  })
   public readonly languages: LanguageWithLevelDto[];
 
   public constructor(
