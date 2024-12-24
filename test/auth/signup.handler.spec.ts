@@ -29,7 +29,7 @@ describe('SignupHandler', () => {
 
   const mockCommand = new SignupCommand({
     email: 'test@example.com',
-    userName: 'Test User',
+    fullName: 'John Smith',
     password: 'password123',
     role: 'candidate',
   });
@@ -63,8 +63,7 @@ describe('SignupHandler', () => {
     em.findOne.mockResolvedValue(null);
 
     const mockUser = new User(
-      mockCommand.user.userName,
-      mockCommand.user.email,
+      mockCommand.dto.email,
       UserRole.CANDIDATE,
       'hashedPassword',
     );
@@ -94,7 +93,7 @@ describe('SignupHandler', () => {
   it('should return failure when email already exists', async () => {
     // Arrange
     em.findOne.mockResolvedValue(
-      new User('existing', 'test@example.com', UserRole.CANDIDATE, 'hash'),
+      new User('test@example.com', UserRole.CANDIDATE, 'hash'),
     );
 
     // Act
@@ -125,10 +124,9 @@ describe('SignupHandler', () => {
 
     // Assert
     expect(capturedUser).toBeTruthy();
-    expect(capturedUser?.email).toBe(mockCommand.user.email);
-    expect(capturedUser?.username).toBe(mockCommand.user.userName);
+    expect(capturedUser?.email).toBe(mockCommand.dto.email);
     expect(capturedUser?.role).toBe(
-      UserRole[mockCommand.user.role.toUpperCase()],
+      UserRole[mockCommand.dto.role.toUpperCase()],
     );
   });
 
@@ -161,8 +159,7 @@ describe('SignupHandler', () => {
     // Arrange
     em.findOne.mockResolvedValue(null);
     const mockUser = new User(
-      mockCommand.user.userName,
-      mockCommand.user.email,
+      mockCommand.dto.email,
       UserRole.CANDIDATE,
       'hashedPassword',
     );
