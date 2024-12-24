@@ -15,6 +15,7 @@ import { AuthError } from '../../auth.error';
 import { Logger } from '@nestjs/common';
 import { EmailVerificationToken } from '../../../../domain/auth/email-verification-token.entity';
 import * as crypto from 'crypto';
+import { Member } from '../../../../domain/member/member.entity';
 
 @CommandHandler(SignupCommand)
 export class SignupHandler implements ICommandHandler<SignupCommand> {
@@ -37,6 +38,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
 
     const user = await this.createUser(userName, email, role, password);
     const emailVerification = await this.createEmailVerification(user);
+    this.em.create(Member, new Member(user));
 
     await this.em.flush();
     await this.queueVerificationEmail(user, emailVerification.token);

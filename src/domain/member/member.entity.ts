@@ -20,7 +20,7 @@ const generateSearchVector = (member: Member): WeightedFullTextValue => ({
   B: member.bio,
   C: [
     member.city?.name,
-    member.country.name,
+    member.country?.name,
     ...[...member.languages].map((lang) => lang.language.name),
   ]
     .filter(Boolean)
@@ -35,16 +35,16 @@ export class Member extends BaseEntity {
   @OneToOne()
   public readonly user!: User;
 
-  @Property({ length: 64 })
-  public fullName!: string;
+  @Property({ length: 64, nullable: true })
+  public fullName?: string;
 
-  @Property({ length: 32 })
-  public title!: string;
+  @Property({ length: 32, nullable: true })
+  public title?: string;
 
-  @Property({ length: 512 })
-  public bio!: string;
+  @Property({ length: 512, nullable: true })
+  public bio?: string;
 
-  @Property()
+  @Property({ nullable: true })
   public avatarUrl?: string;
 
   @Property({ nullable: true })
@@ -53,22 +53,22 @@ export class Member extends BaseEntity {
   @ManyToOne(() => City, { nullable: true })
   public city?: City;
 
-  @ManyToOne(() => Country)
-  public country!: Country;
+  @ManyToOne(() => Country, { nullable: true })
+  public country?: Country;
 
   @OneToMany(() => MemberLanguage, (cl) => cl.member, {
     orphanRemoval: true,
   })
   public languages = new Collection<MemberLanguage>(this);
 
-  @Property({ type: 'float' })
+  @Property({ type: 'float', default: 0 })
   public qualityScore: number;
 
   @Property({ nullable: true })
-  public promotedAt: Date;
+  public promotedAt?: Date;
 
   @Property({ nullable: true })
-  public lastActiveAt: Date;
+  public lastActiveAt?: Date;
 
   @Index({ type: 'fulltext' })
   @Property({
@@ -78,24 +78,8 @@ export class Member extends BaseEntity {
   })
   public searchVector!: WeightedFullTextValue;
 
-  public constructor(
-    user: User,
-    fullName: string,
-    city: City,
-    country: Country,
-    title: string,
-    bio: string,
-    AvatarUrl?: string,
-    tags?: string[],
-  ) {
+  public constructor(user: User) {
     super();
     this.user = user;
-    this.fullName = fullName;
-    this.city = city;
-    this.country = country;
-    this.title = title;
-    this.bio = bio;
-    this.avatarUrl = AvatarUrl;
-    this.tags = tags;
   }
 }
