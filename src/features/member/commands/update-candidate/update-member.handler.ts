@@ -48,32 +48,16 @@ export class UpdateMemberHandler
     this.updateLanguages(member, dto.languages);
 
     member.qualityScore = this.scoringService.calculateProfileScore(member);
-
     this.handlePromotionUpdate(member);
 
     await this.em.flush();
 
     this.logger.log(
-      {
-        memberId: member.id,
-      },
+      { memberId: member.id },
       'member.member-update.success: Member updated successfully',
     );
 
     return Result.success();
-  }
-
-  private handlePromotionUpdate(member: Member): void {
-    const now = new Date();
-
-    // Check if profile has never been promoted or if outside cooldown period
-    const canPromote =
-      !member.promotedAt ||
-      now.getTime() - member.promotedAt.getTime() >= this.COOLDOWN_PERIOD;
-
-    if (canPromote) {
-      member.promotedAt = now;
-    }
   }
 
   private async validateUser(userId: string): Promise<void> {
@@ -89,12 +73,10 @@ export class UpdateMemberHandler
   }
 
   private async findMember(userId: string): Promise<Member | null> {
-    return this.em.findOne(
+    return await this.em.findOne(
       Member,
       { user: userId },
-      {
-        populate: ['city', 'country', 'languages'],
-      },
+      { populate: ['city', 'country', 'languages'] },
     );
   }
 
@@ -104,46 +86,42 @@ export class UpdateMemberHandler
   ): Promise<void> {
     const country = dto.countryId
       ? this.em.getReference(Country, dto.countryId)
-      : undefined;
+      : null;
 
-    const city =
-      dto.city === ''
-        ? null
-        : dto.city
-          ? await this.getOrCreateCity(dto.city, country)
-          : undefined;
+    const city = dto.city
+      ? await this.getOrCreateCity(dto.city, country)
+      : null;
 
-    const updates: Partial<Member> = {
-      fullName: dto.fullName,
-      title: dto.title,
-      bio: dto.bio,
-      avatarUrl: dto.avatarUrl,
-      city,
-      country,
-      tags: dto.tags,
-    };
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value !== undefined) {
-        member[key] = value;
-      }
-    });
+    member.fullName = dto.fullName;
+    member.title = dto.title;
+    member.bio = dto.bio;
+    member.avatarUrl = dto.avatarUrl;
+    member.city = city;
+    member.country = country;
+    member.tags = dto.tags;
   }
 
   private updateLanguages(
     member: Member,
-    languages: MemberLanguageDto[] = [],
+    languages: MemberLanguageDto[],
   ): void {
-    if (!languages.length) {
-      return;
-    }
-
     const memberLanguages = languages.map((lang) => {
       const language = this.em.getReference(Language, lang.languageId);
       return new MemberLanguage(member, language, lang.level);
     });
 
     member.languages.set(memberLanguages);
+  }
+
+  private handlePromotionUpdate(member: Member): void {
+    const now = new Date();
+    const canPromote =
+      !member.promotedAt ||
+      now.getTime() - member.promotedAt.getTime() >= this.COOLDOWN_PERIOD;
+
+    if (canPromote) {
+      member.promotedAt = now;
+    }
   }
 
   private async getOrCreateCity(

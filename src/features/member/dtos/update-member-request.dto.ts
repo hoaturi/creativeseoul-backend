@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayMinSize,
   IsArray,
@@ -21,53 +21,38 @@ import { Trim } from '../../../common/decorators/trim.decorator';
 import { MemberLanguageDto } from './member-language.dto';
 
 export class UpdateMemberRequestDto {
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
+  @ApiProperty()
   @MinLength(3)
   @MaxLength(64)
   @Trim()
-  public readonly fullName?: string;
+  public readonly fullName: string;
 
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
+  @ApiProperty()
   @MinLength(3)
   @MaxLength(32)
   @Trim()
-  public readonly title?: string;
+  public readonly title: string;
 
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
+  @ApiProperty()
   @IsString()
   @MaxLength(512)
   @Trim()
-  public readonly bio?: string;
+  public readonly bio: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUrl()
   @Trim()
   public readonly avatarUrl?: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsArray()
   @IsValidTags()
   @Trim({ each: true })
-  public readonly tags?: string[];
+  public readonly tags: string[] | null;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsAlphaSpace({ allowEmpty: true })
   @MinLength(3)
@@ -76,21 +61,18 @@ export class UpdateMemberRequestDto {
   public readonly city?: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsNumber()
   @Min(1)
   @Max(COUNTRIES.length)
-  public readonly countryId?: number;
+  public readonly countryId: number;
 
   @ApiProperty({
-    required: false,
     type: [MemberLanguageDto],
   })
-  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MemberLanguageDto)
   @ArrayMinSize(1)
   @HasUniqueLanguages()
-  public readonly languages?: MemberLanguageDto[];
+  public readonly languages: MemberLanguageDto[];
 }

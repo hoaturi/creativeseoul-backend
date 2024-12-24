@@ -4,16 +4,13 @@ import {
   Get,
   HttpException,
   Param,
-  Patch,
-  Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import {
   ApiBadRequestResponse,
-  ApiConflictResponse,
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -23,8 +20,6 @@ import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { CreateMemberRequestDto } from './dtos/create-member-request.dto';
-import { CreateMemberCommand } from './commands/create-member/create-member.command';
 import { UpdateMemberRequestDto } from './dtos/update-member-request.dto';
 import { UpdateMemberCommand } from './commands/update-candidate/update-member.command';
 import { MemberError } from './member.error';
@@ -59,37 +54,7 @@ export class MemberController {
     return result.value;
   }
 
-  @Post()
-  @UseGuards(AuthGuard)
-  @ApiCreatedResponse()
-  @ApiUnauthorizedResponse({
-    example: AuthError.Unauthenticated,
-  })
-  @ApiForbiddenResponse({
-    example: AuthError.Unauthorized,
-  })
-  @ApiBadRequestResponse({
-    example: CommonError.ValidationFailed,
-  })
-  @ApiConflictResponse({
-    example: MemberError.AlreadyExists,
-  })
-  public async createMember(
-    @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: CreateMemberRequestDto,
-  ): Promise<void> {
-    const command = new CreateMemberCommand(user.id, dto);
-
-    const result = await this.commandBus.execute(command);
-
-    if (!result.isSuccess) {
-      throw new HttpException(result.error, result.error.statusCode);
-    }
-
-    return result.value;
-  }
-
-  @Patch()
+  @Put('me')
   @UseGuards(AuthGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
