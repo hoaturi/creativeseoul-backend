@@ -29,6 +29,9 @@ export class Candidate extends BaseEntity {
   @Index()
   public isOpenToWork!: boolean;
 
+  @Property()
+  public isPublic!: boolean;
+
   @Property({ nullable: true })
   @Enum(() => SALARY_RANGE.map((r) => r.slug))
   @Index()
@@ -61,6 +64,9 @@ export class Candidate extends BaseEntity {
   public readonly projects: Collection<CandidateProject> =
     new Collection<CandidateProject>(this);
 
+  @Property({ type: 'array', nullable: true })
+  public skills: string[];
+
   @Property({ nullable: true })
   public resumeUrl?: string;
 
@@ -73,12 +79,6 @@ export class Candidate extends BaseEntity {
   @Property({ nullable: true })
   public phone?: string;
 
-  @Property({ type: 'array', nullable: true })
-  public readonly skills: string[];
-
-  @Property()
-  public readonly isPublic!: boolean;
-
   public constructor(
     user: User,
     isOpenToWork: boolean,
@@ -88,6 +88,7 @@ export class Candidate extends BaseEntity {
     hourlyRateRange?: string,
     locationTypes?: string[],
     employmentTypes?: string[],
+    skills?: string[],
     resumeUrl?: string,
     email?: string,
     phone?: string,
@@ -101,6 +102,7 @@ export class Candidate extends BaseEntity {
     this.hourlyRateRange = hourlyRateRange;
     this.locationTypes = locationTypes;
     this.employmentTypes = employmentTypes;
+    this.skills = skills;
     this.resumeUrl = resumeUrl;
     this.email = email;
     this.phone = phone;
