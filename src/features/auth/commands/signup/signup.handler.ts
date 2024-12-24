@@ -30,15 +30,15 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
   public async execute(
     command: SignupCommand,
   ): Promise<Result<void, ResultError>> {
-    const { email, userName, password, role } = command.user;
+    const { email, password, role } = command.user;
 
     if (await this.checkEmailExists(email)) {
       return Result.failure(AuthError.EmailAlreadyExists);
     }
 
-    const user = await this.createUser(userName, email, role, password);
+    const user = await this.createUser(email, role, password);
     const emailVerification = await this.createEmailVerification(user);
-    this.em.create(Member, new Member(user));
+    this.em.create(Member, new Member(user, command.user.fullName));
 
     await this.em.flush();
     await this.queueVerificationEmail(user, emailVerification.token);
@@ -57,19 +57,13 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
   }
 
   private async createUser(
-    fullName: string,
     email: string,
     role: string,
     password: string,
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User(
-      fullName,
-      email,
-      UserRole[role.toUpperCase()],
-      hashedPassword,
-    );
+    const user = new User(email, UserRole[role.toUpperCase()], hashedPassword);
     this.em.create(User, user);
 
     return user;

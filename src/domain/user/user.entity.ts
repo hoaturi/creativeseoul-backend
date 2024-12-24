@@ -13,9 +13,6 @@ export class User extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @Property({ length: 16 })
-  public username!: string;
-
   @Property({ unique: true, length: 256 })
   @Index()
   public email!: string;
@@ -32,14 +29,8 @@ export class User extends BaseEntity {
   @Property({ default: true })
   public isActive!: boolean;
 
-  public constructor(
-    username: string,
-    email: string,
-    role: UserRole,
-    password: string,
-  ) {
+  public constructor(email: string, role: UserRole, password: string) {
     super();
-    this.username = username;
     this.email = email;
     this.role = role;
     this.password = password;

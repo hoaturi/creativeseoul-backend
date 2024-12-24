@@ -36,7 +36,7 @@ export class Member extends BaseEntity {
   @OneToOne()
   public readonly user!: User;
 
-  @Property({ length: 64, nullable: true })
+  @Property({ length: 64 })
   public fullName?: string;
 
   @Property({ length: 32, nullable: true })
@@ -83,8 +83,9 @@ export class Member extends BaseEntity {
   })
   public searchVector!: WeightedFullTextValue;
 
-  public constructor(user: User) {
+  public constructor(user: User, fullName: string) {
     super();
     this.user = user;
+    this.fullName = fullName;
   }
 }

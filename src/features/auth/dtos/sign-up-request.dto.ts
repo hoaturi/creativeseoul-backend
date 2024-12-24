@@ -11,7 +11,6 @@ import { IsPassword } from '../../../common/decorators/is-password.decorator';
 export class SignUpRequestDto {
   @ApiProperty()
   @IsEmail()
-  @MaxLength(256)
   public readonly email: string;
 
   @ApiProperty()
@@ -21,8 +20,8 @@ export class SignUpRequestDto {
   @ApiProperty()
   @IsString()
   @MinLength(3)
-  @MaxLength(16)
-  public readonly userName: string;
+  @MaxLength(64)
+  public readonly fullName: string;
 
   @ApiProperty({
     enum: ['candidate', 'employer'],
