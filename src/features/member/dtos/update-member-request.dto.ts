@@ -54,7 +54,8 @@ export class UpdateMemberRequestDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsAlphaSpace({ allowEmpty: true })
+  @IsString()
+  @IsAlphaSpace()
   @MinLength(3)
   @MaxLength(32)
   @Trim()

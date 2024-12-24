@@ -1,8 +1,6 @@
 import { registerDecorator } from 'class-validator';
 
-export function IsAlphaSpace({
-  allowEmpty = false,
-}: { allowEmpty?: boolean } = {}) {
+export function IsAlphaSpace() {
   return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'isAlphaSpace',
@@ -13,10 +11,7 @@ export function IsAlphaSpace({
       },
       validator: {
         validate(value: any) {
-          return (
-            typeof value === 'string' &&
-            ((allowEmpty && value === '') || /^[A-Za-z ]+$/.test(value))
-          );
+          return /^[A-Za-z ]+$/.test(value);
         },
       },
     });
