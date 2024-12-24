@@ -40,7 +40,7 @@ export class CandidateController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
-  public async updateCandidate(
+  public async upsertCandidate(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: UpsertCandidateRequestDto,
   ): Promise<void> {
