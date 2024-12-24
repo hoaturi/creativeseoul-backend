@@ -6,10 +6,10 @@ export class VerifyEmailJobDto {
   public readonly fullName: string;
   public readonly verificationToken: string;
 
-  public constructor(user: User, verificationToken: string) {
+  public constructor(user: User, fullName: string, verificationToken: string) {
     this.userId = user.id;
     this.email = user.email;
-    this.fullName = user.username;
+    this.fullName = fullName;
     this.verificationToken = verificationToken;
   }
 }
