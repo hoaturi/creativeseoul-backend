@@ -19,9 +19,6 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 import { UpdateMemberRequestDto } from './dtos/update-member-request.dto';
 import { UpdateMemberCommand } from './commands/update-candidate/update-member.command';
-import { MemberError } from './member.error';
-import { GetMemberResponseDto } from './dtos/get-member-response.dto';
-import { GetMemberQuery } from './queries/get-member/get-member.query';
 
 @Controller('members')
 export class MemberController {
@@ -29,27 +26,6 @@ export class MemberController {
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
-
-  @Get(':id')
-  @ApiOkResponse({
-    type: GetMemberResponseDto,
-  })
-  @ApiNotFoundResponse({
-    example: MemberError.NotFound,
-  })
-  public async getMember(
-    @Param('id') id: string,
-  ): Promise<GetMemberResponseDto> {
-    const query = new GetMemberQuery(id);
-
-    const result = await this.queryBus.execute(query);
-
-    if (!result.isSuccess) {
-      throw new HttpException(result.error, result.error.statusCode);
-    }
-
-    return result.value;
-  }
 
   @Put('me')
   @UseGuards(AuthGuard)
