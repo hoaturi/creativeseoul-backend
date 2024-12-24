@@ -4,6 +4,8 @@ import { RedisStore } from 'connect-redis';
 
 dotenv.config();
 
+const TTL_DAYS = 14;
+
 export const sessionConfig = () => {
   const redisClient = new Redis({
     host: process.env.REDIS_HOST,
@@ -13,7 +15,7 @@ export const sessionConfig = () => {
   const redisStore = new RedisStore({
     client: redisClient,
     prefix: 'session:',
-    ttl: 60 * 60 * 24 * 7,
+    ttl: 60 * 60 * 24 * TTL_DAYS,
   });
 
   return {
@@ -21,10 +23,11 @@ export const sessionConfig = () => {
     resave: false,
     saveUninitialized: false,
     store: redisStore,
+    rolling: true,
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7 * 1000,
+      maxAge: 1000 * 60 * 60 * 24 * TTL_DAYS,
     },
   };
 };
