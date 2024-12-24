@@ -1,10 +1,8 @@
 import { Seeder } from '@mikro-orm/seeder';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Category } from '../../domain/common/entities/job-category.entity';
 import {
   COUNTRIES,
   EMPLOYMENT_TYPES,
-  JOB_CATEGORIES,
   LANGUAGES,
   LOCATION_TYPES,
 } from '../../domain/common/constants';
@@ -32,12 +30,6 @@ export class BaseSeeder extends Seeder {
       console.log(`${entityName}: ${added} new records added`);
     }
 
-    await seedMissingEntities(
-      Category,
-      JOB_CATEGORIES,
-      Category,
-      'Job Categories',
-    );
     await seedMissingEntities(
       EmploymentType,
       EMPLOYMENT_TYPES,

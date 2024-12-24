@@ -1,4 +1,3 @@
-export * from './category.constant';
 export * from './language-level.constant';
 export * from './location-type.constant';
 export * from './employment-type.constant';
