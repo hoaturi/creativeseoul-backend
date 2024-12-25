@@ -10,6 +10,7 @@ import { GeneratePresignedUrlResponseDto } from '../dtos/generate-presigned-url-
 import { ResultError } from '../../../common/result/result-error';
 import { Candidate } from '../../../domain/candidate/candidate.entity';
 import { CandidateError } from '../../candidate/candidate.error';
+import { Member } from '../../../domain/member/member.entity';
 
 @CommandHandler(GeneratePresignedUrlCommand)
 export class GeneratePresignedUrlHandler
@@ -23,21 +24,35 @@ export class GeneratePresignedUrlHandler
   public async execute(
     command: GeneratePresignedUrlCommand,
   ): Promise<Result<GeneratePresignedUrlResponseDto, ResultError>> {
+    const member = await this.em.findOne(
+      Member,
+      { user: command.userId },
+      {
+        fields: ['id'],
+      },
+    );
+
+    let filePrefix: string;
+
     switch (command.assetType) {
       case AssetType.Resume: {
         const candidate = await this.em.findOne(Candidate, {
-          user: command.userId,
+          member: member.id,
         });
 
         if (!candidate) {
           return Result.failure(CandidateError.NotFound);
         }
 
+        filePrefix = candidate.id;
         break;
+      }
+      default: {
+        filePrefix = member.id;
       }
     }
 
-    const fileName = `${command.assetType}/${command.userId}-${Date.now()}`;
+    const fileName = `${command.assetType}/${filePrefix}-${Date.now()}`;
 
     const presignedUrl = await this.storageService.generatePresignedUrl(
       fileName,

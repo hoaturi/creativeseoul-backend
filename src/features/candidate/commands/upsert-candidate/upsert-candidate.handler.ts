@@ -10,7 +10,7 @@ import { CandidateExperience } from '../../../../domain/candidate/candidate-expe
 import { CandidateProject } from '../../../../domain/candidate/candidate-project.entity';
 import { CandidateExperienceDto } from '../../dtos/candidate-experience.dto';
 import { CandidateProjectDto } from '../../dtos/candidate-project.dto';
-import { User } from '../../../../domain/user/user.entity';
+import { Member } from '../../../../domain/member/member.entity';
 
 @CommandHandler(UpsertCandidateCommand)
 export class UpsertCandidateHandler
@@ -24,12 +24,20 @@ export class UpsertCandidateHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, userId } = command;
 
+    const member = await this.em.findOne(
+      Member,
+      { user: userId },
+      {
+        fields: ['id'],
+      },
+    );
+
     const existingCandidate = await this.em.findOne(Candidate, {
-      user: userId,
+      member: member.id,
     });
 
     if (!existingCandidate) {
-      await this.createCandidate(userId, dto);
+      await this.createCandidate(member.id, dto);
       return Result.success();
     }
 
@@ -38,15 +46,15 @@ export class UpsertCandidateHandler
   }
 
   private async createCandidate(
-    userId: string,
+    memberId: string,
     dto: UpsertCandidateRequestDto,
   ): Promise<void> {
-    const userRef = this.em.getReference(User, userId);
+    const memberRef = this.em.getReference(Member, memberId);
 
     const candidate = this.em.create(
       Candidate,
       new Candidate(
-        userRef,
+        memberRef,
         dto.isOpenToWork,
         dto.isContactable,
         dto.isPublic,
@@ -71,7 +79,7 @@ export class UpsertCandidateHandler
 
     this.logger.log(
       {
-        userId,
+        memberId: memberRef.id,
         candidateId: candidate.id,
       },
       'candidate.upsert-candidate.success: Candidate created successfully',
@@ -104,7 +112,7 @@ export class UpsertCandidateHandler
 
     this.logger.log(
       {
-        userId: candidate.user.id,
+        memberId: candidate.member.id,
         profileId: candidate.id,
       },
       'candidate.upsert-candidate.success: Candidate updated successfully',
