@@ -18,12 +18,8 @@ import { SocialLinks } from './social-links.interface';
 
 const generateSearchVector = (member: Member): WeightedFullTextValue => ({
   A: [member.title, member.tags?.join(' ')].filter(Boolean).join(' '),
-  B: member.bio,
-  C: [
-    member.city?.name,
-    member.country?.name,
-    ...[...member.languages].map((lang) => lang.language.name),
-  ]
+  B: [member.bio].filter(Boolean).join(' '),
+  C: [...[...member.languages].map((lang) => lang.language.name)]
     .filter(Boolean)
     .join(' '),
 });
@@ -33,7 +29,7 @@ export class Member extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @OneToOne()
+  @OneToOne(() => User)
   public readonly user!: User;
 
   @Property({ length: 16 })
