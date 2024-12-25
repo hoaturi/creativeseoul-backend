@@ -1,8 +1,10 @@
 import {
+  Cascade,
   Collection,
   Entity,
   FullTextType,
   OneToMany,
+  OneToOne,
   PrimaryKey,
   Property,
   WeightedFullTextValue,
@@ -13,6 +15,7 @@ import { City } from '../common/entities/city.entity';
 import { Country } from '../common/entities/country.entity';
 import { BaseEntity } from '../base.entity';
 import { SocialLinks } from './social-links.interface';
+import { Candidate } from '../candidate/candidate.entity';
 
 const generateSearchVector = (member: Member): WeightedFullTextValue => ({
   A: [member.title, member.tags?.join(' ')].filter(Boolean).join(' '),
@@ -26,6 +29,12 @@ const generateSearchVector = (member: Member): WeightedFullTextValue => ({
 export class Member extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
+
+  @OneToOne(() => Candidate, {
+    nullable: true,
+    cascade: [Cascade.REMOVE],
+  })
+  public candidate?: Candidate;
 
   @Property({ length: 16 })
   @Unique()

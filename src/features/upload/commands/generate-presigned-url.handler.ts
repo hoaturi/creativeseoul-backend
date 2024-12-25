@@ -8,7 +8,6 @@ import { Result } from '../../../common/result/result';
 import { StorageService } from '../../../infrastructure/services/storage/storage.service';
 import { GeneratePresignedUrlResponseDto } from '../dtos/generate-presigned-url-response.dto';
 import { ResultError } from '../../../common/result/result-error';
-import { Candidate } from '../../../domain/candidate/candidate.entity';
 import { CandidateError } from '../../candidate/candidate.error';
 import { User } from '../../../domain/user/user.entity';
 
@@ -25,22 +24,18 @@ export class GeneratePresignedUrlHandler
     command: GeneratePresignedUrlCommand,
   ): Promise<Result<GeneratePresignedUrlResponseDto, ResultError>> {
     const user = await this.em.findOne(User, command.userId, {
-      fields: ['member.id'],
+      fields: ['member.id', 'member.candidate.id'],
     });
 
     let filePrefix: string;
 
     switch (command.assetType) {
       case AssetType.Resume: {
-        const candidate = await this.em.findOne(Candidate, {
-          member: user.member.id,
-        });
-
-        if (!candidate) {
+        if (!user.member.candidate.id) {
           return Result.failure(CandidateError.NotFound);
         }
 
-        filePrefix = candidate.id;
+        filePrefix = user.member.candidate.id;
         break;
       }
       default: {

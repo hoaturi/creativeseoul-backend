@@ -5,7 +5,6 @@ import {
   Enum,
   FullTextType,
   OneToMany,
-  OneToOne,
   Property,
   WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
@@ -17,7 +16,6 @@ import {
 } from '../common/constants';
 import { CandidateExperience } from './candidate-experience.entity';
 import { CandidateProject } from './candidate-project.entity';
-import { Member } from '../member/member.entity';
 
 const generateSearchVector = (candidate: Candidate): WeightedFullTextValue => ({
   A: [candidate.skills?.join(' ')].filter(Boolean).join(' '),
@@ -34,9 +32,6 @@ const generateSearchVector = (candidate: Candidate): WeightedFullTextValue => ({
 export class Candidate extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
-
-  @OneToOne(() => Member)
-  public member!: Member;
 
   @Property()
   @Index()
@@ -101,7 +96,6 @@ export class Candidate extends BaseEntity {
   public searchVector!: WeightedFullTextValue;
 
   public constructor(
-    member: Member,
     isOpenToWork: boolean,
     isContactable: boolean,
     isPublic: boolean,
@@ -115,7 +109,6 @@ export class Candidate extends BaseEntity {
     phone?: string,
   ) {
     super();
-    this.member = member;
     this.isOpenToWork = isOpenToWork;
     this.isContactable = isContactable;
     this.isPublic = isPublic;
