@@ -3,13 +3,15 @@ import { Entity, Index, PrimaryKey } from '@mikro-orm/core';
 import {
   Collection,
   Enum,
+  FullTextType,
   OneToMany,
   OneToOne,
   Property,
+  WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
 import {
   EMPLOYMENT_TYPES,
-  HOURLY_RATE,
+  HOURLY_RATE_RANGE,
   LOCATION_TYPES,
   SALARY_RANGE,
 } from '../common/constants';
@@ -38,7 +40,7 @@ export class Candidate extends BaseEntity {
   public salaryRange?: string;
 
   @Property({ nullable: true })
-  @Enum(() => HOURLY_RATE.map((r) => r.slug))
+  @Enum(() => HOURLY_RATE_RANGE.map((r) => r.slug))
   @Index()
   public hourlyRateRange?: string;
 

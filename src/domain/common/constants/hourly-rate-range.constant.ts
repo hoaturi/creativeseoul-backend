@@ -1,4 +1,4 @@
-export const HOURLY_RATE = [
+export const HOURLY_RATE_RANGE = [
   { name: '₩0 - ₩10K', slug: '0-10' },
   { name: '₩10K - ₩20K', slug: '10-20' },
   { name: '₩20K - ₩35K', slug: '20-35' },

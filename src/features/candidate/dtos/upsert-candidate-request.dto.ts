@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import {
   EMPLOYMENT_TYPES,
-  HOURLY_RATE,
+  HOURLY_RATE_RANGE,
   LOCATION_TYPES,
   SALARY_RANGE,
 } from '../../../domain/common/constants';
@@ -39,7 +39,7 @@ export class UpsertCandidateRequestDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsIn(HOURLY_RATE.map((r) => r.slug))
+  @IsIn(HOURLY_RATE_RANGE.map((r) => r.slug))
   public readonly hourlyRateRange: string;
 
   @ApiProperty({
