@@ -10,7 +10,7 @@ import {
 } from '@mikro-orm/postgresql';
 import { User } from '../user/user.entity';
 import { MemberLanguage } from './member-language.entity';
-import { Index, ManyToOne } from '@mikro-orm/core';
+import { Index, ManyToOne, Unique } from '@mikro-orm/core';
 import { City } from '../common/entities/city.entity';
 import { Country } from '../common/entities/country.entity';
 import { BaseEntity } from '../base.entity';
@@ -35,6 +35,10 @@ export class Member extends BaseEntity {
 
   @OneToOne()
   public readonly user!: User;
+
+  @Property({ length: 16 })
+  @Unique()
+  public handle!: string;
 
   @Property({ length: 64 })
   public fullName?: string;
@@ -83,9 +87,10 @@ export class Member extends BaseEntity {
   })
   public searchVector!: WeightedFullTextValue;
 
-  public constructor(user: User, fullName: string) {
+  public constructor(user: User, fullName: string, handle: string) {
     super();
     this.user = user;
     this.fullName = fullName;
+    this.handle = handle;
   }
 }

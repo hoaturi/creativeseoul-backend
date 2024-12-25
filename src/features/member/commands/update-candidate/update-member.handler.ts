@@ -65,6 +65,7 @@ export class UpdateMemberHandler
       ? await this.getOrCreateCity(dto.city, country)
       : null;
 
+    member.handle = dto.handle;
     member.fullName = dto.fullName;
     member.title = dto.title;
     member.bio = dto.bio;

@@ -1,7 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  ArrayMaxSize,
   ArrayMinSize,
+  IsAlphanumeric,
   IsArray,
+  IsLowercase,
   IsNumber,
   IsOptional,
   IsString,
@@ -23,12 +26,24 @@ import { MemberSocialLinksDto } from './member-social-links.dto';
 
 export class UpdateMemberRequestDto {
   @ApiProperty()
+  @IsString()
+  @IsAlphanumeric()
+  @IsLowercase()
+  @MinLength(3)
+  @MaxLength(16)
+  @Trim()
+  public readonly handle: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsAlphaSpace()
   @MinLength(3)
   @MaxLength(64)
   @Trim()
   public readonly fullName: string;
 
   @ApiProperty()
+  @IsString()
   @MinLength(3)
   @MaxLength(32)
   @Trim()
@@ -42,26 +57,18 @@ export class UpdateMemberRequestDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUrl()
-  @Trim()
-  public readonly avatarUrl?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
   @IsArray()
+  @ArrayMaxSize(5)
   @IsValidTags()
+  @MaxLength(16, { each: true })
   @Trim({ each: true })
-  public readonly tags: string[] | null;
+  public readonly tags: string[];
 
-  @ApiProperty({
-    type: [MemberLanguageDto],
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => MemberLanguageDto)
-  @ArrayMinSize(1)
-  @HasUniqueLanguages()
-  public readonly languages: MemberLanguageDto[];
+  @ApiProperty()
+  @IsNumber()
+  @Min(1)
+  @Max(COUNTRIES.length)
+  public readonly countryId: number;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -72,15 +79,21 @@ export class UpdateMemberRequestDto {
   @Trim()
   public readonly city?: string;
 
-  @ApiProperty()
-  @IsNumber()
-  @Min(1)
-  @Max(COUNTRIES.length)
-  public readonly countryId: number;
+  @ApiProperty({ type: [MemberLanguageDto] })
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @HasUniqueLanguages()
+  @Type(() => MemberLanguageDto)
+  public readonly languages: MemberLanguageDto[];
 
-  @ApiPropertyOptional({
-    type: MemberSocialLinksDto,
-  })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUrl()
+  @Trim()
+  public readonly avatarUrl?: string;
+
+  @ApiPropertyOptional({ type: MemberSocialLinksDto })
   @IsOptional()
   @ValidateNested()
   public readonly socialLinks?: MemberSocialLinksDto;

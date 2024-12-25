@@ -38,7 +38,9 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
 
     const user = await this.createUser(email, role, password);
     const emailVerification = await this.createEmailVerification(user);
-    this.em.create(Member, new Member(user, fullName));
+
+    const handle = crypto.randomBytes(8).toString('hex');
+    this.em.create(Member, new Member(user, fullName, handle));
 
     await this.em.flush();
     await this.queueVerificationEmail(user, fullName, emailVerification.token);
