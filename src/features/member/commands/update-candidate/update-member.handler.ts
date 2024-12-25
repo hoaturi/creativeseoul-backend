@@ -13,6 +13,7 @@ import { Member } from '../../../../domain/member/member.entity';
 import { MemberLanguage } from '../../../../domain/member/member-language.entity';
 import { MemberScoringService } from '../../../../infrastructure/services/member-scoring/member-scoring.service';
 import { MemberLanguageDto } from '../../dtos/member-language.dto';
+import { User } from '../../../../domain/user/user.entity';
 
 @CommandHandler(UpdateMemberCommand)
 export class UpdateMemberHandler
@@ -31,22 +32,23 @@ export class UpdateMemberHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, userId } = command;
 
-    const member = await this.em.findOne(
-      Member,
-      { user: userId },
-      { populate: ['city', 'country', 'languages'] },
+    const user = await this.em.findOne(User, userId, {
+      fields: ['member'],
+      populate: ['member.city', 'member.country', 'member.languages'],
+    });
+
+    await this.updateMember(user.member, dto);
+    this.updateLanguages(user.member, dto.languages);
+
+    user.member.qualityScore = this.scoringService.calculateProfileScore(
+      user.member,
     );
-
-    await this.updateMember(member, dto);
-    this.updateLanguages(member, dto.languages);
-
-    member.qualityScore = this.scoringService.calculateProfileScore(member);
-    this.handlePromotionUpdate(member);
+    this.handlePromotionUpdate(user.member);
 
     await this.em.flush();
 
     this.logger.log(
-      { memberId: member.id },
+      { memberId: user.member.id },
       'member.member-update.success: Member updated successfully',
     );
 

@@ -1,6 +1,13 @@
-import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/postgresql';
+import {
+  Entity,
+  Enum,
+  OneToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/postgresql';
 import { BaseEntity } from '../base.entity';
-import { Index } from '@mikro-orm/core';
+import { Cascade, Index } from '@mikro-orm/core';
+import { Member } from '../member/member.entity';
 
 export enum UserRole {
   CANDIDATE = 'candidate',
@@ -12,6 +19,11 @@ export enum UserRole {
 export class User extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
+
+  @OneToOne(() => Member, {
+    cascade: [Cascade.REMOVE],
+  })
+  public readonly member: Member;
 
   @Property({ unique: true, length: 256 })
   @Index()
@@ -29,10 +41,16 @@ export class User extends BaseEntity {
   @Property({ default: true })
   public isActive!: boolean;
 
-  public constructor(email: string, role: UserRole, password: string) {
+  public constructor(
+    email: string,
+    password: string,
+    role: UserRole,
+    member: Member,
+  ) {
     super();
     this.email = email;
     this.role = role;
     this.password = password;
+    this.member = member;
   }
 }

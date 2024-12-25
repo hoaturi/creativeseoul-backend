@@ -16,6 +16,7 @@ import { Logger } from '@nestjs/common';
 import { EmailVerificationToken } from '../../../../domain/auth/email-verification-token.entity';
 import * as crypto from 'crypto';
 import { Member } from '../../../../domain/member/member.entity';
+import { SignUpRequestDto } from '../../dtos';
 
 @CommandHandler(SignupCommand)
 export class SignupHandler implements ICommandHandler<SignupCommand> {
@@ -30,17 +31,14 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
   public async execute(
     command: SignupCommand,
   ): Promise<Result<void, ResultError>> {
-    const { email, fullName, password, role } = command.dto;
+    const { email, fullName } = command.dto;
 
     if (await this.checkEmailExists(email)) {
       return Result.failure(AuthError.EmailAlreadyExists);
     }
 
-    const user = await this.createUser(email, role, password);
+    const user = await this.createUser(command.dto);
     const emailVerification = await this.createEmailVerification(user);
-
-    const handle = crypto.randomBytes(8).toString('hex');
-    this.em.create(Member, new Member(user, fullName, handle));
 
     await this.em.flush();
     await this.queueVerificationEmail(user, fullName, emailVerification.token);
@@ -58,14 +56,19 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
     return !!exists;
   }
 
-  private async createUser(
-    email: string,
-    role: string,
-    password: string,
-  ): Promise<User> {
-    const hashedPassword = await bcrypt.hash(password, 10);
+  private async createUser(dto: SignUpRequestDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const user = new User(email, UserRole[role.toUpperCase()], hashedPassword);
+    const handle = crypto.randomBytes(8).toString('hex');
+    const member = new Member(dto.fullName, handle);
+
+    const user = new User(
+      dto.email,
+      hashedPassword,
+      UserRole[dto.role.toUpperCase()],
+      member,
+    );
+
     this.em.create(User, user);
 
     return user;

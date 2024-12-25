@@ -3,12 +3,10 @@ import {
   Entity,
   FullTextType,
   OneToMany,
-  OneToOne,
   PrimaryKey,
   Property,
   WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
-import { User } from '../user/user.entity';
 import { MemberLanguage } from './member-language.entity';
 import { Index, ManyToOne, Unique } from '@mikro-orm/core';
 import { City } from '../common/entities/city.entity';
@@ -28,9 +26,6 @@ const generateSearchVector = (member: Member): WeightedFullTextValue => ({
 export class Member extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
-
-  @OneToOne(() => User)
-  public readonly user!: User;
 
   @Property({ length: 16 })
   @Unique()
@@ -83,9 +78,8 @@ export class Member extends BaseEntity {
   })
   public searchVector!: WeightedFullTextValue;
 
-  public constructor(user: User, fullName: string, handle: string) {
+  public constructor(fullName: string, handle: string) {
     super();
-    this.user = user;
     this.fullName = fullName;
     this.handle = handle;
   }

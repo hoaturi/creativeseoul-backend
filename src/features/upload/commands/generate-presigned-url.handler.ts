@@ -10,7 +10,7 @@ import { GeneratePresignedUrlResponseDto } from '../dtos/generate-presigned-url-
 import { ResultError } from '../../../common/result/result-error';
 import { Candidate } from '../../../domain/candidate/candidate.entity';
 import { CandidateError } from '../../candidate/candidate.error';
-import { Member } from '../../../domain/member/member.entity';
+import { User } from '../../../domain/user/user.entity';
 
 @CommandHandler(GeneratePresignedUrlCommand)
 export class GeneratePresignedUrlHandler
@@ -24,20 +24,16 @@ export class GeneratePresignedUrlHandler
   public async execute(
     command: GeneratePresignedUrlCommand,
   ): Promise<Result<GeneratePresignedUrlResponseDto, ResultError>> {
-    const member = await this.em.findOne(
-      Member,
-      { user: command.userId },
-      {
-        fields: ['id'],
-      },
-    );
+    const user = await this.em.findOne(User, command.userId, {
+      fields: ['member.id'],
+    });
 
     let filePrefix: string;
 
     switch (command.assetType) {
       case AssetType.Resume: {
         const candidate = await this.em.findOne(Candidate, {
-          member: member.id,
+          member: user.member.id,
         });
 
         if (!candidate) {
@@ -48,7 +44,7 @@ export class GeneratePresignedUrlHandler
         break;
       }
       default: {
-        filePrefix = member.id;
+        filePrefix = user.member.id;
       }
     }
 
