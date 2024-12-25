@@ -66,7 +66,7 @@ export class Member extends BaseEntity {
   @Property({ type: 'jsonb', nullable: true })
   public socialLinks?: SocialLinks;
 
-  @Property()
+  @Property({ nullable: true })
   public qualityScore: number;
 
   @Property({ nullable: true })
