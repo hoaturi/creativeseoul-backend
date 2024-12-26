@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsEnum,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsPassword } from '../../../common/decorators/is-password.decorator';
 
@@ -22,10 +16,4 @@ export class SignUpRequestDto {
   @MinLength(3)
   @MaxLength(64)
   public readonly fullName: string;
-
-  @ApiProperty({
-    enum: ['member', 'company'],
-  })
-  @IsEnum(['member', 'company'])
-  public readonly role: 'member' | 'company';
 }

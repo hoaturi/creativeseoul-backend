@@ -63,12 +63,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
     const handle = crypto.randomBytes(8).toString('hex');
     const member = new Member(dto.fullName, handle);
 
-    const user = new User(
-      dto.email,
-      hashedPassword,
-      UserRole[dto.role.toUpperCase()],
-      member,
-    );
+    const user = new User(dto.email, hashedPassword, UserRole.MEMBER, member);
 
     this.em.create(User, user);
 

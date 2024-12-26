@@ -33,7 +33,6 @@ describe('SignupHandler', () => {
     email: 'test@example.com',
     fullName: 'John Smith',
     password: 'password123',
-    role: 'member',
   });
 
   const mockMember = new Member('John Smith', 'handle');
@@ -130,9 +129,7 @@ describe('SignupHandler', () => {
     // Assert
     expect(capturedUser).toBeTruthy();
     expect(capturedUser?.email).toBe(mockCommand.dto.email);
-    expect(capturedUser?.role).toBe(
-      UserRole[mockCommand.dto.role.toUpperCase()],
-    );
+    expect(capturedUser?.role).toBe(UserRole.MEMBER);
   });
 
   it('should create email verification with correct expiration time', async () => {
