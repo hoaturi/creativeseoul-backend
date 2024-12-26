@@ -1,14 +1,14 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetMemberQuery } from './get-member-query';
-import { GetMemberResponseDto } from '../dtos/responses/get-member-response.dto';
-import { MemberError } from '../member.error';
-import { ResultError } from '../../../common/result/result-error';
-import { Result } from '../../../common/result/result';
-import { LanguageWithLevelDto } from '../../common/dtos/language-with-level.dto';
-import { LocationDto } from '../../common/dtos/location.dto';
-import { SocialLinksResponseDto } from '../dtos/responses/social-links-response.dto';
+import { GetMemberResponseDto } from '../../dtos/responses/get-member-response.dto';
+import { MemberError } from '../../member.error';
+import { ResultError } from '../../../../common/result/result-error';
+import { Result } from '../../../../common/result/result';
+import { LanguageWithLevelDto } from '../../../common/dtos/language-with-level.dto';
+import { LocationDto } from '../../../common/dtos/location.dto';
+import { SocialLinksResponseDto } from '../../dtos/responses/social-links-response.dto';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Member } from '../../../domain/member/member.entity';
+import { Member } from '../../../../domain/member/member.entity';
 
 @QueryHandler(GetMemberQuery)
 export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {

@@ -1,7 +1,7 @@
-import { GetMemberHandler } from '../../src/features/member/queries/get-member.handler';
+import { GetMemberHandler } from '../../src/features/member/queries/get-member/get-member.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
-import { GetMemberQuery } from '../../src/features/member/queries/get-member-query';
+import { GetMemberQuery } from '../../src/features/member/queries/get-member/get-member-query';
 import { Member } from '../../src/domain/member/member.entity';
 import { MemberError } from '../../src/features/member/member.error';
 import { LanguageWithLevelDto } from '../../src/features/common/dtos/language-with-level.dto';

@@ -25,7 +25,7 @@ import { UpdateMemberCommand } from './commands/update-candidate/update-member.c
 import { UserRole } from '../../domain/user/user-role.enum';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { GetMemberResponseDto } from './dtos/responses/get-member-response.dto';
-import { GetMemberQuery } from './queries/get-member-query';
+import { GetMemberQuery } from './queries/get-member/get-member-query';
 import { MemberError } from './member.error';
 
 @Controller('members')
