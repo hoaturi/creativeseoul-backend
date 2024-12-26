@@ -19,7 +19,7 @@ export class UpdateMemberHandler
   implements ICommandHandler<UpdateMemberCommand>
 {
   private readonly logger = new Logger(UpdateMemberHandler.name);
-  private readonly COOLDOWN_PERIOD = 3 * 24 * 60 * 60 * 1000;
+  private readonly COOLDOWN_PERIOD = 14 * 24 * 60 * 60 * 1000;
 
   public constructor(
     private readonly em: EntityManager,

@@ -66,7 +66,7 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
     const priorityTier = raw(`
       CASE 
         /* High quality + Recently updated + Active: Best case */
-        WHEN m.promoted_at > NOW() - INTERVAL '3 days'
+        WHEN m.promoted_at > NOW() - INTERVAL '14 days'
         AND m.last_active_at > NOW() - INTERVAL '24 hours'
         AND m.quality_score >= 80
         THEN 3
@@ -74,13 +74,13 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
         /* High quality + Either updated or active */
         WHEN m.quality_score >= 80 
         AND (
-          m.promoted_at > NOW() - INTERVAL '3 days'
+          m.promoted_at > NOW() - INTERVAL '14 days'
           OR m.last_active_at > NOW() - INTERVAL '24 hours'
         )
         THEN 2
         
         /* Recently updated or active */
-        WHEN m.promoted_at > NOW() - INTERVAL '3 days'
+        WHEN m.promoted_at > NOW() - INTERVAL '14 days'
         OR m.last_active_at > NOW() - INTERVAL '24 hours'
         THEN 1
         
