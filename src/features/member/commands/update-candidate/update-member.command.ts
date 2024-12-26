@@ -5,7 +5,7 @@ import { ResultError } from '../../../../common/result/result-error';
 
 export class UpdateMemberCommand extends Command<Result<void, ResultError>> {
   public constructor(
-    public readonly userId: string,
+    public readonly profileId: string,
     public readonly dto: UpdateMemberRequestDto,
   ) {
     super();

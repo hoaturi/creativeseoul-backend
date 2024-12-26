@@ -19,6 +19,8 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 import { UpdateMemberRequestDto } from './dtos/update-member-request.dto';
 import { UpdateMemberCommand } from './commands/update-candidate/update-member.command';
+import { UserRole } from '../../domain/user/user-role.enum';
+import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 
 @Controller('members')
 export class MemberController {
@@ -28,6 +30,7 @@ export class MemberController {
   ) {}
 
   @Put('me')
+  @Roles(UserRole.MEMBER)
   @UseGuards(AuthGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
@@ -43,7 +46,7 @@ export class MemberController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: UpdateMemberRequestDto,
   ): Promise<void> {
-    const command = new UpdateMemberCommand(user.id, dto);
+    const command = new UpdateMemberCommand(user.profileId, dto);
 
     const result = await this.commandBus.execute(command);
 

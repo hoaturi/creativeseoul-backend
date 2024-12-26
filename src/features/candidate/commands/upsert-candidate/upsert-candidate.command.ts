@@ -5,7 +5,7 @@ import { UpsertCandidateRequestDto } from '../../dtos/upsert-candidate-request.d
 
 export class UpsertCandidateCommand extends Command<Result<void, ResultError>> {
   public constructor(
-    public readonly userId: string,
+    public readonly profileId: string,
     public readonly dto: UpsertCandidateRequestDto,
   ) {
     super();

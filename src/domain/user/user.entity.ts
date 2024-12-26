@@ -15,7 +15,7 @@ export class User extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @OneToOne(() => Member, {
+  @OneToOne(() => Member, (member) => member.user, {
     cascade: [Cascade.REMOVE],
   })
   public readonly member: Member;

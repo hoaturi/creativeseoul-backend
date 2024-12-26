@@ -1,5 +1,4 @@
 import {
-  Cascade,
   Collection,
   Entity,
   FullTextType,
@@ -10,11 +9,12 @@ import {
   WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
 import { MemberLanguage } from './member-language.entity';
-import { Index, ManyToOne, Unique } from '@mikro-orm/core';
+import { Cascade, Index, ManyToOne, Unique } from '@mikro-orm/core';
 import { City } from '../common/entities/city.entity';
 import { Country } from '../common/entities/country.entity';
 import { BaseEntity } from '../base.entity';
 import { SocialLinks } from './social-links.interface';
+import { User } from '../user/user.entity';
 import { Candidate } from '../candidate/candidate.entity';
 
 const generateSearchVector = (member: Member): WeightedFullTextValue => ({
@@ -30,7 +30,13 @@ export class Member extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @OneToOne(() => Candidate, {
+  @OneToOne(() => User, (user) => user.member, {
+    owner: true,
+    deleteRule: 'cascade',
+  })
+  public readonly user!: User;
+
+  @OneToOne(() => Candidate, (candidate) => candidate.member, {
     nullable: true,
     cascade: [Cascade.REMOVE],
   })

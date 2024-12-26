@@ -11,7 +11,6 @@ import { CandidateProject } from '../../../../domain/candidate/candidate-project
 import { CandidateExperienceDto } from '../../dtos/candidate-experience.dto';
 import { CandidateProjectDto } from '../../dtos/candidate-project.dto';
 import { Member } from '../../../../domain/member/member.entity';
-import { User } from '../../../../domain/user/user.entity';
 
 @CommandHandler(UpsertCandidateCommand)
 export class UpsertCandidateHandler
@@ -23,28 +22,32 @@ export class UpsertCandidateHandler
   public async execute(
     command: UpsertCandidateCommand,
   ): Promise<Result<void, ResultError>> {
-    const { dto, userId } = command;
+    const { dto, profileId } = command;
 
-    const user = await this.em.findOne(User, userId, {
-      populate: ['member.candidate'],
+    const member = await this.em.findOne(Member, profileId, {
+      fields: ['id', 'candidate'],
+      populate: ['candidate'],
     });
 
-    if (!user.member.candidate) {
-      await this.createCandidate(user.member, dto);
+    if (!member.candidate) {
+      await this.createCandidate(member.id, dto);
       return Result.success();
     }
 
-    await this.updateExistingCandidate(user.member.candidate, dto);
+    await this.updateExistingCandidate(member.candidate, dto);
     return Result.success();
   }
 
   private async createCandidate(
-    member: Member,
+    memberId: string,
     dto: UpsertCandidateRequestDto,
   ): Promise<void> {
+    const member = this.em.getReference(Member, memberId);
+
     const candidate = this.em.create(
       Candidate,
       new Candidate(
+        member,
         dto.isOpenToWork,
         dto.isContactable,
         dto.isPublic,
@@ -73,8 +76,6 @@ export class UpsertCandidateHandler
       },
       'candidate.upsert-candidate.success: Candidate created successfully',
     );
-
-    member.candidate = candidate;
   }
 
   private async updateExistingCandidate(

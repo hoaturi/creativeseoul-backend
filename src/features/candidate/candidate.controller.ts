@@ -44,7 +44,7 @@ export class CandidateController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: UpsertCandidateRequestDto,
   ): Promise<void> {
-    const command = new UpsertCandidateCommand(user.id, dto);
+    const command = new UpsertCandidateCommand(user.profileId, dto);
 
     const result = await this.commandBus.execute(command);
 
