@@ -11,12 +11,12 @@ export const EMPLOYMENT_TYPES = [
   },
   {
     id: 3,
-    name: 'Contract/Temp',
-    slug: 'contract/Temp',
+    name: 'Contract',
+    slug: 'contract',
   },
   {
-    id: 4,
-    name: 'Freelance',
-    slug: 'freelance',
+    id: 5,
+    name: 'Internship',
+    slug: 'internship',
   },
 ] as const;
