@@ -20,7 +20,7 @@ describe('GetMemberHandler', () => {
       fullName: 'Test User',
       title: 'Developer',
       bio: 'Test bio',
-      avatarUrl: 'http://example.com/avatar.jpg',
+      avatarUrl: 'https://example.com/avatar.jpg',
       tags: ['tag1', 'tag2'],
       languages: {
         getItems: jest
@@ -32,7 +32,10 @@ describe('GetMemberHandler', () => {
       country: { name: 'Country' },
       city: { name: 'City' },
       socialLinks: {
-        instagram: 'http://example.com/social',
+        instagram: 'https://example.com/social',
+      },
+      professional: {
+        isOpenToWork: true,
       },
       ...overrides,
     }) as unknown as Member;
@@ -70,15 +73,16 @@ describe('GetMemberHandler', () => {
         fullName: 'Test User',
         title: 'Developer',
         bio: 'Test bio',
-        avatarUrl: 'http://example.com/avatar.jpg',
+        avatarUrl: 'https://example.com/avatar.jpg',
         tags: ['tag1', 'tag2'],
         languages: [
           new LanguageProficiencyResponseDto('English', LANGUAGE_LEVELS.NATIVE),
         ],
         location: new LocationResponseDto('Country', 'City'),
         socialLinks: new SocialLinksResponseDto({
-          instagram: 'http://example.com/social',
+          instagram: 'https://example.com/social',
         }),
+        isOpenToWork: true,
       }),
     );
   });
@@ -95,6 +99,7 @@ describe('GetMemberHandler', () => {
     expect(result.value.location).toEqual(
       new LocationResponseDto('Country', undefined),
     );
+    expect(result.value.isOpenToWork).toBe(true);
   });
 
   it('should handle member without languages', async () => {
@@ -109,6 +114,21 @@ describe('GetMemberHandler', () => {
 
     expect(result.isSuccess).toBeTruthy();
     expect(result.value.languages).toEqual([]);
+    expect(result.value.isOpenToWork).toBe(true);
+  });
+
+  it('should handle member without professional information', async () => {
+    const mockMember = createMockMember({
+      professional: null,
+    });
+    const query = new GetMemberQuery('test-handle');
+
+    em.findOne.mockResolvedValueOnce(mockMember);
+
+    const result = await handler.execute(query);
+
+    expect(result.isSuccess).toBeTruthy();
+    expect(result.value.isOpenToWork).toBe(undefined);
   });
 
   it('should return a failure result when member is not found', async () => {

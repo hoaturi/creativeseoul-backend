@@ -8,19 +8,22 @@ export class GetMemberResponseDto {
   public readonly handle: string;
 
   @ApiProperty()
-  public readonly fullName?: string;
+  public readonly fullName: string;
 
   @ApiProperty()
-  public readonly title?: string;
+  public readonly title: string;
 
   @ApiProperty()
-  public readonly bio?: string;
+  public readonly bio: string;
 
   @ApiProperty()
   public readonly avatarUrl?: string;
 
   @ApiProperty()
   public readonly tags?: string[];
+
+  @ApiProperty()
+  public readonly isOpenToWork?: boolean;
 
   @ApiProperty()
   public readonly languages: LanguageProficiencyResponseDto[];
@@ -34,10 +37,11 @@ export class GetMemberResponseDto {
   public constructor(data: {
     handle: string;
     fullName?: string;
-    title?: string;
-    bio?: string;
+    title: string;
+    bio: string;
     avatarUrl?: string;
-    tags?: string[];
+    tags: string[];
+    isOpenToWork?: boolean;
     languages: LanguageProficiencyResponseDto[];
     location: LocationResponseDto;
     socialLinks?: SocialLinksResponseDto;

@@ -21,7 +21,7 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
       Member,
       { handle: query.handle },
       {
-        populate: ['languages', 'city', 'country'],
+        populate: ['professional.isOpenToWork', 'languages', 'city', 'country'],
       },
     );
 
@@ -53,6 +53,7 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
         bio: member.bio,
         avatarUrl: member.avatarUrl,
         tags: member.tags,
+        isOpenToWork: member.professional?.isOpenToWork,
         languages,
         location,
         socialLinks,
