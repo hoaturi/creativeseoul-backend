@@ -1,5 +1,5 @@
 import { BaseEntity } from '../base.entity';
-import { Entity, Index, PrimaryKey } from '@mikro-orm/core';
+import { Cascade, Entity, Index, PrimaryKey } from '@mikro-orm/core';
 import {
   Collection,
   Enum,
@@ -70,13 +70,15 @@ export class Professional extends BaseEntity {
   @Index()
   public employmentTypes: string[];
 
-  @OneToMany(() => ProfessionalExperience, (e) => e.candidate, {
+  @OneToMany(() => ProfessionalExperience, (e) => e.professional, {
+    cascade: [Cascade.REMOVE],
     orphanRemoval: true,
   })
   public readonly experiences: Collection<ProfessionalExperience> =
     new Collection<ProfessionalExperience>(this);
 
   @OneToMany(() => ProfessionalProject, (p) => p.professional, {
+    cascade: [Cascade.REMOVE],
     orphanRemoval: true,
   })
   public readonly projects: Collection<ProfessionalProject> =

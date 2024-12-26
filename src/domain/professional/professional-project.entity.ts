@@ -1,4 +1,4 @@
-import { Cascade, Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { BaseEntity } from '../base.entity';
 import { Property } from '@mikro-orm/postgresql';
 import { Professional } from './professional.entity';
@@ -9,7 +9,7 @@ export class ProfessionalProject extends BaseEntity {
   public readonly id!: string;
 
   @ManyToOne(() => Professional, {
-    cascade: [Cascade.REMOVE],
+    deleteRule: 'cascade',
   })
   public professional!: Professional;
 
