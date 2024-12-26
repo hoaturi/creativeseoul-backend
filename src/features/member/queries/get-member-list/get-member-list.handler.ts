@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetMemberListQuery } from './get-member-list.query';
 import { EntityManager, QueryOrder, raw } from '@mikro-orm/postgresql';
-import { Result } from 'src/common/result/result';
-import { ResultError } from 'src/common/result/result-error';
+import { Result } from '../../../../common/result/result';
+import { ResultError } from '../../../../common/result/result-error';
 import {
   GetMemberListResponseDto,
   MemberListItemDto,
