@@ -47,9 +47,8 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
         'm.avatar_url as avatarUrl',
         'm.tags',
       ])
-      .select([])
-      .leftJoinAndSelect('m.country', 'c', {}, ['c.name'])
-      .leftJoinAndSelect('m.city', 'ct', {}, ['ct.name'])
+      .leftJoinAndSelect('m.country', 'c')
+      .leftJoinAndSelect('m.city', 'ct')
       .where({ qualityScore: { $gt: 40 } });
 
     if (search) {
@@ -64,22 +63,35 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
       qb.andWhere({ country_id: countryId });
     }
 
-    /**
-     * Calculates weighted score based on:
-     * - Base quality score
-     * - Activity decay: -0.5 per day, max 90 days
-     * - Promotion decay: -0.3 per day, max 90 days
-     */
-    const scoreFormula = raw(
-      `(
-      quality_score - 
-      LEAST(EXTRACT(EPOCH FROM NOW() - last_active_at) / 86400, 90) * 0.5 - 
-      LEAST(EXTRACT(EPOCH FROM NOW() - promoted_at) / 86400, 90) * 0.3
-      )`,
-    );
+    const priorityTier = raw(`
+      CASE 
+        /* High quality + Recently updated + Active: Best case */
+        WHEN m.promoted_at > NOW() - INTERVAL '3 days'
+        AND m.last_active_at > NOW() - INTERVAL '24 hours'
+        AND m.quality_score >= 80
+        THEN 3
+    
+        /* High quality + Either updated or active */
+        WHEN m.quality_score >= 80 
+        AND (
+          m.promoted_at > NOW() - INTERVAL '3 days'
+          OR m.last_active_at > NOW() - INTERVAL '24 hours'
+        )
+        THEN 2
+        
+        /* Recently updated or active */
+        WHEN m.promoted_at > NOW() - INTERVAL '3 days'
+        OR m.last_active_at > NOW() - INTERVAL '24 hours'
+        THEN 1
+        
+        ELSE 0 
+      END
+    `);
 
     qb.orderBy({
-      [scoreFormula]: QueryOrder.DESC,
+      [priorityTier]: QueryOrder.DESC,
+      'm.quality_score': QueryOrder.DESC,
+      'm.last_active_at': QueryOrder.DESC,
     })
       .limit(this.pageSizes)
       .offset(this.pageSizes * (page - 1));
@@ -89,7 +101,6 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
       number,
     ];
 
-    // Map the results to DTOs
     const memberDtos = members.map((member) => {
       const location = new LocationResponseDto(
         member.country.name,

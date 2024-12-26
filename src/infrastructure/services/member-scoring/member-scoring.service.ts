@@ -6,7 +6,6 @@ import { MemberLanguage } from '../../../domain/member/member-language.entity';
 @Injectable()
 export class MemberScoringService {
   private readonly SCORING_CONFIG = {
-    TOP_QUALITY_THRESHOLD: 70,
     WEIGHTS: {
       avatar: 20,
       bio: 30,
@@ -35,16 +34,11 @@ export class MemberScoringService {
       city: member.city ? 100 : 0,
     };
 
-    const weightedScore = Math.round(
+    return Math.round(
       Object.entries(scores).reduce((total, [field, score]) => {
         return total + score * (this.SCORING_CONFIG.WEIGHTS[field] / 100);
       }, 0),
     );
-
-    // If score is above threshold, normalize it to 100
-    return weightedScore >= this.SCORING_CONFIG.TOP_QUALITY_THRESHOLD
-      ? 100
-      : weightedScore;
   }
 
   private calculateBioScore(bio: string): number {
