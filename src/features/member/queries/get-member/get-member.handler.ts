@@ -21,6 +21,16 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
       Member,
       { handle: query.handle },
       {
+        fields: [
+          'handle',
+          'fullName',
+          'title',
+          'bio',
+          'avatarUrl',
+          'tags',
+          'socialLinks',
+          'professional.isOpenToWork',
+        ],
         populate: ['professional.isOpenToWork', 'languages', 'city', 'country'],
       },
     );
