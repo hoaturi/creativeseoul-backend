@@ -19,11 +19,11 @@ import {
   SALARY_RANGE,
 } from '../../../domain/common/constants';
 import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
-import { CandidateExperienceDto } from './candidate-experience.dto';
-import { CandidateProjectDto } from './candidate-project.dto';
+import { ProfessionalExperienceDto } from './professional-experience.dto';
+import { ProfessionalProjectDto } from './professional-project.dto';
 import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
 
-export class UpsertCandidateRequestDto {
+export class UpsertProfessionalRequestDto {
   @ApiProperty()
   @IsBoolean()
   public readonly isOpenToWork: boolean;
@@ -63,20 +63,20 @@ export class UpsertCandidateRequestDto {
   public readonly employmentTypes: string[];
 
   @ApiPropertyOptional({
-    type: [CandidateExperienceDto],
+    type: [ProfessionalExperienceDto],
   })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  public readonly experiences: CandidateExperienceDto[];
+  public readonly experiences: ProfessionalExperienceDto[];
 
   @ApiPropertyOptional({
-    type: [CandidateProjectDto],
+    type: [ProfessionalProjectDto],
   })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  public readonly projects: CandidateProjectDto[];
+  public readonly projects: ProfessionalProjectDto[];
 
   @ApiPropertyOptional()
   @IsOptional()

@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 
-export class CandidateProjectDto {
+export class ProfessionalProjectDto {
   @ApiProperty()
   @IsString()
   @MaxLength(64)

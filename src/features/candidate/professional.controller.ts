@@ -19,12 +19,12 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
-import { UpsertCandidateRequestDto } from './dtos/upsert-candidate-request.dto';
-import { UpsertCandidateCommand } from './commands/upsert-candidate/upsert-candidate.command';
+import { UpsertProfessionalRequestDto } from './dtos/upsert-professional-request.dto';
+import { UpsertProfessionalCommand } from './commands/upsert-professional/upsert-professional.command';
 import { UserRole } from '../../domain/user/user-role.enum';
 
-@Controller('candidates')
-export class CandidateController {
+@Controller('professionals')
+export class ProfessionalController {
   public constructor(private readonly commandBus: CommandBus) {}
 
   @Put('me')
@@ -42,9 +42,9 @@ export class CandidateController {
   })
   public async upsertCandidate(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: UpsertCandidateRequestDto,
+    @Body() dto: UpsertProfessionalRequestDto,
   ): Promise<void> {
-    const command = new UpsertCandidateCommand(user.profileId, dto);
+    const command = new UpsertProfessionalCommand(user.profileId, dto);
 
     const result = await this.commandBus.execute(command);
 

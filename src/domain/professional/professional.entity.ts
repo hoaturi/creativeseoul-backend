@@ -15,27 +15,29 @@ import {
   LOCATION_TYPES,
   SALARY_RANGE,
 } from '../common/constants';
-import { CandidateExperience } from './candidate-experience.entity';
-import { CandidateProject } from './candidate-project.entity';
+import { ProfessionalExperience } from './professional-experience.entity';
+import { ProfessionalProject } from './professional-project.entity';
 import { Member } from '../member/member.entity';
 
-const generateSearchVector = (candidate: Candidate): WeightedFullTextValue => ({
-  A: [candidate.skills?.join(' ')].filter(Boolean).join(' '),
+const generateSearchVector = (
+  professional: Professional,
+): WeightedFullTextValue => ({
+  A: [professional.skills?.join(' ')].filter(Boolean).join(' '),
 
   B: [
-    ...[...candidate.experiences].map((exp) => exp.title),
-    ...[...candidate.projects].map((project) => project.title),
+    ...[...professional.experiences].map((exp) => exp.title),
+    ...[...professional.projects].map((project) => project.title),
   ]
     .filter(Boolean)
     .join(' '),
 });
 
 @Entity()
-export class Candidate extends BaseEntity {
+export class Professional extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @OneToOne(() => Member, (member) => member.candidate, {
+  @OneToOne(() => Member, (member) => member.professional, {
     owner: true,
     deleteRule: 'cascade',
   })
@@ -68,17 +70,17 @@ export class Candidate extends BaseEntity {
   @Index()
   public employmentTypes: string[];
 
-  @OneToMany(() => CandidateExperience, (e) => e.candidate, {
+  @OneToMany(() => ProfessionalExperience, (e) => e.candidate, {
     orphanRemoval: true,
   })
-  public readonly experiences: Collection<CandidateExperience> =
-    new Collection<CandidateExperience>(this);
+  public readonly experiences: Collection<ProfessionalExperience> =
+    new Collection<ProfessionalExperience>(this);
 
-  @OneToMany(() => CandidateProject, (p) => p.candidate, {
+  @OneToMany(() => ProfessionalProject, (p) => p.professional, {
     orphanRemoval: true,
   })
-  public readonly projects: Collection<CandidateProject> =
-    new Collection<CandidateProject>(this);
+  public readonly projects: Collection<ProfessionalProject> =
+    new Collection<ProfessionalProject>(this);
 
   @Property({ type: 'array', nullable: true })
   public skills: string[];
@@ -98,8 +100,8 @@ export class Candidate extends BaseEntity {
   @Index({ type: 'fulltext' })
   @Property({
     type: new FullTextType('english'),
-    onCreate: (candidate: Candidate) => generateSearchVector(candidate),
-    onUpdate: (candidate: Candidate) => generateSearchVector(candidate),
+    onCreate: (candidate: Professional) => generateSearchVector(candidate),
+    onUpdate: (candidate: Professional) => generateSearchVector(candidate),
   })
   public searchVector!: WeightedFullTextValue;
 

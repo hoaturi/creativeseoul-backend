@@ -1,10 +1,10 @@
 import { ResultError } from '../../common/result/result-error';
 import { HttpStatus } from '@nestjs/common';
-import { CandidateErrorCode } from '../../domain/candidate/candidate-error-code.enum';
+import { ProfessionalErrorCode } from '../../domain/professional/professional-error-code.enum';
 
-export class CandidateError extends ResultError {
+export class ProfessionalError extends ResultError {
   public static readonly NotFound = new ResultError(
-    CandidateErrorCode.NOT_FOUND,
+    ProfessionalErrorCode.NOT_FOUND,
     HttpStatus.BAD_REQUEST,
     'Candidate not found',
   );

@@ -15,7 +15,7 @@ import { Country } from '../common/entities/country.entity';
 import { BaseEntity } from '../base.entity';
 import { SocialLinks } from './social-links.interface';
 import { User } from '../user/user.entity';
-import { Candidate } from '../candidate/candidate.entity';
+import { Professional } from '../professional/professional.entity';
 
 const generateSearchVector = (member: Member): WeightedFullTextValue => ({
   A: [member.title, member.tags?.join(' ')].filter(Boolean).join(' '),
@@ -36,11 +36,11 @@ export class Member extends BaseEntity {
   })
   public readonly user!: User;
 
-  @OneToOne(() => Candidate, (candidate) => candidate.member, {
+  @OneToOne(() => Professional, (professional) => professional.member, {
     nullable: true,
     cascade: [Cascade.REMOVE],
   })
-  public candidate?: Candidate;
+  public professional?: Professional;
 
   @Property({ length: 16 })
   @Unique()

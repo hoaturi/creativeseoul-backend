@@ -1,17 +1,17 @@
 import { Cascade, Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { BaseEntity } from '../base.entity';
 import { Property } from '@mikro-orm/postgresql';
-import { Candidate } from './candidate.entity';
+import { Professional } from './professional.entity';
 
 @Entity()
-export class CandidateProject extends BaseEntity {
+export class ProfessionalProject extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
-  @ManyToOne(() => Candidate, {
+  @ManyToOne(() => Professional, {
     cascade: [Cascade.REMOVE],
   })
-  public candidate!: Candidate;
+  public professional!: Professional;
 
   @Property({ length: 64 })
   public title!: string;

@@ -14,7 +14,7 @@ import { LoggerModule } from 'nestjs-pino';
 import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
-import { CandidateModule } from './features/candidate/candidate.module';
+import { ProfessionalModule } from './features/candidate/professional.module';
 import { UploadModule } from './features/upload/upload.module';
 import { MemberModule } from './features/member/member.module';
 
@@ -48,7 +48,7 @@ import { MemberModule } from './features/member/member.module';
     AuthModule,
     UserModule,
     MemberModule,
-    CandidateModule,
+    ProfessionalModule,
     UploadModule,
   ],
   controllers: [AppController],
