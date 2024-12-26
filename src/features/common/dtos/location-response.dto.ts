@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class LocationDto {
+export class LocationResponseDto {
   @ApiProperty()
   public readonly country: string;
 

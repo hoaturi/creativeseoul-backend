@@ -4,8 +4,8 @@ import { Test } from '@nestjs/testing';
 import { GetMemberQuery } from '../../src/features/member/queries/get-member/get-member-query';
 import { Member } from '../../src/domain/member/member.entity';
 import { MemberError } from '../../src/features/member/member.error';
-import { LanguageWithLevelDto } from '../../src/features/common/dtos/language-with-level.dto';
-import { LocationDto } from '../../src/features/common/dtos/location.dto';
+import { LanguageProficiencyResponseDto } from '../../src/features/common/dtos/language-proficiency-response.dto';
+import { LocationResponseDto } from '../../src/features/common/dtos/location-response.dto';
 import { SocialLinksResponseDto } from '../../src/features/member/dtos/responses/social-links-response.dto';
 import { GetMemberResponseDto } from '../../src/features/member/dtos/responses/get-member-response.dto';
 import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
@@ -73,9 +73,9 @@ describe('GetMemberHandler', () => {
         avatarUrl: 'http://example.com/avatar.jpg',
         tags: ['tag1', 'tag2'],
         languages: [
-          new LanguageWithLevelDto('English', LANGUAGE_LEVELS.NATIVE),
+          new LanguageProficiencyResponseDto('English', LANGUAGE_LEVELS.NATIVE),
         ],
-        location: new LocationDto('Country', 'City'),
+        location: new LocationResponseDto('Country', 'City'),
         socialLinks: new SocialLinksResponseDto({
           instagram: 'http://example.com/social',
         }),
@@ -93,7 +93,7 @@ describe('GetMemberHandler', () => {
 
     expect(result.isSuccess).toBeTruthy();
     expect(result.value.location).toEqual(
-      new LocationDto('Country', undefined),
+      new LocationResponseDto('Country', undefined),
     );
   });
 

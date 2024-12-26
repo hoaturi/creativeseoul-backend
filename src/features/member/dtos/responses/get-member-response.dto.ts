@@ -1,6 +1,6 @@
-import { LanguageWithLevelDto } from '../../../common/dtos/language-with-level.dto';
+import { LanguageProficiencyResponseDto } from '../../../common/dtos/language-proficiency-response.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { LocationDto } from '../../../common/dtos/location.dto';
+import { LocationResponseDto } from '../../../common/dtos/location-response.dto';
 import { SocialLinksResponseDto } from './social-links-response.dto';
 
 export class GetMemberResponseDto {
@@ -23,10 +23,10 @@ export class GetMemberResponseDto {
   public readonly tags?: string[];
 
   @ApiProperty()
-  public readonly languages: LanguageWithLevelDto[];
+  public readonly languages: LanguageProficiencyResponseDto[];
 
   @ApiProperty()
-  public readonly location: LocationDto;
+  public readonly location: LocationResponseDto;
 
   @ApiPropertyOptional()
   public readonly socialLinks?: SocialLinksResponseDto;
@@ -38,8 +38,8 @@ export class GetMemberResponseDto {
     bio?: string;
     avatarUrl?: string;
     tags?: string[];
-    languages: LanguageWithLevelDto[];
-    location: LocationDto;
+    languages: LanguageProficiencyResponseDto[];
+    location: LocationResponseDto;
     socialLinks?: SocialLinksResponseDto;
   }) {
     Object.assign(this, data);
