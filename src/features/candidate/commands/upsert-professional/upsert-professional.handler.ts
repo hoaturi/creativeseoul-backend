@@ -1,16 +1,16 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpsertProfessionalCommand } from './upsert-professional.command';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Result } from 'src/common/result/result';
-import { ResultError } from 'src/common/result/result-error';
+import { Result } from '../../../../common/result/result';
+import { ResultError } from '../../../../common/result/result-error';
 import { Logger } from '@nestjs/common';
 import { Professional } from '../../../../domain/professional/professional.entity';
 import { UpsertProfessionalRequestDto } from '../../dtos/upsert-professional-request.dto';
 import { ProfessionalExperience } from '../../../../domain/professional/professional-experience.entity';
 import { ProfessionalProject } from '../../../../domain/professional/professional-project.entity';
-import { ProfessionalExperienceDto } from '../../dtos/professional-experience.dto';
-import { ProfessionalProjectDto } from '../../dtos/professional-project.dto';
 import { Member } from '../../../../domain/member/member.entity';
+import { ProfessionalExperienceRequestDto } from '../../dtos/professional-experience-request.dto';
+import { ProfessionalProjectRequestDto } from '../../dtos/professional-project-request.dto';
 
 @CommandHandler(UpsertProfessionalCommand)
 export class UpsertProfessionalHandler
@@ -111,7 +111,7 @@ export class UpsertProfessionalHandler
   }
 
   private mapExperiences(
-    experiences: ProfessionalExperienceDto[],
+    experiences: ProfessionalExperienceRequestDto[],
   ): ProfessionalExperience[] {
     return experiences.map(
       (experience) =>
@@ -124,7 +124,7 @@ export class UpsertProfessionalHandler
   }
 
   private mapProjects(
-    projects: ProfessionalProjectDto[],
+    projects: ProfessionalProjectRequestDto[],
   ): ProfessionalProject[] {
     return projects.map(
       (project) =>

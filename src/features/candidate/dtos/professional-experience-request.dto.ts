@@ -1,20 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, MaxLength, Min } from 'class-validator';
+import { IsNumber, IsString, MaxLength, Min, MinLength } from 'class-validator';
+import { Trim } from '../../../common/decorators/trim.decorator';
 
-export class ProfessionalExperienceDto {
+export class ProfessionalExperienceRequestDto {
   @ApiProperty()
   @IsString()
-  @Min(3)
-  @MaxLength(32)
+  @MinLength(3)
+  @MaxLength(64)
+  @Trim()
   public readonly title: string;
 
   @ApiProperty()
-  @Min(0)
   @IsNumber()
+  @Min(0)
   public readonly yearsOfExperience: number;
 
   @ApiProperty()
   @IsString()
   @MaxLength(512)
+  @Trim()
   public readonly description: string;
 }
