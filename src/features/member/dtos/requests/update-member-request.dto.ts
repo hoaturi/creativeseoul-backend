@@ -16,11 +16,11 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { MemberLanguageRequestDto } from './member-language-request.dto';
-import { Trim } from '../../../common/decorators/trim.decorator';
-import { IsAlphaSpace } from '../../../common/decorators/is-alpha-space.decorator';
-import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
-import { COUNTRIES } from '../../../domain/common/constants';
-import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
+import { Trim } from '../../../../common/decorators/trim.decorator';
+import { IsAlphaSpace } from '../../../../common/decorators/is-alpha-space.decorator';
+import { IsValidTags } from '../../../../common/decorators/is-valid-tags.decorator';
+import { COUNTRIES } from '../../../../domain/common/constants';
+import { HasUniqueLanguages } from '../../../../common/decorators/has-unique-languages.decorator';
 import { MemberSocialLinksRequestDto } from './member-social-links-request.dto';
 
 export class UpdateMemberRequestDto {

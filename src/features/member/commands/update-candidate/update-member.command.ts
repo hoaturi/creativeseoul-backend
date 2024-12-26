@@ -1,4 +1,4 @@
-import { UpdateMemberRequestDto } from '../../dtos/update-member-request.dto';
+import { UpdateMemberRequestDto } from '../../dtos/requests/update-member-request.dto';
 import { Command } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';

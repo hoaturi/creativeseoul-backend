@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, Max, Min } from 'class-validator';
-import { LANGUAGE_LEVELS, LANGUAGES } from '../../../domain/common/constants';
+import {
+  LANGUAGE_LEVELS,
+  LANGUAGES,
+} from '../../../../domain/common/constants';
 
 export class MemberLanguageRequestDto {
   @ApiProperty()

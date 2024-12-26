@@ -4,7 +4,7 @@ import {
   ValidationOptions,
 } from 'class-validator';
 
-import { MemberLanguageRequestDto } from '../../features/member/dtos/member-language-request.dto';
+import { MemberLanguageRequestDto } from '../../features/member/dtos/requests/member-language-request.dto';
 
 export function HasUniqueLanguages(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {

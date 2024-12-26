@@ -5,14 +5,14 @@ import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import { Logger } from '@nestjs/common';
 import { Language } from '../../../../domain/common/entities/language.entity';
-import { UpdateMemberRequestDto } from '../../dtos/update-member-request.dto';
+import { UpdateMemberRequestDto } from '../../dtos/requests/update-member-request.dto';
 import { City } from '../../../../domain/common/entities/city.entity';
 import { Country } from '../../../../domain/common/entities/country.entity';
 import slugify from 'slugify';
 import { Member } from '../../../../domain/member/member.entity';
 import { MemberLanguage } from '../../../../domain/member/member-language.entity';
 import { MemberScoringService } from '../../../../infrastructure/services/member-scoring/member-scoring.service';
-import { MemberLanguageRequestDto } from '../../dtos/member-language-request.dto';
+import { MemberLanguageRequestDto } from '../../dtos/requests/member-language-request.dto';
 
 @CommandHandler(UpdateMemberCommand)
 export class UpdateMemberHandler

@@ -3,7 +3,7 @@ import { GetMemberQuery } from './get-member-query';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
-import { GetMemberResponseDto } from '../dtos/get-member-response.dto';
+import { GetMemberResponseDto } from '../dtos/responses/get-member-response.dto';
 import { Member } from '../../../domain/member/member.entity';
 import { MemberError } from '../member.error';
 

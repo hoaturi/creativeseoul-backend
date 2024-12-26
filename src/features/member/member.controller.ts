@@ -20,11 +20,11 @@ import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { UpdateMemberRequestDto } from './dtos/update-member-request.dto';
+import { UpdateMemberRequestDto } from './dtos/requests/update-member-request.dto';
 import { UpdateMemberCommand } from './commands/update-candidate/update-member.command';
 import { UserRole } from '../../domain/user/user-role.enum';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
-import { GetMemberResponseDto } from './dtos/get-member-response.dto';
+import { GetMemberResponseDto } from './dtos/responses/get-member-response.dto';
 import { GetMemberQuery } from './queries/get-member-query';
 import { MemberError } from './member.error';
 

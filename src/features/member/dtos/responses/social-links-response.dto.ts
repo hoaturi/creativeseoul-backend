@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MemberSocialLinks } from '../../../domain/member/member-social-links.interface';
+import { MemberSocialLinks } from '../../../../domain/member/member-social-links.interface';
 
 export class SocialLinksResponseDto {
   @ApiProperty({ required: false })

@@ -1,8 +1,8 @@
-import { LanguageWithLevelDto } from '../../common/dtos/language-with-level.dto';
+import { LanguageWithLevelDto } from '../../../common/dtos/language-with-level.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { LocationDto } from '../../common/dtos/location.dto';
+import { LocationDto } from '../../../common/dtos/location.dto';
 import { SocialLinksResponseDto } from './social-links-response.dto';
-import { Member } from '../../../domain/member/member.entity';
+import { Member } from '../../../../domain/member/member.entity';
 
 export class GetMemberResponseDto {
   @ApiProperty()
