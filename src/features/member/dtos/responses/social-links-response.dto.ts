@@ -45,19 +45,6 @@ export class SocialLinksResponseDto {
   public readonly website?: string;
 
   public constructor(socialLinks?: MemberSocialLinks) {
-    this.instagram = socialLinks?.instagram;
-    this.facebook = socialLinks?.facebook;
-    this.tiktok = socialLinks?.tiktok;
-    this.linkedin = socialLinks?.linkedin;
-    this.github = socialLinks?.github;
-    this.behance = socialLinks?.behance;
-    this.twitter = socialLinks?.twitter;
-    this.dribbble = socialLinks?.dribbble;
-    this.youtube = socialLinks?.youtube;
-    this.vimeo = socialLinks?.vimeo;
-    this.artstation = socialLinks?.artstation;
-    this.medium = socialLinks?.medium;
-    this.substack = socialLinks?.substack;
-    this.website = socialLinks?.website;
+    Object.assign(this, socialLinks);
   }
 }
