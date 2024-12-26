@@ -1,12 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class LocationDto {
   @ApiProperty()
   public readonly country: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiPropertyOptional()
   public readonly city?: string;
 
   public constructor(country: string, city?: string) {
