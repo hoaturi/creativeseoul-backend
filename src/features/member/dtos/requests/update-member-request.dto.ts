@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  ArrayUnique,
   IsAlphanumeric,
   IsArray,
   IsLowercase,
@@ -58,8 +59,8 @@ export class UpdateMemberRequestDto {
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(5)
+  @ArrayUnique()
   @IsValidTags()
-  @MaxLength(16, { each: true })
   @Trim({ each: true })
   public readonly tags: string[];
 
