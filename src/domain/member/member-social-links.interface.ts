@@ -1,16 +1,16 @@
-export interface SocialLinks {
+export interface MemberSocialLinks {
   instagram?: string;
   facebook?: string;
   tiktok?: string;
   linkedin?: string;
+  github?: string;
   behance?: string;
-  gitHub?: string;
   twitter?: string;
   dribbble?: string;
   youtube?: string;
   vimeo?: string;
-  artStation?: string;
+  artstation?: string;
   medium?: string;
-  subStack?: string;
+  substack?: string;
   website?: string;
 }

@@ -4,7 +4,7 @@ import {
   ValidationOptions,
 } from 'class-validator';
 
-import { MemberLanguageDto } from '../../features/member/dtos/member-language.dto';
+import { MemberLanguageRequestDto } from '../../features/member/dtos/member-language-request.dto';
 
 export function HasUniqueLanguages(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
@@ -14,7 +14,7 @@ export function HasUniqueLanguages(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(languages: MemberLanguageDto[]) {
+        validate(languages: MemberLanguageRequestDto[]) {
           if (!Array.isArray(languages)) return false;
 
           const languageIds = languages.map((lang) => lang.languageId);

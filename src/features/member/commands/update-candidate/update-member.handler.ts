@@ -12,7 +12,7 @@ import slugify from 'slugify';
 import { Member } from '../../../../domain/member/member.entity';
 import { MemberLanguage } from '../../../../domain/member/member-language.entity';
 import { MemberScoringService } from '../../../../infrastructure/services/member-scoring/member-scoring.service';
-import { MemberLanguageDto } from '../../dtos/member-language.dto';
+import { MemberLanguageRequestDto } from '../../dtos/member-language-request.dto';
 
 @CommandHandler(UpdateMemberCommand)
 export class UpdateMemberHandler
@@ -76,7 +76,7 @@ export class UpdateMemberHandler
 
   private updateLanguages(
     member: Member,
-    languages: MemberLanguageDto[],
+    languages: MemberLanguageRequestDto[],
   ): void {
     const memberLanguages = languages.map((lang) => {
       const language = this.em.getReference(Language, lang.languageId);

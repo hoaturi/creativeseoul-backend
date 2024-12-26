@@ -15,14 +15,13 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
-import { IsAlphaSpace } from '../../../common/decorators/is-alpha-space.decorator';
-import { COUNTRIES } from '../../../domain/common/constants';
-import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
+import { MemberLanguageRequestDto } from './member-language-request.dto';
 import { Trim } from '../../../common/decorators/trim.decorator';
-import { MemberLanguageDto } from './member-language.dto';
-import { MemberSocialLinksDto } from './member-social-links.dto';
+import { IsAlphaSpace } from '../../../common/decorators/is-alpha-space.decorator';
+import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
+import { COUNTRIES } from '../../../domain/common/constants';
+import { HasUniqueLanguages } from '../../../common/decorators/has-unique-languages.decorator';
+import { MemberSocialLinksRequestDto } from './member-social-links-request.dto';
 
 export class UpdateMemberRequestDto {
   @ApiProperty()
@@ -79,13 +78,12 @@ export class UpdateMemberRequestDto {
   @Trim()
   public readonly city?: string;
 
-  @ApiProperty({ type: [MemberLanguageDto] })
+  @ApiProperty({ type: [MemberLanguageRequestDto] })
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @HasUniqueLanguages()
-  @Type(() => MemberLanguageDto)
-  public readonly languages: MemberLanguageDto[];
+  public readonly languages: MemberLanguageRequestDto[];
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -93,8 +91,8 @@ export class UpdateMemberRequestDto {
   @Trim()
   public readonly avatarUrl?: string;
 
-  @ApiPropertyOptional({ type: MemberSocialLinksDto })
+  @ApiPropertyOptional({ type: MemberSocialLinksRequestDto })
   @IsOptional()
   @ValidateNested()
-  public readonly socialLinks?: MemberSocialLinksDto;
+  public readonly socialLinks?: MemberSocialLinksRequestDto;
 }

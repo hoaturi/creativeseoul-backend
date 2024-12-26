@@ -13,9 +13,9 @@ import { Cascade, Index, ManyToOne, Unique } from '@mikro-orm/core';
 import { City } from '../common/entities/city.entity';
 import { Country } from '../common/entities/country.entity';
 import { BaseEntity } from '../base.entity';
-import { SocialLinks } from './social-links.interface';
 import { User } from '../user/user.entity';
 import { Professional } from '../professional/professional.entity';
+import { MemberSocialLinks } from './member-social-links.interface';
 
 const generateSearchVector = (member: Member): WeightedFullTextValue => ({
   A: [member.title, member.tags?.join(' ')].filter(Boolean).join(' '),
@@ -74,7 +74,7 @@ export class Member extends BaseEntity {
   public country?: Country;
 
   @Property({ type: 'jsonb', nullable: true })
-  public socialLinks?: SocialLinks;
+  public socialLinks?: MemberSocialLinks;
 
   @Property({ nullable: true })
   public qualityScore: number;
