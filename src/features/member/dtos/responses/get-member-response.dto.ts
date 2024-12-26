@@ -16,13 +16,13 @@ export class GetMemberResponseDto {
   @ApiProperty()
   public readonly bio: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   public readonly avatarUrl?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   public readonly tags?: string[];
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   public readonly isOpenToWork?: boolean;
 
   @ApiProperty()
@@ -36,11 +36,11 @@ export class GetMemberResponseDto {
 
   public constructor(data: {
     handle: string;
-    fullName?: string;
+    fullName: string;
     title: string;
     bio: string;
     avatarUrl?: string;
-    tags: string[];
+    tags?: string[];
     isOpenToWork?: boolean;
     languages: LanguageProficiencyResponseDto[];
     location: LocationResponseDto;
