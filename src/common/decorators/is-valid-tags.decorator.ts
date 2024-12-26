@@ -15,7 +15,7 @@ export function IsValidTags(validationOptions?: ValidationOptions) {
         validate(value: string[], _: ValidationArguments) {
           // Tag must start with a letter and can contain letters, numbers,
           // dots, and special characters (#,+). Length must be between 3-32 characters
-          const TAG_PATTERN = /^[a-zA-Z][a-zA-Z0-9.#+]{2,31}$/;
+          const TAG_PATTERN = /^[a-zA-Z][a-zA-Z0-9.#+]{2,15}$/;
 
           return (
             Array.isArray(value) && value.every((tag) => TAG_PATTERN.test(tag))
