@@ -77,12 +77,15 @@ export class Member extends BaseEntity {
   public socialLinks?: MemberSocialLinks;
 
   @Property({ nullable: true })
+  @Index()
   public qualityScore: number;
 
   @Property({ nullable: true })
+  @Index()
   public promotedAt?: Date;
 
   @Property({ nullable: true })
+  @Index()
   public lastActiveAt?: Date;
 
   @Index({ type: 'fulltext' })
