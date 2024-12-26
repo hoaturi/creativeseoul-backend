@@ -52,7 +52,7 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
         title: member.title,
         bio: member.bio,
         avatarUrl: member.avatarUrl,
-        tags: member.tags,
+        tags: member.tags?.length ? member.tags : undefined,
         isOpenToWork: member.professional?.isOpenToWork,
         languages,
         location,
