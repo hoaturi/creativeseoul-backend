@@ -110,10 +110,7 @@ export class AuthController {
       throw new HttpException(result.error, result.error.statusCode);
     }
 
-    session.user = {
-      id: result.value.user.id,
-      role: result.value.user.role,
-    };
+    session.user = result.value.user;
   }
 
   @Post('logout')

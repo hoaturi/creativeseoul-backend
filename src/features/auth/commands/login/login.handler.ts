@@ -19,10 +19,11 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     command: LoginCommand,
   ): Promise<Result<LoginCommandResult, ResultError>> {
     const { email, password } = command.dto;
+
     const user = await this.em.findOne(
       User,
       { email },
-      { fields: ['id', 'password', 'role', 'isVerified'] },
+      { fields: ['id', 'password', 'role', 'isVerified', 'member'] },
     );
 
     if (!user) {
@@ -42,13 +43,20 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       return Result.failure(AuthError.EmailNotVerified);
     }
 
+    // TODO: add company?.id when company is implemented
+    const profileId = user.member?.id;
+
     this.logger.log(
       { userId: user.id },
       'auth.login.success: User authenticated',
     );
 
     return Result.success(
-      new LoginCommandResult({ id: user.id, role: user.role }),
+      new LoginCommandResult({
+        id: user.id,
+        role: user.role,
+        profileId,
+      }),
     );
   }
 }
