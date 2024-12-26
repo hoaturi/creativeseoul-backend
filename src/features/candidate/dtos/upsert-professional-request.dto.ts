@@ -5,11 +5,13 @@ import {
   IsArray,
   IsBoolean,
   IsEmail,
-  IsIn,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
   Matches,
+  Max,
+  Min,
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
@@ -38,21 +40,33 @@ export class UpsertProfessionalRequestDto {
   @IsBoolean()
   public readonly isContactable: boolean;
 
-  @ApiProperty()
-  @IsArray()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(EMPLOYMENT_TYPES.length)
-  @IsString({ each: true })
-  @IsIn(EMPLOYMENT_TYPES.map((t) => t.slug), { each: true })
-  public readonly employmentTypes: string[];
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(HOURLY_RATE_RANGE.length)
+  public readonly hourlyRateRangeId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(SALARY_RANGE.length)
+  public readonly salaryRangeId?: number;
 
   @ApiProperty()
   @IsArray()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(LOCATION_TYPES.length)
-  @IsString({ each: true })
-  @IsIn(LOCATION_TYPES.map((t) => t.slug), { each: true })
-  public readonly locationTypes: string[];
+  @IsNumber({}, { each: true })
+  @Min(1, { each: true })
+  @Max(EMPLOYMENT_TYPES.length, { each: true })
+  public readonly employmentTypeIds: number[];
+
+  @ApiProperty()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @Min(1, { each: true })
+  @Max(LOCATION_TYPES.length, { each: true })
+  public readonly locationTypeIds: number[];
 
   @ApiPropertyOptional({
     type: [ProfessionalExperienceRequestDto],
@@ -82,16 +96,6 @@ export class UpsertProfessionalRequestDto {
   @Trim({ each: true })
   @RemoveDuplicates()
   public readonly skills?: string[];
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsIn(HOURLY_RATE_RANGE.map((r) => r.slug))
-  public readonly hourlyRateRange?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsIn(SALARY_RANGE.map((r) => r.slug))
-  public readonly salaryRange?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

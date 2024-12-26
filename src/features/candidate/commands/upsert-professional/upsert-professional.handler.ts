@@ -43,27 +43,15 @@ export class UpsertProfessionalHandler
     dto: UpsertProfessionalRequestDto,
   ): Promise<void> {
     const member = this.em.getReference(Member, memberId);
+    const { experiences: experiencesDto, projects: projectsDto, ...data } = dto;
 
     const professional = this.em.create(
       Professional,
-      new Professional(
-        member,
-        dto.isOpenToWork,
-        dto.isContactable,
-        dto.isPublic,
-        dto.salaryRange,
-        dto.hourlyRateRange,
-        dto.locationTypes,
-        dto.employmentTypes,
-        dto.skills,
-        dto.resumeUrl,
-        dto.email,
-        dto.phone,
-      ),
+      new Professional(member, data),
     );
 
-    const experiences = this.mapExperiences(dto.experiences);
-    const projects = this.mapProjects(dto.projects);
+    const experiences = this.mapExperiences(experiencesDto);
+    const projects = this.mapProjects(projectsDto);
 
     professional.experiences.add(experiences);
     professional.projects.add(projects);
@@ -82,20 +70,12 @@ export class UpsertProfessionalHandler
     professional: Professional,
     dto: UpsertProfessionalRequestDto,
   ): Promise<void> {
-    professional.isPublic = dto.isPublic;
-    professional.isOpenToWork = dto.isOpenToWork;
-    professional.salaryRange = dto.salaryRange;
-    professional.hourlyRateRange = dto.hourlyRateRange;
-    professional.employmentTypes = dto.employmentTypes;
-    professional.locationTypes = dto.locationTypes;
-    professional.skills = dto.skills;
-    professional.resumeUrl = dto.resumeUrl;
-    professional.isContactable = dto.isContactable;
-    professional.email = dto.email;
-    professional.phone = dto.phone;
+    const { experiences: experiencesDto, projects: projectsDto, ...data } = dto;
 
-    const experiences = this.mapExperiences(dto.experiences);
-    const projects = this.mapProjects(dto.projects);
+    Object.assign(professional, data);
+
+    const experiences = this.mapExperiences(experiencesDto);
+    const projects = this.mapProjects(projectsDto);
 
     professional.experiences.set(experiences);
     professional.projects.set(projects);

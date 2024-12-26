@@ -2,19 +2,12 @@ import { BaseEntity } from '../base.entity';
 import { Cascade, Entity, Index, PrimaryKey } from '@mikro-orm/core';
 import {
   Collection,
-  Enum,
   FullTextType,
   OneToMany,
   OneToOne,
   Property,
   WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
-import {
-  EMPLOYMENT_TYPES,
-  HOURLY_RATE_RANGE,
-  LOCATION_TYPES,
-  SALARY_RANGE,
-} from '../common/constants';
 import { ProfessionalExperience } from './professional-experience.entity';
 import { ProfessionalProject } from './professional-project.entity';
 import { Member } from '../member/member.entity';
@@ -51,24 +44,20 @@ export class Professional extends BaseEntity {
   public isPublic!: boolean;
 
   @Property({ nullable: true })
-  @Enum(() => SALARY_RANGE.map((r) => r.slug))
   @Index()
-  public salaryRange?: string;
+  public salaryRangeId?: number;
 
   @Property({ nullable: true })
-  @Enum(() => HOURLY_RATE_RANGE.map((r) => r.slug))
   @Index()
-  public hourlyRateRange?: string;
+  public hourlyRateRangeId?: number;
 
   @Property({ type: 'array' })
-  @Enum(() => LOCATION_TYPES.map((t) => t.slug))
   @Index()
-  public locationTypes: string[];
+  public locationTypeIds: number[];
 
   @Property({ type: 'array' })
-  @Enum(() => EMPLOYMENT_TYPES.map((t) => t.slug))
   @Index()
-  public employmentTypes: string[];
+  public employmentTypeIds: number[];
 
   @OneToMany(() => ProfessionalExperience, (e) => e.professional, {
     cascade: [Cascade.REMOVE],
@@ -109,30 +98,21 @@ export class Professional extends BaseEntity {
 
   public constructor(
     member: Member,
-    isOpenToWork: boolean,
-    isContactable: boolean,
-    isPublic: boolean,
-    salaryRange?: string,
-    hourlyRateRange?: string,
-    locationTypes?: string[],
-    employmentTypes?: string[],
-    skills?: string[],
-    resumeUrl?: string,
-    email?: string,
-    phone?: string,
+    data: {
+      isPublic: boolean;
+      isOpenToWork: boolean;
+      isContactable: boolean;
+      locationTypeIds: number[];
+      employmentTypeIds: number[];
+      salaryRangeId?: number;
+      hourlyRateRangeId?: number;
+      skills?: string[];
+      resumeUrl?: string;
+      email?: string;
+      phone?: string;
+    },
   ) {
     super();
-    this.member = member;
-    this.isOpenToWork = isOpenToWork;
-    this.isContactable = isContactable;
-    this.isPublic = isPublic;
-    this.salaryRange = salaryRange;
-    this.hourlyRateRange = hourlyRateRange;
-    this.locationTypes = locationTypes;
-    this.employmentTypes = employmentTypes;
-    this.skills = skills;
-    this.resumeUrl = resumeUrl;
-    this.email = email;
-    this.phone = phone;
+    Object.assign(this, member, data);
   }
 }
