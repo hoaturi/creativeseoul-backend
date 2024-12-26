@@ -5,6 +5,7 @@ import {
   HttpException,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -27,6 +28,9 @@ import { Roles } from '../../infrastructure/security/decorators/roles.decorator'
 import { GetMemberResponseDto } from './dtos/responses/get-member-response.dto';
 import { GetMemberQuery } from './queries/get-member/get-member-query';
 import { MemberError } from './member.error';
+import { GetMemberListResponseDto } from './dtos/responses/get-member-list-response.dto';
+import { GetMemberListQueryDto } from './dtos/requests/get-member-list-query.dto';
+import { GetMemberListQuery } from './queries/get-member-list/get-member-list.query';
 
 @Controller('members')
 export class MemberController {
@@ -34,6 +38,24 @@ export class MemberController {
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
+
+  @Get()
+  @ApiOkResponse({
+    type: GetMemberListResponseDto,
+  })
+  public async getMemberList(
+    @Query() queryDto: GetMemberListQueryDto,
+  ): Promise<GetMemberListResponseDto> {
+    const query = new GetMemberListQuery(queryDto);
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
 
   @Get(':handle')
   @ApiOkResponse({
