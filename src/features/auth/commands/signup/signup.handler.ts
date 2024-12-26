@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SignupCommand } from './signup.command';
-import { User, UserRole } from '../../../../domain/user/user.entity';
+import { User } from '../../../../domain/user/user.entity';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
@@ -17,6 +17,7 @@ import { EmailVerificationToken } from '../../../../domain/auth/email-verificati
 import * as crypto from 'crypto';
 import { Member } from '../../../../domain/member/member.entity';
 import { SignUpRequestDto } from '../../dtos';
+import { UserRole } from '../../../../domain/user/user-role.enum';
 
 @CommandHandler(SignupCommand)
 export class SignupHandler implements ICommandHandler<SignupCommand> {

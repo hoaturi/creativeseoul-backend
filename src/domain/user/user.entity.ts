@@ -8,12 +8,7 @@ import {
 import { BaseEntity } from '../base.entity';
 import { Cascade, Index } from '@mikro-orm/core';
 import { Member } from '../member/member.entity';
-
-export enum UserRole {
-  CANDIDATE = 'candidate',
-  EMPLOYER = 'employer',
-  ADMIN = 'admin',
-}
+import { UserRole } from './user-role.enum';
 
 @Entity()
 export class User extends BaseEntity {

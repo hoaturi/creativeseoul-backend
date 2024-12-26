@@ -18,17 +18,17 @@ import { CommonError } from '../common/common.error';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
-import { UserRole } from '../../domain/user/user.entity';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 import { UpsertCandidateRequestDto } from './dtos/upsert-candidate-request.dto';
 import { UpsertCandidateCommand } from './commands/upsert-candidate/upsert-candidate.command';
+import { UserRole } from '../../domain/user/user-role.enum';
 
 @Controller('candidates')
 export class CandidateController {
   public constructor(private readonly commandBus: CommandBus) {}
 
   @Put('me')
-  @Roles(UserRole.CANDIDATE)
+  @Roles(UserRole.MEMBER)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({

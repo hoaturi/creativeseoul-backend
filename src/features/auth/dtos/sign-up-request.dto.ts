@@ -24,8 +24,8 @@ export class SignUpRequestDto {
   public readonly fullName: string;
 
   @ApiProperty({
-    enum: ['candidate', 'employer'],
+    enum: ['member', 'company'],
   })
-  @IsEnum(['candidate', 'employer'])
-  public readonly role: 'candidate' | 'employer';
+  @IsEnum(['member', 'company'])
+  public readonly role: 'member' | 'company';
 }

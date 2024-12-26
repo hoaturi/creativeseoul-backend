@@ -15,7 +15,6 @@ import {
 import { GeneratePresignedUrlResponseDto } from './dtos/generate-presigned-url-response.dto';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
-import { UserRole } from '../../domain/user/user.entity';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { AuthError } from '../auth/auth.error';
 import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
@@ -26,13 +25,14 @@ import {
 } from './commands/generate-presigned-url.command';
 import { GenerateImagePresignedUrlRequestDto } from './dtos/generate-image-presigned-url-request.dto';
 import { CommonError } from '../common/common.error';
+import { UserRole } from '../../domain/user/user-role.enum';
 
 @Controller('upload')
 export class UploadController {
   public constructor(private readonly commandBus: CommandBus) {}
 
   @Put('avatar')
-  @Roles(UserRole.CANDIDATE)
+  @Roles(UserRole.MEMBER)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse({
     type: GeneratePresignedUrlResponseDto,

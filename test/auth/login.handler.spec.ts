@@ -2,9 +2,9 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { LoginCommand, LoginHandler } from '../../src/features/auth/commands';
-import { UserRole } from '../../src/domain/user/user.entity';
 import { LoginCommandResult } from '../../src/features/auth/commands/login/login-command.result';
 import { AuthError } from '../../src/features/auth/auth.error';
+import { UserRole } from '../../src/domain/user/user-role.enum';
 
 jest.mock('bcrypt');
 
@@ -39,7 +39,7 @@ describe('LoginHandler', () => {
     id: '1',
     email: mockEmail,
     password: mockPassword,
-    role: UserRole.CANDIDATE,
+    role: UserRole.MEMBER,
     isVerified: true,
   };
 
