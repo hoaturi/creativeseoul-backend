@@ -8,7 +8,7 @@ import { Result } from '../../../common/result/result';
 import { StorageService } from '../../../infrastructure/services/storage/storage.service';
 import { GeneratePresignedUrlResponseDto } from '../dtos/generate-presigned-url-response.dto';
 import { ResultError } from '../../../common/result/result-error';
-import { ProfessionalError } from '../../candidate/professional.error';
+import { ProfessionalError } from '../../professional/professional.error';
 import { User } from '../../../domain/user/user.entity';
 
 @CommandHandler(GeneratePresignedUrlCommand)
