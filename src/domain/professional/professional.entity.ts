@@ -51,11 +51,13 @@ export class Professional extends BaseEntity {
   @Index()
   public hourlyRateRangeId?: number;
 
-  @Property({ type: 'array' })
+  @Property({
+    columnType: 'integer[]',
+  })
   @Index()
   public locationTypeIds: number[];
 
-  @Property({ type: 'array' })
+  @Property({ columnType: 'integer[]' })
   @Index()
   public employmentTypeIds: number[];
 
