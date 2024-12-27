@@ -47,7 +47,7 @@ export class Member extends BaseEntity {
   public handle!: string;
 
   @Property({ length: 64 })
-  public fullName?: string;
+  public fullName: string;
 
   @Property({ length: 32, nullable: true })
   public title?: string;

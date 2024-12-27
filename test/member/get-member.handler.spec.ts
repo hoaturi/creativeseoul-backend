@@ -4,9 +4,9 @@ import { Test } from '@nestjs/testing';
 import { GetMemberQuery } from '../../src/features/member/queries/get-member/get-member-query';
 import { Member } from '../../src/domain/member/member.entity';
 import { MemberError } from '../../src/features/member/member.error';
-import { LanguageProficiencyResponseDto } from '../../src/features/common/dtos/language-proficiency-response.dto';
-import { LocationResponseDto } from '../../src/features/common/dtos/location-response.dto';
-import { SocialLinksResponseDto } from '../../src/features/member/dtos/responses/social-links-response.dto';
+import { MemberLanguageProficiencyResponseDto } from '../../src/features/common/dtos/member-language-proficiency-response.dto';
+import { MemberLocationResponseDto } from '../../src/features/common/dtos/member-location-response.dto';
+import { MemberSocialLinksResponseDto } from '../../src/features/member/dtos/responses/member-social-links-response.dto';
 import { GetMemberResponseDto } from '../../src/features/member/dtos/responses/get-member-response.dto';
 import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
 
@@ -76,10 +76,13 @@ describe('GetMemberHandler', () => {
         avatarUrl: 'https://example.com/avatar.jpg',
         tags: ['tag1', 'tag2'],
         languages: [
-          new LanguageProficiencyResponseDto('English', LANGUAGE_LEVELS.NATIVE),
+          new MemberLanguageProficiencyResponseDto(
+            'English',
+            LANGUAGE_LEVELS.NATIVE,
+          ),
         ],
-        location: new LocationResponseDto('Country', 'City'),
-        socialLinks: new SocialLinksResponseDto({
+        location: new MemberLocationResponseDto('Country', 'City'),
+        socialLinks: new MemberSocialLinksResponseDto({
           instagram: 'https://example.com/social',
         }),
         isOpenToWork: true,
@@ -97,7 +100,7 @@ describe('GetMemberHandler', () => {
 
     expect(result.isSuccess).toBeTruthy();
     expect(result.value.location).toEqual(
-      new LocationResponseDto('Country', undefined),
+      new MemberLocationResponseDto('Country', undefined),
     );
     expect(result.value.isOpenToWork).toBe(true);
   });

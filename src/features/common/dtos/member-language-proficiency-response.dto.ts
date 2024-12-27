@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LanguageProficiencyResponseDto {
+export class MemberLanguageProficiencyResponseDto {
   @ApiProperty()
   public readonly name: string;
 

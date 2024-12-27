@@ -7,7 +7,7 @@ import {
   GetMemberListResponseDto,
   MemberListItemDto,
 } from '../../dtos/responses/get-member-list-response.dto';
-import { LocationResponseDto } from '../../../common/dtos/location-response.dto';
+import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
 import { Member } from '../../../../domain/member/member.entity';
 
 interface MemberQueryResult {
@@ -102,7 +102,7 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
     ];
 
     const memberDtos = members.map((member) => {
-      const location = new LocationResponseDto(
+      const location = new MemberLocationResponseDto(
         member.country.name,
         member.city?.name,
       );

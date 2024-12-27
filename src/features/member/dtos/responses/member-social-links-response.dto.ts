@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MemberSocialLinks } from '../../../../domain/member/member-social-links.interface';
 
-export class SocialLinksResponseDto {
+export class MemberSocialLinksResponseDto {
   @ApiProperty({ required: false })
   public readonly instagram?: string;
 

@@ -4,9 +4,9 @@ import { GetMemberResponseDto } from '../../dtos/responses/get-member-response.d
 import { MemberError } from '../../member.error';
 import { ResultError } from '../../../../common/result/result-error';
 import { Result } from '../../../../common/result/result';
-import { LanguageProficiencyResponseDto } from '../../../common/dtos/language-proficiency-response.dto';
-import { LocationResponseDto } from '../../../common/dtos/location-response.dto';
-import { SocialLinksResponseDto } from '../../dtos/responses/social-links-response.dto';
+import { MemberLanguageProficiencyResponseDto } from '../../../common/dtos/member-language-proficiency-response.dto';
+import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
+import { MemberSocialLinksResponseDto } from '../../dtos/responses/member-social-links-response.dto';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Member } from '../../../../domain/member/member.entity';
 
@@ -43,16 +43,19 @@ export class GetMemberHandler implements IQueryHandler<GetMemberQuery> {
       .getItems()
       .map(
         (lang) =>
-          new LanguageProficiencyResponseDto(lang.language.name, lang.level),
+          new MemberLanguageProficiencyResponseDto(
+            lang.language.name,
+            lang.level,
+          ),
       );
 
-    const location = new LocationResponseDto(
+    const location = new MemberLocationResponseDto(
       member.country.name,
       member.city?.name,
     );
 
     const socialLinks = member.socialLinks
-      ? new SocialLinksResponseDto(member.socialLinks)
+      ? new MemberSocialLinksResponseDto(member.socialLinks)
       : undefined;
 
     return Result.success(

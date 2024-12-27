@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LocationResponseDto } from '../../../common/dtos/location-response.dto';
+import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
 
 export class MemberListItemDto {
   @ApiProperty()
@@ -18,7 +18,7 @@ export class MemberListItemDto {
   public readonly tags: string[];
 
   @ApiProperty()
-  public readonly location: LocationResponseDto;
+  public readonly location: MemberLocationResponseDto;
 
   public constructor(data: {
     handle: string;
@@ -26,7 +26,7 @@ export class MemberListItemDto {
     title: string;
     avatarUrl: string;
     tags: string[];
-    location: LocationResponseDto;
+    location: MemberLocationResponseDto;
   }) {
     Object.assign(this, data);
   }

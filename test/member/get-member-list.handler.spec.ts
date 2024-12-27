@@ -6,7 +6,7 @@ import {
   GetMemberListResponseDto,
   MemberListItemDto,
 } from '../../src/features/member/dtos/responses/get-member-list-response.dto';
-import { LocationResponseDto } from '../../src/features/common/dtos/location-response.dto';
+import { MemberLocationResponseDto } from '../../src/features/common/dtos/member-location-response.dto';
 import { Member } from '../../src/domain/member/member.entity';
 
 type MemberQueryResult = {
@@ -26,7 +26,6 @@ type MemberQueryResult = {
 
 describe('GetMemberListHandler', () => {
   let handler: GetMemberListHandler;
-  let em: jest.Mocked<EntityManager>;
   let mockQueryBuilder: jest.Mocked<QueryBuilder<Member>>;
 
   beforeEach(async () => {
@@ -53,7 +52,6 @@ describe('GetMemberListHandler', () => {
     }).compile();
 
     handler = module.get(GetMemberListHandler);
-    em = module.get(EntityManager);
   });
 
   const mockMemberData: MemberQueryResult[] = [
@@ -104,7 +102,10 @@ describe('GetMemberListHandler', () => {
         title: 'Software Engineer',
         avatarUrl: 'https://example.com/avatar1.jpg',
         tags: ['javascript', 'react'],
-        location: new LocationResponseDto('United States', 'San Francisco'),
+        location: new MemberLocationResponseDto(
+          'United States',
+          'San Francisco',
+        ),
       }),
     );
 
@@ -116,7 +117,7 @@ describe('GetMemberListHandler', () => {
         title: 'Product Designer',
         avatarUrl: 'https://example.com/avatar2.jpg',
         tags: ['ui', 'ux'],
-        location: new LocationResponseDto('Canada', undefined),
+        location: new MemberLocationResponseDto('Canada', undefined),
       }),
     );
   });
