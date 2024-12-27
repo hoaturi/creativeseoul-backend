@@ -6,7 +6,7 @@ export class ProfessionalError extends ResultError {
   public static readonly NotFound = new ResultError(
     ProfessionalErrorCode.NOT_FOUND,
     HttpStatus.BAD_REQUEST,
-    'Candidate not found',
+    'Professional not found',
   );
 
   public constructor(code: string, statusCode: number, description: string) {
