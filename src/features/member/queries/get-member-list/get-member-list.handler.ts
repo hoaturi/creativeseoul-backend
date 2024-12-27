@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { EntityManager, QueryOrder, raw } from '@mikro-orm/postgresql';
+import { EntityManager, Loaded, QueryOrder, raw } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import {
@@ -9,6 +9,19 @@ import {
 import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
 import { Member } from '../../../../domain/member/member.entity';
 import { GetMemberListQuery } from './get-member-list.query';
+
+const MEMBER_FIELDS = [
+  'handle',
+  'fullName',
+  'title',
+  'avatarUrl',
+  'tags',
+  'country.name',
+  'city.name',
+] as const;
+
+type MemberFields = (typeof MEMBER_FIELDS)[number];
+type LoadedMember = Loaded<Member, never, MemberFields>;
 
 @QueryHandler(GetMemberListQuery)
 export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
@@ -39,29 +52,29 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
     }
 
     const priorityTier = raw(`
-      CASE 
+      CASE
         WHEN m0.promoted_at > NOW() - INTERVAL '14 days'
         AND m0.last_active_at > NOW() - INTERVAL '24 hours'
         AND m0.quality_score >= 80
         THEN 3
-    
+
         WHEN m0.quality_score >= 80 
         AND (
           m0.promoted_at > NOW() - INTERVAL '14 days'
           OR m0.last_active_at > NOW() - INTERVAL '24 hours'
         )
         THEN 2
-        
+
         WHEN m0.promoted_at > NOW() - INTERVAL '14 days'
         OR m0.last_active_at > NOW() - INTERVAL '24 hours'
         THEN 1
-        
-        ELSE 0 
+
+        ELSE 0
       END
     `);
 
     const [members, count] = await this.em.findAndCount(Member, where, {
-      populate: ['country', 'city'],
+      fields: MEMBER_FIELDS,
       orderBy: {
         [priorityTier]: QueryOrder.DESC,
         qualityScore: QueryOrder.DESC,
@@ -75,7 +88,7 @@ export class GetMemberListHandler implements IQueryHandler<GetMemberListQuery> {
     return Result.success(new GetMemberListResponseDto(memberDtos, count));
   }
 
-  private mapToMemberDtos(members: Member[]): MemberListItemDto[] {
+  private mapToMemberDtos(members: LoadedMember[]): MemberListItemDto[] {
     return members.map((member) => {
       const location = new MemberLocationResponseDto(
         member.country.name,
