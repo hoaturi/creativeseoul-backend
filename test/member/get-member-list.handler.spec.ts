@@ -1,4 +1,4 @@
-import { EntityManager, QueryBuilder } from '@mikro-orm/postgresql';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
 import { GetMemberListQuery } from '../../src/features/member/queries/get-member-list/get-member-list.query';
 import { GetMemberListHandler } from '../../src/features/member/queries/get-member-list/get-member-list.handler';
@@ -9,40 +9,14 @@ import {
 import { MemberLocationResponseDto } from '../../src/features/common/dtos/member-location-response.dto';
 import { Member } from '../../src/domain/member/member.entity';
 
-type MemberQueryResult = {
-  id: string;
-  handle: string;
-  fullName: string;
-  title: string;
-  avatarUrl?: string;
-  tags?: string[];
-  country: {
-    name: string;
-  };
-  city?: {
-    name: string;
-  };
-};
-
 describe('GetMemberListHandler', () => {
   let handler: GetMemberListHandler;
-  let mockQueryBuilder: jest.Mocked<QueryBuilder<Member>>;
+  let mockedEm: jest.Mocked<EntityManager>;
 
   beforeEach(async () => {
-    mockQueryBuilder = {
-      select: jest.fn().mockReturnThis(),
-      leftJoinAndSelect: jest.fn().mockReturnThis(),
-      where: jest.fn().mockReturnThis(),
-      andWhere: jest.fn().mockReturnThis(),
-      orderBy: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
-      offset: jest.fn().mockReturnThis(),
-      getResultAndCount: jest.fn(),
-    } as unknown as jest.Mocked<QueryBuilder<Member>>;
-
-    const mockedEm = {
-      createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
-    };
+    mockedEm = {
+      findAndCount: jest.fn(),
+    } as unknown as jest.Mocked<EntityManager>;
 
     const module = await Test.createTestingModule({
       providers: [
@@ -54,7 +28,7 @@ describe('GetMemberListHandler', () => {
     handler = module.get(GetMemberListHandler);
   });
 
-  const mockMemberData: MemberQueryResult[] = [
+  const mockMemberData: Member[] = [
     {
       id: '1',
       handle: 'john-doe',
@@ -64,7 +38,7 @@ describe('GetMemberListHandler', () => {
       tags: ['javascript', 'react'],
       country: { name: 'United States' },
       city: { name: 'San Francisco' },
-    },
+    } as Member,
     {
       id: '2',
       handle: 'jane-smith',
@@ -74,27 +48,22 @@ describe('GetMemberListHandler', () => {
       tags: ['ui', 'ux'],
       country: { name: 'Canada' },
       city: null,
-    },
+    } as Member,
   ];
 
   it('should return paginated list of members with total count', async () => {
-    mockQueryBuilder.getResultAndCount.mockResolvedValue([
-      mockMemberData as unknown as Member[],
-      100,
-    ]);
+    mockedEm.findAndCount.mockResolvedValue([mockMemberData, 100]);
 
     const query = new GetMemberListQuery({ page: 1 });
     const result = await handler.execute(query);
 
     expect(result.isSuccess).toBeTruthy();
-    if (!result.isSuccess) return;
 
     const response = result.value;
     expect(response).toBeInstanceOf(GetMemberListResponseDto);
     expect(response.total).toBe(100);
     expect(response.members).toHaveLength(2);
 
-    // Verify first member data mapping
     expect(response.members[0]).toEqual(
       new MemberListItemDto({
         handle: 'john-doe',
@@ -109,7 +78,6 @@ describe('GetMemberListHandler', () => {
       }),
     );
 
-    // Verify second member without city
     expect(response.members[1]).toEqual(
       new MemberListItemDto({
         handle: 'jane-smith',
@@ -120,70 +88,103 @@ describe('GetMemberListHandler', () => {
         location: new MemberLocationResponseDto('Canada', undefined),
       }),
     );
+
+    expect(mockedEm.findAndCount).toHaveBeenCalledWith(
+      Member,
+      { qualityScore: { $gt: 40 } },
+      expect.objectContaining({
+        populate: ['country', 'city'],
+        limit: 20,
+        offset: 0,
+      }),
+    );
   });
 
   it('should handle empty search results', async () => {
-    mockQueryBuilder.getResultAndCount.mockResolvedValue([[] as Member[], 0]);
+    mockedEm.findAndCount.mockResolvedValue([[], 0]);
 
     const query = new GetMemberListQuery({ search: 'nonexistent' });
     const result = await handler.execute(query);
 
     expect(result.isSuccess).toBeTruthy();
-    if (!result.isSuccess) return;
 
     const response = result.value;
     expect(response.members).toHaveLength(0);
     expect(response.total).toBe(0);
+
+    expect(mockedEm.findAndCount).toHaveBeenCalledWith(
+      Member,
+      expect.objectContaining({
+        qualityScore: { $gt: 40 },
+        searchVector: { $fulltext: 'nonexistent' },
+      }),
+      expect.any(Object),
+    );
   });
 
   it('should handle country filtering', async () => {
-    mockQueryBuilder.getResultAndCount.mockResolvedValue([
-      [mockMemberData[0]] as unknown as Member[],
-      1,
-    ]);
+    mockedEm.findAndCount.mockResolvedValue([[mockMemberData[0]], 1]);
 
     const query = new GetMemberListQuery({ countryId: 1 });
     const result = await handler.execute(query);
 
     expect(result.isSuccess).toBeTruthy();
-    if (!result.isSuccess) return;
 
     const response = result.value;
     expect(response.members).toHaveLength(1);
     expect(response.members[0].location.country).toBe('United States');
+
+    expect(mockedEm.findAndCount).toHaveBeenCalledWith(
+      Member,
+      expect.objectContaining({
+        qualityScore: { $gt: 40 },
+        country_id: 1,
+      }),
+      expect.any(Object),
+    );
   });
 
   it('should use default page 1 when page is not provided', async () => {
-    mockQueryBuilder.getResultAndCount.mockResolvedValue([
-      mockMemberData as unknown as Member[],
-      100,
-    ]);
+    mockedEm.findAndCount.mockResolvedValue([mockMemberData, 100]);
 
     const query = new GetMemberListQuery({});
     const result = await handler.execute(query);
 
     expect(result.isSuccess).toBeTruthy();
-    if (!result.isSuccess) return;
 
     const response = result.value;
     expect(response.members).toHaveLength(2);
+
+    expect(mockedEm.findAndCount).toHaveBeenCalledWith(
+      Member,
+      expect.any(Object),
+      expect.objectContaining({
+        limit: 20,
+        offset: 0,
+      }),
+    );
   });
 
   it('should handle pagination correctly', async () => {
-    mockQueryBuilder.getResultAndCount.mockResolvedValue([
-      [mockMemberData[1]] as unknown as Member[],
-      100,
-    ]);
+    mockedEm.findAndCount.mockResolvedValue([[mockMemberData[1]], 100]);
 
     const query = new GetMemberListQuery({ page: 2 });
     const result = await handler.execute(query);
 
     expect(result.isSuccess).toBeTruthy();
-    if (!result.isSuccess) return;
 
     const response = result.value;
     expect(response.members).toHaveLength(1);
     expect(response.total).toBe(100);
     expect(response.members[0].handle).toBe('jane-smith');
+
+    expect(mockedEm.findAndCount).toHaveBeenCalledWith(
+      Member,
+      expect.any(Object),
+      expect.objectContaining({
+        limit: 20,
+        offset: 20,
+      }),
+    );
   });
 });
