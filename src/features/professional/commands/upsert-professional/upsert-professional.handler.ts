@@ -17,6 +17,7 @@ export class UpsertProfessionalHandler
   implements ICommandHandler<UpsertProfessionalCommand>
 {
   private readonly logger = new Logger(UpsertProfessionalHandler.name);
+
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
@@ -26,7 +27,7 @@ export class UpsertProfessionalHandler
 
     const member = await this.em.findOne(Member, profileId, {
       fields: ['id', 'professional'],
-      populate: ['professional'],
+      populate: ['professional.experiences', 'professional.projects'],
     });
 
     if (!member.professional) {
@@ -34,7 +35,7 @@ export class UpsertProfessionalHandler
       return Result.success();
     }
 
-    await this.updateExistingProfessional(member.professional, dto);
+    await this.updateProfessional(member.professional, dto);
     return Result.success();
   }
 
@@ -45,13 +46,13 @@ export class UpsertProfessionalHandler
     const member = this.em.getReference(Member, memberId);
     const { experiences: experiencesDto, projects: projectsDto, ...data } = dto;
 
-    const professional = this.em.create(
-      Professional,
-      new Professional(member, data),
-    );
-
+    const professional = new Professional(member, data);
     const experiences = this.mapExperiences(experiencesDto);
     const projects = this.mapProjects(projectsDto);
+
+    this.em.persist(professional);
+    this.em.persist(experiences);
+    this.em.persist(projects);
 
     professional.experiences.add(experiences);
     professional.projects.add(projects);
@@ -59,33 +60,34 @@ export class UpsertProfessionalHandler
     await this.em.flush();
 
     this.logger.log(
-      {
-        professionalId: professional.id,
-      },
+      { professionalId: professional.id },
       'professional.upsert-professional.success: Professional created successfully',
     );
   }
 
-  private async updateExistingProfessional(
+  private async updateProfessional(
     professional: Professional,
     dto: UpsertProfessionalRequestDto,
   ): Promise<void> {
     const { experiences: experiencesDto, projects: projectsDto, ...data } = dto;
 
     Object.assign(professional, data);
+    professional.experiences.removeAll();
+    professional.projects.removeAll();
 
     const experiences = this.mapExperiences(experiencesDto);
     const projects = this.mapProjects(projectsDto);
 
-    professional.experiences.set(experiences);
-    professional.projects.set(projects);
+    this.em.persist(experiences);
+    this.em.persist(projects);
+
+    professional.experiences.add(experiences);
+    professional.projects.add(projects);
 
     await this.em.flush();
 
     this.logger.log(
-      {
-        professionalId: professional.id,
-      },
+      { professionalId: professional.id },
       'professional.upsert-professional.success: Professional updated successfully',
     );
   }
