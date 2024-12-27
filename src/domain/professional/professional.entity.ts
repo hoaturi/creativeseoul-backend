@@ -1,4 +1,3 @@
-import { BaseEntity } from '../base.entity';
 import { Cascade, Entity, Index, PrimaryKey } from '@mikro-orm/core';
 import {
   Collection,
@@ -11,6 +10,7 @@ import {
 import { ProfessionalExperience } from './professional-experience.entity';
 import { ProfessionalProject } from './professional-project.entity';
 import { Member } from '../member/member.entity';
+import { BaseEntity } from '../base.entity';
 
 const generateSearchVector = (
   professional: Professional,
@@ -74,7 +74,7 @@ export class Professional extends BaseEntity {
     new Collection<ProfessionalProject>(this);
 
   @Property({ type: 'array', nullable: true })
-  public skills: string[];
+  public skills?: string[];
 
   @Property({ nullable: true })
   public resumeUrl?: string;
@@ -113,6 +113,6 @@ export class Professional extends BaseEntity {
     },
   ) {
     super();
-    Object.assign(this, member, data);
+    Object.assign(this, { member, ...data });
   }
 }
