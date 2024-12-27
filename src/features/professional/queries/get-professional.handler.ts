@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetProfessionalQuery } from './get-professional.query';
-import { Collection, EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { GetProfessionalResponseDto } from '../dtos/get-professional-response.dto';
 import { Professional } from '../../../domain/professional/professional.entity';
 import { ProfessionalError } from '../professional.error';
@@ -16,11 +16,49 @@ import {
 import { MemberLocationResponseDto } from '../../common/dtos/member-location-response.dto';
 import { MemberLanguageProficiencyResponseDto } from '../../common/dtos/member-language-proficiency-response.dto';
 import { UserRole } from '../../../domain/user/user-role.enum';
-import { Member } from '../../../domain/member/member.entity';
-import { ProfessionalExperience } from '../../../domain/professional/professional-experience.entity';
-import { ProfessionalProject } from '../../../domain/professional/professional-project.entity';
 import { ResultError } from '../../../common/result/result-error';
 import { Result } from '../../../common/result/result';
+
+const PROFESSIONAL_FIELDS = [
+  // Professional fields
+  'isOpenToWork',
+  'salaryRangeId',
+  'hourlyRateRangeId',
+  'locationTypeIds',
+  'employmentTypeIds',
+  'skills',
+  'isPublic',
+  'email',
+  'phone',
+  'resumeUrl',
+  // Member fields
+  'member.handle',
+  'member.fullName',
+  'member.title',
+  'member.bio',
+  'member.avatarUrl',
+  'member.tags',
+  'member.socialLinks',
+  'member.country.name',
+  'member.city.name',
+  'member.languages.language.name',
+  'member.languages.level',
+  // Experience fields
+  'experiences.title',
+  'experiences.yearsOfExperience',
+  'experiences.description',
+  // Project fields
+  'projects.title',
+  'projects.description',
+  'projects.url',
+] as const;
+
+// Derive the types from the array
+type ProfessionalFields = (typeof PROFESSIONAL_FIELDS)[number];
+
+// Update LoadedProfessional to use this type
+type LoadedProfessional = Loaded<Professional, never, ProfessionalFields>;
+type LoadedMember = LoadedProfessional['member'];
 
 @QueryHandler(GetProfessionalQuery)
 export class GetProfessionalHandler
@@ -31,60 +69,60 @@ export class GetProfessionalHandler
   public async execute(
     query: GetProfessionalQuery,
   ): Promise<Result<GetProfessionalResponseDto, ResultError>> {
-    const professional = await this.em.findOne(
-      Professional,
-      {
-        member: { handle: query.handle },
-      },
-      {
-        populate: [
-          'member.country',
-          'member.city',
-          'member.languages.language',
-          'experiences',
-          'projects',
-        ],
-      },
-    );
+    const professional = await this.findProfessionalByHandle(query.handle);
 
     if (!professional) {
       return Result.failure(ProfessionalError.NotFound);
     }
 
-    const isUserOwner = query.user.profileId === professional.member.id;
-    const isUserAdmin = query.user.role === UserRole.ADMIN;
-    const isUserCompany = query.user.role === UserRole.COMPANY;
-
-    // For private profiles (isPublic is false):
-    // - Only owner or admin can access
-    // For public profiles (isPublic is true):
-    // - Only company or admin can access
-
-    if (
-      (!professional.isPublic && !isUserOwner && !isUserAdmin) ||
-      (professional.isPublic && !isUserCompany && !isUserAdmin && !isUserOwner)
-    ) {
+    if (!this.hasAccessPermission(query.user, professional)) {
       return Result.failure(ProfessionalError.NotFound);
     }
 
-    const memberDto = this.mapMember(professional.member);
-    const response = this.mapProfessional(professional, memberDto);
-
-    return Result.success(response);
+    return Result.success(this.createProfessionalResponse(professional));
   }
 
-  private mapMember(member: Member): ProfessionalMemberResponseDto {
+  private async findProfessionalByHandle(
+    handle: string,
+  ): Promise<LoadedProfessional | null> {
+    return (await this.em.findOne(
+      Professional,
+      { member: { handle } },
+      { fields: PROFESSIONAL_FIELDS },
+    )) as LoadedProfessional | null;
+  }
+
+  private hasAccessPermission(
+    user: GetProfessionalQuery['user'],
+    professional: LoadedProfessional,
+  ): boolean {
+    const isUserOwner = user.profileId === professional.member.id;
+    const isUserAdmin = user.role === UserRole.ADMIN;
+    const isUserCompany = user.role === UserRole.COMPANY;
+
+    if (!professional.isPublic) {
+      return isUserOwner || isUserAdmin;
+    }
+
+    return isUserCompany || isUserAdmin || isUserOwner;
+  }
+
+  private createProfessionalResponse(
+    professional: LoadedProfessional,
+  ): GetProfessionalResponseDto {
+    const memberDto = this.mapMemberProfile(professional.member);
+    return this.createProfessionalDto(professional, memberDto);
+  }
+
+  private mapMemberProfile(
+    member: LoadedMember,
+  ): ProfessionalMemberResponseDto {
     const location = new MemberLocationResponseDto(
       member.country.name,
       member.city?.name,
     );
-    const languages = member.languages.map(
-      (language) =>
-        new MemberLanguageProficiencyResponseDto(
-          language.language.name,
-          language.level,
-        ),
-    );
+
+    const languages = this.mapLanguageProficiencies(member.languages);
 
     return new ProfessionalMemberResponseDto({
       handle: member.handle,
@@ -99,7 +137,53 @@ export class GetProfessionalHandler
     });
   }
 
-  private mapCompensation(
+  private mapLanguageProficiencies(
+    languages: LoadedMember['languages'],
+  ): MemberLanguageProficiencyResponseDto[] {
+    return languages.map(
+      (language) =>
+        new MemberLanguageProficiencyResponseDto(
+          language.language.name,
+          language.level,
+        ),
+    );
+  }
+
+  private createProfessionalDto(
+    professional: LoadedProfessional,
+    memberDto: ProfessionalMemberResponseDto,
+  ): GetProfessionalResponseDto {
+    const { salaryRange, hourlyRateRange } = this.mapCompensationRanges(
+      professional.salaryRangeId,
+      professional.hourlyRateRangeId,
+    );
+
+    const { locationTypes, employmentTypes } = this.mapWorkPreferences(
+      professional.locationTypeIds,
+      professional.employmentTypeIds,
+    );
+
+    const { experiences, projects } = this.mapExperiencesAndProjects(
+      professional.experiences,
+      professional.projects,
+    );
+
+    return new GetProfessionalResponseDto(memberDto, {
+      isOpenToWork: professional.isOpenToWork,
+      salaryRange,
+      hourlyRateRange,
+      locationTypes,
+      employmentTypes,
+      experiences,
+      projects,
+      skills: professional.skills,
+      resumeUrl: professional.resumeUrl,
+      email: professional.email,
+      phone: professional.phone,
+    });
+  }
+
+  private mapCompensationRanges(
     salaryId: number,
     hourlyId: number,
   ): { salaryRange: string; hourlyRateRange: string } {
@@ -108,7 +192,7 @@ export class GetProfessionalHandler
     return { salaryRange, hourlyRateRange };
   }
 
-  private mapPreferences(
+  private mapWorkPreferences(
     locationTypeIds: number[],
     employmentTypeIds: number[],
   ): {
@@ -122,9 +206,9 @@ export class GetProfessionalHandler
     return { locationTypes, employmentTypes };
   }
 
-  private MapCareer(
-    experienceCollection: Collection<ProfessionalExperience>,
-    projectCollection: Collection<ProfessionalProject>,
+  private mapExperiencesAndProjects(
+    experienceCollection: LoadedProfessional['experiences'],
+    projectCollection: LoadedProfessional['projects'],
   ): {
     experiences: ProfessionalExperienceResponseDto[];
     projects: ProfessionalProjectResponseDto[];
@@ -148,39 +232,5 @@ export class GetProfessionalHandler
     );
 
     return { experiences, projects };
-  }
-
-  private mapProfessional(
-    professional: Professional,
-    memberDto: ProfessionalMemberResponseDto,
-  ): GetProfessionalResponseDto {
-    const { salaryRange, hourlyRateRange } = this.mapCompensation(
-      professional.salaryRangeId,
-      professional.hourlyRateRangeId,
-    );
-
-    const { locationTypes, employmentTypes } = this.mapPreferences(
-      professional.locationTypeIds,
-      professional.employmentTypeIds,
-    );
-
-    const { experiences, projects } = this.MapCareer(
-      professional.experiences,
-      professional.projects,
-    );
-
-    return new GetProfessionalResponseDto(memberDto, {
-      isOpenToWork: professional.isOpenToWork,
-      salaryRange,
-      hourlyRateRange,
-      locationTypes,
-      employmentTypes,
-      experiences,
-      projects,
-      skills: professional.skills,
-      resumeUrl: professional.resumeUrl,
-      email: professional.email,
-      phone: professional.phone,
-    });
   }
 }
