@@ -25,17 +25,22 @@ export class UpsertProfessionalHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, profileId } = command;
 
-    const member = await this.em.findOne(Member, profileId, {
-      fields: ['id', 'professional'],
-      populate: ['professional.experiences', 'professional.projects'],
-    });
+    const professional = await this.em.findOne(
+      Professional,
+      {
+        member: profileId,
+      },
+      {
+        populate: ['experiences', 'projects'],
+      },
+    );
 
-    if (!member.professional) {
-      await this.createProfessional(member.id, dto);
+    if (!professional) {
+      await this.createProfessional(profileId, dto);
       return Result.success();
     }
 
-    await this.updateProfessional(member.professional, dto);
+    await this.updateProfessional(professional, dto);
     return Result.success();
   }
 
@@ -72,8 +77,6 @@ export class UpsertProfessionalHandler
     const { experiences: experiencesDto, projects: projectsDto, ...data } = dto;
 
     Object.assign(professional, data);
-    professional.experiences.removeAll();
-    professional.projects.removeAll();
 
     const experiences = this.mapExperiences(experiencesDto);
     const projects = this.mapProjects(projectsDto);
@@ -81,8 +84,8 @@ export class UpsertProfessionalHandler
     this.em.persist(experiences);
     this.em.persist(projects);
 
-    professional.experiences.add(experiences);
-    professional.projects.add(projects);
+    professional.experiences.set(experiences);
+    professional.projects.set(projects);
 
     await this.em.flush();
 
