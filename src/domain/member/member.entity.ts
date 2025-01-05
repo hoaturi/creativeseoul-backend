@@ -40,7 +40,7 @@ export class Member extends BaseEntity {
     nullable: true,
     cascade: [Cascade.REMOVE],
   })
-  public professional?: Professional;
+  public readonly professional?: Professional;
 
   @Property({ length: 16 })
   @Unique()
