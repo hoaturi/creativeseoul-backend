@@ -79,7 +79,10 @@ export class GetProfessionalHandler
       return Result.failure(ProfessionalError.NotFound);
     }
 
-    return Result.success(this.createProfessionalResponse(professional));
+    const memberDto = this.mapMemberProfile(professional.member);
+    const response = this.createProfessionalDto(professional, memberDto);
+
+    return Result.success(response);
   }
 
   private async findProfessionalByHandle(
@@ -105,13 +108,6 @@ export class GetProfessionalHandler
     }
 
     return isUserCompany || isUserAdmin || isUserOwner;
-  }
-
-  private createProfessionalResponse(
-    professional: LoadedProfessional,
-  ): GetProfessionalResponseDto {
-    const memberDto = this.mapMemberProfile(professional.member);
-    return this.createProfessionalDto(professional, memberDto);
   }
 
   private mapMemberProfile(
