@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { UpsertProfessionalHandler } from '../../src/features/professional/commands/upsert-professional/upsert-professional.handler';
-import { UpsertProfessionalRequestDto } from '../../src/features/professional/dtos/upsert-professional-request.dto';
+import { UpsertProfessionalRequestDto } from '../../src/features/professional/dtos/requests/upsert-professional-request.dto';
 import { Member } from '../../src/domain/member/member.entity';
 import { UpsertProfessionalCommand } from '../../src/features/professional/commands/upsert-professional/upsert-professional.command';
 import { Professional } from '../../src/domain/professional/professional.entity';

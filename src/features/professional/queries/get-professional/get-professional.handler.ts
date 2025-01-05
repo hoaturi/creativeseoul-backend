@@ -1,12 +1,12 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetProfessionalQuery } from './get-professional.query';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
-import { GetProfessionalResponseDto } from '../../dtos/get-professional-response.dto';
+import { GetProfessionalResponseDto } from '../../dtos/responses/get-professional-response.dto';
 import { Professional } from '../../../../domain/professional/professional.entity';
 import { ProfessionalError } from '../../professional.error';
-import { ProfessionalMemberResponseDto } from '../../dtos/professional-member-response.dto';
-import { ProfessionalExperienceResponseDto } from '../../dtos/professional-experience-response.dto';
-import { ProfessionalProjectResponseDto } from '../../dtos/professional-project-response.dto';
+import { ProfessionalMemberResponseDto } from '../../dtos/responses/professional-member-response.dto';
+import { ProfessionalExperienceResponseDto } from '../../dtos/responses/professional-experience-response.dto';
+import { ProfessionalProjectResponseDto } from '../../dtos/responses/professional-project-response.dto';
 import {
   EMPLOYMENT_TYPES,
   HOURLY_RATE_RANGE,

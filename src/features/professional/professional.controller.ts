@@ -22,10 +22,10 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
-import { UpsertProfessionalRequestDto } from './dtos/upsert-professional-request.dto';
+import { UpsertProfessionalRequestDto } from './dtos/requests/upsert-professional-request.dto';
 import { UpsertProfessionalCommand } from './commands/upsert-professional/upsert-professional.command';
 import { UserRole } from '../../domain/user/user-role.enum';
-import { GetProfessionalResponseDto } from './dtos/get-professional-response.dto';
+import { GetProfessionalResponseDto } from './dtos/responses/get-professional-response.dto';
 import { GetProfessionalQuery } from './queries/get-professional/get-professional.query';
 import { ProfessionalError } from './professional.error';
 

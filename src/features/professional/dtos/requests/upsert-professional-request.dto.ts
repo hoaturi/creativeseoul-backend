@@ -20,12 +20,12 @@ import {
   HOURLY_RATE_RANGE,
   LOCATION_TYPES,
   SALARY_RANGE,
-} from '../../../domain/common/constants';
-import { IsValidTags } from '../../../common/decorators/is-valid-tags.decorator';
-import { Trim } from '../../../common/decorators/trim.decorator';
+} from '../../../../domain/common/constants';
+import { IsValidTags } from '../../../../common/decorators/is-valid-tags.decorator';
+import { Trim } from '../../../../common/decorators/trim.decorator';
 import { ProfessionalExperienceRequestDto } from './professional-experience-request.dto';
 import { ProfessionalProjectRequestDto } from './professional-project-request.dto';
-import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
+import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
 
 export class UpsertProfessionalRequestDto {
   @ApiProperty()

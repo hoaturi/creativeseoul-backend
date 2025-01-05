@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, MaxLength, Min, MinLength } from 'class-validator';
-import { Trim } from '../../../common/decorators/trim.decorator';
+import { Trim } from '../../../../common/decorators/trim.decorator';
 
 export class ProfessionalExperienceRequestDto {
   @ApiProperty()

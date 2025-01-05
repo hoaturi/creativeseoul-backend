@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MemberLocationResponseDto } from '../../common/dtos/member-location-response.dto';
-import { MemberLanguageProficiencyResponseDto } from '../../common/dtos/member-language-proficiency-response.dto';
-import { MemberSocialLinksResponseDto } from '../../member/dtos/responses/member-social-links-response.dto';
+import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
+import { MemberLanguageProficiencyResponseDto } from '../../../common/dtos/member-language-proficiency-response.dto';
+import { MemberSocialLinksResponseDto } from '../../../member/dtos/responses/member-social-links-response.dto';
 
 export class ProfessionalMemberResponseDto {
   @ApiProperty()

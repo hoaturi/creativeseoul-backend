@@ -1,7 +1,7 @@
 import { Command } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
-import { UpsertProfessionalRequestDto } from '../../dtos/upsert-professional-request.dto';
+import { UpsertProfessionalRequestDto } from '../../dtos/requests/upsert-professional-request.dto';
 
 export class UpsertProfessionalCommand extends Command<
   Result<void, ResultError>

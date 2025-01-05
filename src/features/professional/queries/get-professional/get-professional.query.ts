@@ -1,6 +1,6 @@
 import { Query } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
-import { GetProfessionalResponseDto } from '../../dtos/get-professional-response.dto';
+import { GetProfessionalResponseDto } from '../../dtos/responses/get-professional-response.dto';
 import { ResultError } from '../../../../common/result/result-error';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
