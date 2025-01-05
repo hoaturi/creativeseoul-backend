@@ -5,6 +5,7 @@ import {
   HttpException,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -28,6 +29,9 @@ import { UserRole } from '../../domain/user/user-role.enum';
 import { GetProfessionalResponseDto } from './dtos/responses/get-professional-response.dto';
 import { GetProfessionalQuery } from './queries/get-professional/get-professional.query';
 import { ProfessionalError } from './professional.error';
+import { GetProfessionalListResponseDto } from './dtos/responses/get-professional-list-response.dto';
+import { GetProfessionalListQuery } from './queries/get-professional-list/get-professional-list.query';
+import { GetProfessionalListQueryDto } from './dtos/requests/get-professional-list-query.dto';
 
 @Controller('professionals')
 export class ProfessionalController {
@@ -35,6 +39,33 @@ export class ProfessionalController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  @Get()
+  @Roles(UserRole.ADMIN, UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({ type: GetProfessionalListResponseDto })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async getProfessionalList(
+    @Query() queryDto: GetProfessionalListQueryDto,
+  ): Promise<GetProfessionalListResponseDto> {
+    const command = new GetProfessionalListQuery(queryDto);
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
 
   @Get(':handle')
   @UseGuards(AuthGuard)
