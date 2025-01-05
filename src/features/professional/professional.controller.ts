@@ -26,7 +26,7 @@ import { UpsertProfessionalRequestDto } from './dtos/upsert-professional-request
 import { UpsertProfessionalCommand } from './commands/upsert-professional/upsert-professional.command';
 import { UserRole } from '../../domain/user/user-role.enum';
 import { GetProfessionalResponseDto } from './dtos/get-professional-response.dto';
-import { GetProfessionalQuery } from './queries/get-professional.query';
+import { GetProfessionalQuery } from './queries/get-professional/get-professional.query';
 import { ProfessionalError } from './professional.error';
 
 @Controller('professionals')

@@ -1,23 +1,23 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetProfessionalQuery } from './get-professional.query';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
-import { GetProfessionalResponseDto } from '../dtos/get-professional-response.dto';
-import { Professional } from '../../../domain/professional/professional.entity';
-import { ProfessionalError } from '../professional.error';
-import { ProfessionalMemberResponseDto } from '../dtos/professional-member-response.dto';
-import { ProfessionalExperienceResponseDto } from '../dtos/professional-experience-response.dto';
-import { ProfessionalProjectResponseDto } from '../dtos/professional-project-response.dto';
+import { GetProfessionalResponseDto } from '../../dtos/get-professional-response.dto';
+import { Professional } from '../../../../domain/professional/professional.entity';
+import { ProfessionalError } from '../../professional.error';
+import { ProfessionalMemberResponseDto } from '../../dtos/professional-member-response.dto';
+import { ProfessionalExperienceResponseDto } from '../../dtos/professional-experience-response.dto';
+import { ProfessionalProjectResponseDto } from '../../dtos/professional-project-response.dto';
 import {
   EMPLOYMENT_TYPES,
   HOURLY_RATE_RANGE,
   LOCATION_TYPES,
   SALARY_RANGE,
-} from '../../../domain/common/constants';
-import { MemberLocationResponseDto } from '../../common/dtos/member-location-response.dto';
-import { MemberLanguageProficiencyResponseDto } from '../../common/dtos/member-language-proficiency-response.dto';
-import { UserRole } from '../../../domain/user/user-role.enum';
-import { ResultError } from '../../../common/result/result-error';
-import { Result } from '../../../common/result/result';
+} from '../../../../domain/common/constants';
+import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
+import { MemberLanguageProficiencyResponseDto } from '../../../common/dtos/member-language-proficiency-response.dto';
+import { UserRole } from '../../../../domain/user/user-role.enum';
+import { ResultError } from '../../../../common/result/result-error';
+import { Result } from '../../../../common/result/result';
 
 const PROFESSIONAL_FIELDS = [
   // Professional fields

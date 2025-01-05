@@ -1,11 +1,11 @@
-import { GetProfessionalHandler } from '../../src/features/professional/queries/get-professional.handler';
+import { GetProfessionalHandler } from '../../src/features/professional/queries/get-professional/get-professional.handler';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
 import { UserRole } from '../../src/domain/user/user-role.enum';
 import { Collection } from '@mikro-orm/core';
 import { LANGUAGE_LEVELS } from '../../src/domain/common/constants';
 import { AuthenticatedUser } from '../../src/infrastructure/security/authenticated-user.interface';
-import { GetProfessionalQuery } from '../../src/features/professional/queries/get-professional.query';
+import { GetProfessionalQuery } from '../../src/features/professional/queries/get-professional/get-professional.query';
 import { ProfessionalError } from '../../src/features/professional/professional.error';
 
 describe('GetProfessionalHandler', () => {
