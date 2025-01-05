@@ -41,7 +41,8 @@ export class Professional extends BaseEntity {
   public isOpenToWork!: boolean;
 
   @Property()
-  public isPublic!: boolean;
+  @Index()
+  public requiresVisaSponsorship!: boolean;
 
   @Property({ nullable: true })
   @Index()
@@ -90,6 +91,9 @@ export class Professional extends BaseEntity {
   @Property({ nullable: true })
   public phone?: string;
 
+  @Property()
+  public isPublic!: boolean;
+
   @Index({ type: 'fulltext' })
   @Property({
     type: new FullTextType('english'),
@@ -101,6 +105,7 @@ export class Professional extends BaseEntity {
   public constructor(
     member: Member,
     data: {
+      requiresVisaSponsorship: boolean;
       isPublic: boolean;
       isOpenToWork: boolean;
       isContactable: boolean;

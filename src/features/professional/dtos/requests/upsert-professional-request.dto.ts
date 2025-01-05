@@ -34,6 +34,10 @@ export class UpsertProfessionalRequestDto {
 
   @ApiProperty()
   @IsBoolean()
+  public readonly requiresVisaSponsorship: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
   public readonly isOpenToWork: boolean;
 
   @ApiProperty()
