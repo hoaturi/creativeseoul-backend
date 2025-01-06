@@ -68,7 +68,7 @@ describe('SignupHandler', () => {
     const mockUser = new User(
       mockCommand.dto.email,
       'hashedPassword',
-      UserRole.MEMBER,
+      UserRole.Talent,
       mockMember,
     );
     const mockVerificationToken = new EmailVerificationToken(
@@ -97,7 +97,7 @@ describe('SignupHandler', () => {
   it('should return failure when email already exists', async () => {
     // Arrange
     em.findOne.mockResolvedValue(
-      new User('test@example.com', 'hash', UserRole.MEMBER, mockMember),
+      new User('test@example.com', 'hash', UserRole.Talent, mockMember),
     );
 
     // Act
@@ -129,7 +129,7 @@ describe('SignupHandler', () => {
     // Assert
     expect(capturedUser).toBeTruthy();
     expect(capturedUser?.email).toBe(mockCommand.dto.email);
-    expect(capturedUser?.role).toBe(UserRole.MEMBER);
+    expect(capturedUser?.role).toBe(UserRole.Talent);
   });
 
   it('should create email verification with correct expiration time', async () => {
@@ -163,7 +163,7 @@ describe('SignupHandler', () => {
     const mockUser = new User(
       mockCommand.dto.email,
       'hashedPassword',
-      UserRole.MEMBER,
+      UserRole.Talent,
       mockMember,
     );
     const mockVerificationToken = new EmailVerificationToken(

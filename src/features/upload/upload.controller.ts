@@ -32,7 +32,7 @@ export class UploadController {
   public constructor(private readonly commandBus: CommandBus) {}
 
   @Put('avatar')
-  @Roles(UserRole.MEMBER)
+  @Roles(UserRole.Talent)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse({
     type: GeneratePresignedUrlResponseDto,

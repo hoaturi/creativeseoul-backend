@@ -15,7 +15,6 @@ import { AuthError } from '../../auth.error';
 import { Logger } from '@nestjs/common';
 import { EmailVerificationToken } from '../../../../domain/auth/email-verification-token.entity';
 import * as crypto from 'crypto';
-import { Member } from '../../../../domain/member/member.entity';
 import { SignUpRequestDto } from '../../dtos';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 
@@ -60,10 +59,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
   private async createUser(dto: SignUpRequestDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const handle = crypto.randomBytes(8).toString('hex');
-    const member = new Member(dto.fullName, handle);
-
-    const user = new User(dto.email, hashedPassword, UserRole.MEMBER, member);
+    const user = new User(dto.email, hashedPassword, UserRole.Talent);
 
     this.em.create(User, user);
 

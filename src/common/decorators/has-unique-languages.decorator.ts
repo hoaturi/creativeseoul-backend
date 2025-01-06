@@ -4,8 +4,6 @@ import {
   ValidationOptions,
 } from 'class-validator';
 
-import { MemberLanguageRequestDto } from '../../features/member/dtos/requests/member-language-request.dto';
-
 export function HasUniqueLanguages(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
@@ -14,7 +12,7 @@ export function HasUniqueLanguages(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(languages: MemberLanguageRequestDto[]) {
+        validate(languages: { languageId: number; level: number }[]) {
           if (!Array.isArray(languages)) return false;
 
           const languageIds = languages.map((lang) => lang.languageId);

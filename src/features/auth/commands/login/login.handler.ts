@@ -23,7 +23,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     const user = await this.em.findOne(
       User,
       { email },
-      { fields: ['id', 'password', 'role', 'isVerified', 'member'] },
+      { fields: ['id', 'password', 'role', 'isVerified', 'talent.id'] },
     );
 
     if (!user) {
@@ -44,7 +44,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     }
 
     // TODO: add company?.id when company is implemented
-    const profileId = user.member?.id;
+    const profileId = user.talent?.id;
 
     this.logger.log(
       { userId: user.id },

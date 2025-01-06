@@ -7,7 +7,6 @@ import { GenerateImagePresignedUrlRequestDto } from '../dtos/generate-image-pres
 export enum AssetType {
   Avatar = 'avatars',
   Logo = 'logos',
-  Resume = 'resumes',
 }
 
 export class GeneratePresignedUrlCommand extends Command<

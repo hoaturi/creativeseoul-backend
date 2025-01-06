@@ -39,7 +39,7 @@ describe('LoginHandler', () => {
     id: '1',
     email: mockEmail,
     password: mockPassword,
-    role: UserRole.MEMBER,
+    role: UserRole.Talent,
     isVerified: true,
   };
 
