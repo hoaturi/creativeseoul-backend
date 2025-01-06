@@ -10,7 +10,6 @@ import { AuthError } from '../../src/features/auth/auth.error';
 import { EmailVerificationToken } from '../../src/domain/auth/email-verification-token.entity';
 import { SignupCommand, SignupHandler } from '../../src/features/auth/commands';
 import { UserRole } from '../../src/domain/user/user-role.enum';
-import { Member } from '../../src/domain/member/member.entity';
 
 jest.mock('bcrypt');
 
@@ -34,8 +33,6 @@ describe('SignupHandler', () => {
     fullName: 'John Smith',
     password: 'password123',
   });
-
-  const mockMember = new Member('John Smith', 'handle');
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -69,7 +66,6 @@ describe('SignupHandler', () => {
       mockCommand.dto.email,
       'hashedPassword',
       UserRole.Talent,
-      mockMember,
     );
     const mockVerificationToken = new EmailVerificationToken(
       mockUser,
@@ -97,7 +93,7 @@ describe('SignupHandler', () => {
   it('should return failure when email already exists', async () => {
     // Arrange
     em.findOne.mockResolvedValue(
-      new User('test@example.com', 'hash', UserRole.Talent, mockMember),
+      new User('test@example.com', 'hash', UserRole.Talent),
     );
 
     // Act
@@ -164,7 +160,6 @@ describe('SignupHandler', () => {
       mockCommand.dto.email,
       'hashedPassword',
       UserRole.Talent,
-      mockMember,
     );
     const mockVerificationToken = new EmailVerificationToken(
       mockUser,
