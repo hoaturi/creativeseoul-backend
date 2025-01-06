@@ -1,5 +1,5 @@
 export * from './language-level.constant';
-export * from './location-type.constant';
+export * from './work-location-type.constant';
 export * from './employment-type.constant';
 export * from './language.constant';
 export * from './country.constant';

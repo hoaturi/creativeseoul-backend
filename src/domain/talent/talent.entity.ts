@@ -20,7 +20,7 @@ import { TalentSocialLinks } from './talent-social-links.interface';
 const generateSearchVector = (talent: Talent): WeightedFullTextValue => ({
   A: [talent.title, talent.skills?.join(' ')].filter(Boolean).join(' '),
 
-  B: [talent.bio, [...talent.languages].map((lang) => lang.language.name)]
+  B: [talent.bio, [...talent.languages].map((lang) => lang.language.label)]
     .filter(Boolean)
     .join(' '),
 });

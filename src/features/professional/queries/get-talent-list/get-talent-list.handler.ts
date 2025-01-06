@@ -29,8 +29,8 @@ const TALENT_FIELDS = [
   'qualityScore',
   'promotedAt',
   'lastActiveAt',
-  'country.name',
-  'city.name',
+  'country.label',
+  'city.label',
 ] as const;
 
 type TalentFields = (typeof TALENT_FIELDS)[number];
@@ -119,8 +119,8 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
           bio: talent.bio,
           avatarUrl: talent.avatarUrl,
           location: {
-            country: talent.country.name,
-            city: talent.city?.name,
+            country: talent.country.label,
+            city: talent.city?.label,
           },
           isAvailable: talent.isAvailable,
           skills: talent.skills,

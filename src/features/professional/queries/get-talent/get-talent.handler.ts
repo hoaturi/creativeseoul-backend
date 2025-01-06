@@ -6,8 +6,8 @@ import { TalentError } from '../../talent.error';
 import {
   EMPLOYMENT_TYPES,
   HOURLY_RATE_RANGE,
-  LOCATION_TYPES,
   SALARY_RANGE,
+  WORK_LOCATION_TYPES,
 } from '../../../../domain/common/constants';
 import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
 import { MemberLanguageProficiencyResponseDto } from '../../../common/dtos/member-language-proficiency-response.dto';
@@ -32,9 +32,9 @@ const TALENT_FIELDS = [
   'email',
   'phone',
   'socialLinks',
-  'country.name',
-  'city.name',
-  'languages.language.name',
+  'country.label',
+  'city.label',
+  'languages.language.label',
   'languages.level',
 ] as const;
 
@@ -87,14 +87,14 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
 
   private createTalentResponse(talent: LoadedTalent): GetTalentResponseDto {
     const location = new MemberLocationResponseDto(
-      talent.country.name,
-      talent.city?.name,
+      talent.country.label,
+      talent.city?.label,
     );
 
     const languages = talent.languages.map(
       (language) =>
         new MemberLanguageProficiencyResponseDto(
-          language.language.name,
+          language.language.label,
           language.level,
         ),
     );
@@ -133,9 +133,9 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     hourlyId?: number,
   ): { salaryRange?: string; hourlyRateRange?: string } {
     const salaryRange =
-      salaryId !== undefined ? SALARY_RANGE[salaryId]?.name : undefined;
+      salaryId !== undefined ? SALARY_RANGE[salaryId]?.label : undefined;
     const hourlyRateRange =
-      hourlyId !== undefined ? HOURLY_RATE_RANGE[hourlyId]?.name : undefined;
+      hourlyId !== undefined ? HOURLY_RATE_RANGE[hourlyId]?.label : undefined;
     return { salaryRange, hourlyRateRange };
   }
 
@@ -146,9 +146,11 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     locationTypes: string[];
     employmentTypes: string[];
   } {
-    const locationTypes = locationTypeIds.map((id) => LOCATION_TYPES[id].name);
+    const locationTypes = locationTypeIds.map(
+      (id) => WORK_LOCATION_TYPES[id].label,
+    );
     const employmentTypes = employmentTypeIds.map(
-      (id) => EMPLOYMENT_TYPES[id].name,
+      (id) => EMPLOYMENT_TYPES[id].label,
     );
     return { locationTypes, employmentTypes };
   }

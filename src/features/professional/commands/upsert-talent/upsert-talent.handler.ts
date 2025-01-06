@@ -11,7 +11,6 @@ import { Country } from '../../../../domain/common/entities/country.entity';
 import { City } from '../../../../domain/common/entities/city.entity';
 import { Language } from '../../../../domain/common/entities/language.entity';
 import { TalentLanguage } from '../../../../domain/talent/talent-language.entity';
-import slugify from 'slugify';
 import { TalentScoringService } from '../../../../infrastructure/services/talent-scoring/talent-scoring.service';
 import { TalentLanguageRequestDto } from '../../dtos/requests/talent-language-request.dto';
 
@@ -143,11 +142,10 @@ export class UpsertTalentHandler
     cityName: string,
     country: Country,
   ): Promise<City> {
-    const citySlug = slugify(cityName, { lower: true });
-    let city = await this.em.findOne(City, { slug: citySlug });
+    let city = await this.em.findOne(City, { label: cityName, country });
 
     if (!city) {
-      city = this.em.create(City, new City(cityName, citySlug, country));
+      city = this.em.create(City, new City(cityName, country));
     }
 
     return city;

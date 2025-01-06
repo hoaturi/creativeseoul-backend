@@ -6,13 +6,9 @@ export class Language {
   public readonly id!: number;
 
   @Property({ unique: true })
-  public name!: string;
+  public label!: string;
 
-  @Property()
-  public slug!: string;
-
-  public constructor(name: string, slug: string) {
-    this.name = name;
-    this.slug = slug;
+  public constructor(label: string) {
+    this.label = label;
   }
 }

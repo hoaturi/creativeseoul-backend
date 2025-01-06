@@ -1,7 +1,10 @@
 export const SENIORITY_LEVELS = [
-  { name: 'Junior', slug: 'junior' },
-  { name: 'Mid Level', slug: 'mid-level' },
-  { name: 'Senior', slug: 'senior' },
-  { name: 'Lead', slug: 'lead' },
-  { name: 'Principal', slug: 'principal' },
+  { id: 1, label: 'Intern' },
+  { id: 2, label: 'Junior' },
+  { id: 3, label: 'Mid' },
+  { id: 4, label: 'Senior' },
+  { id: 5, label: 'Lead' },
+  { id: 6, label: 'Manager' },
 ] as const;
+
+export type SeniorityLevel = (typeof SENIORITY_LEVELS)[number]['label'];

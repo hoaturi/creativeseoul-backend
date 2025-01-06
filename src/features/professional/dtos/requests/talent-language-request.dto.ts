@@ -10,6 +10,6 @@ export class TalentLanguageRequestDto {
   @ApiProperty()
   @IsString()
   @Min(1)
-  @Max(LANGUAGE_LEVELS.NATIVE)
+  @Max(LANGUAGE_LEVELS.length)
   public readonly level: number;
 }

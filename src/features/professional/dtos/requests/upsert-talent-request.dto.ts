@@ -17,8 +17,8 @@ import {
 import {
   EMPLOYMENT_TYPES,
   HOURLY_RATE_RANGE,
-  LOCATION_TYPES,
   SALARY_RANGE,
+  WORK_LOCATION_TYPES,
 } from '../../../../domain/common/constants';
 import { Trim } from '../../../../common/decorators/trim.decorator';
 import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
@@ -103,7 +103,7 @@ export class UpsertTalentRequestDto {
   @IsArray()
   @IsNumber({}, { each: true })
   @Min(1, { each: true })
-  @Max(LOCATION_TYPES.length, { each: true })
+  @Max(WORK_LOCATION_TYPES.length, { each: true })
   public readonly locationTypeIds: number[];
 
   @ApiPropertyOptional()

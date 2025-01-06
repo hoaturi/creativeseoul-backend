@@ -1,22 +1,20 @@
 export const EMPLOYMENT_TYPES = [
   {
     id: 1,
-    name: 'Full time',
-    slug: 'full-time',
+    label: 'Full time',
   },
   {
     id: 2,
-    name: 'Part time',
-    slug: 'part-time',
+    label: 'Part time',
   },
   {
     id: 3,
-    name: 'Contract',
-    slug: 'contract',
+    label: 'Contract',
   },
   {
-    id: 5,
-    name: 'Internship',
-    slug: 'internship',
+    id: 4,
+    label: 'Internship',
   },
 ] as const;
+
+export type EmploymentType = (typeof EMPLOYMENT_TYPES)[number]['label'];

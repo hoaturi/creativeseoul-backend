@@ -1,7 +1,6 @@
 import { Country } from './country.entity';
 import {
   Entity,
-  Index,
   ManyToOne,
   PrimaryKey,
   Property,
@@ -9,24 +8,19 @@ import {
 } from '@mikro-orm/core';
 
 @Entity()
-@Unique({ properties: ['name', 'country'] })
+@Unique({ properties: ['label', 'country'] })
 export class City {
   @PrimaryKey()
   public readonly id: number;
 
   @Property({ length: 32 })
-  public readonly name: string;
-
-  @Property({ length: 32 })
-  @Index()
-  public readonly slug: string;
+  public readonly label: string;
 
   @ManyToOne(() => Country)
   public readonly country: Country;
 
-  public constructor(name: string, slug: string, country: Country) {
-    this.name = name;
-    this.slug = slug;
+  public constructor(label: string, country: Country) {
+    this.label = label;
     this.country = country;
   }
 }
