@@ -14,7 +14,7 @@ import { LoggerModule } from 'nestjs-pino';
 import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
-import { TalentModule } from './features/professional/talent.module';
+import { TalentModule } from './features/talent/talent.module';
 import { UploadModule } from './features/upload/upload.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
