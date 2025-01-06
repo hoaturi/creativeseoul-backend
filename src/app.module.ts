@@ -16,6 +16,9 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
 import { TalentModule } from './features/professional/talent.module';
 import { UploadModule } from './features/upload/upload.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
+import { TalentScoringService } from './infrastructure/services/talent-scoring/talent-scoring.service';
 
 @Module({
   imports: [
@@ -40,6 +43,10 @@ import { UploadModule } from './features/upload/upload.module';
       validate,
       load: [applicationConfig],
     }),
+    CacheModule.register({
+      ttl: 60 * 60 * 4,
+      max: 10000,
+    }),
     CqrsModule.forRoot(),
     MikroOrmModule.forRoot(mikroOrmConfig),
     BullModule.forRoot(bullMqConfig),
@@ -50,6 +57,11 @@ import { UploadModule } from './features/upload/upload.module';
     UploadModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EmailProcessor],
+  providers: [
+    AppService,
+    EmailProcessor,
+    TalentActivityService,
+    TalentScoringService,
+  ],
 })
 export class AppModule {}
