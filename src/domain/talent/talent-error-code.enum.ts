@@ -1,4 +1,4 @@
 export enum TalentErrorCode {
-  NOT_FOUND = 'TA001',
-  ALREADY_EXISTS = 'TA002',
+  PROFILE_NOT_FOUND = 'TA001',
+  PROFILE_ALREADY_EXISTS = 'TA002',
 }

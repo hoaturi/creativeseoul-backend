@@ -3,16 +3,16 @@ import { HttpStatus } from '@nestjs/common';
 import { TalentErrorCode } from '../../domain/talent/talent-error-code.enum';
 
 export class TalentError extends ResultError {
-  public static readonly NotFound = new ResultError(
-    TalentErrorCode.NOT_FOUND,
+  public static readonly ProfileNotFound = new ResultError(
+    TalentErrorCode.PROFILE_NOT_FOUND,
     HttpStatus.NOT_FOUND,
-    'Talent not found',
+    'Talent profile not found',
   );
 
-  public static readonly AlreadyExists = new ResultError(
-    TalentErrorCode.ALREADY_EXISTS,
+  public static readonly ProfileAlreadyExists = new ResultError(
+    TalentErrorCode.PROFILE_ALREADY_EXISTS,
     HttpStatus.CONFLICT,
-    'Talent already exists',
+    'Talent profile already exists',
   );
 
   public constructor(code: string, statusCode: number, description: string) {

@@ -32,7 +32,7 @@ export class GeneratePresignedUrlHandler
     switch (command.assetType) {
       case AssetType.Avatar: {
         if (!user.talent.id) {
-          return Result.failure(TalentError.NotFound);
+          return Result.failure(TalentError.ProfileNotFound);
         }
 
         filePrefix = user.talent.id;

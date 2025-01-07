@@ -13,6 +13,7 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   ApiBadRequestResponse,
+  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -73,7 +74,7 @@ export class TalentController {
   @UseGuards(AuthGuard)
   @ApiOkResponse({ type: GetTalentResponseDto })
   @ApiNotFoundResponse({
-    example: TalentError.NotFound,
+    example: TalentError.ProfileNotFound,
   })
   public async getTalent(
     @CurrentUser() user: AuthenticatedUser,
@@ -102,6 +103,9 @@ export class TalentController {
   })
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
+  })
+  @ApiConflictResponse({
+    example: TalentError.ProfileAlreadyExists,
   })
   public async createTalent(
     @Session() session: Record<string, any>,

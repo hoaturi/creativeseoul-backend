@@ -42,7 +42,7 @@ export class UpdateTalentHandler
     });
 
     if (!talent) {
-      return Result.failure(TalentError.NotFound);
+      return Result.failure(TalentError.ProfileNotFound);
     }
 
     await this.updateTalent(talent, dto);

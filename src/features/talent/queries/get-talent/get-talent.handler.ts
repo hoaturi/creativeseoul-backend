@@ -58,11 +58,11 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     const talent = await this.findTalentByUser(query.id);
 
     if (!talent) {
-      return Result.failure(TalentError.NotFound);
+      return Result.failure(TalentError.ProfileNotFound);
     }
 
     if (!this.hasAccessPermission(query.user, talent)) {
-      return Result.failure(TalentError.NotFound);
+      return Result.failure(TalentError.ProfileNotFound);
     }
 
     const response = this.createTalentResponse(talent);

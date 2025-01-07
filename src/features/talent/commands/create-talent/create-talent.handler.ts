@@ -38,7 +38,7 @@ export class CreateTalentHandler
     const { dto, user } = command;
 
     if (user.profileId) {
-      return Result.failure(TalentError.AlreadyExists);
+      return Result.failure(TalentError.ProfileAlreadyExists);
     }
 
     const talent = await this.createTalent(dto, user.id);
