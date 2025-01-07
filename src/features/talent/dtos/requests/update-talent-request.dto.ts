@@ -70,6 +70,7 @@ export class UpdateTalentRequestDto {
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(15)
+  @IsString({ each: true })
   @Trim({ each: true })
   @RemoveDuplicates()
   public readonly skills?: string[];
@@ -81,6 +82,7 @@ export class UpdateTalentRequestDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @Trim()
   public readonly city?: string;
@@ -133,8 +135,8 @@ export class UpdateTalentRequestDto {
 
   // Contact Information
   @ApiPropertyOptional()
-  @IsOptional()
   @ValidateIf((o) => o.isContactable === true)
+  @IsOptional()
   @IsEmail()
   public readonly email?: string;
 
@@ -142,6 +144,7 @@ export class UpdateTalentRequestDto {
   @IsOptional()
   @ValidateIf((o) => o.isContactable === true)
   @IsString()
+  @IsNotEmpty()
   @Trim()
   public readonly phone?: string;
 
