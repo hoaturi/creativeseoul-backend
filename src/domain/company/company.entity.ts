@@ -1,4 +1,10 @@
-import { Cascade, Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
+import {
+  Cascade,
+  Entity,
+  Formula,
+  ManyToOne,
+  PrimaryKey,
+} from '@mikro-orm/core';
 import {
   Collection,
   OneToMany,
@@ -50,6 +56,12 @@ export class Company {
     orphanRemoval: true,
   })
   public jobs: Collection<Job> = new Collection(this);
+
+  @Formula(
+    (alias) =>
+      `(SELECT COUNT(*)::int FROM job j WHERE j.company_id = ${alias}.id)`,
+  )
+  public readonly jobCount!: number;
 
   public constructor(
     data: {
