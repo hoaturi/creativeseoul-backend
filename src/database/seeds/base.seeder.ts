@@ -89,6 +89,12 @@ export class BaseSeeder extends Seeder {
       LanguageLevel,
       'LanguageLevel',
     );
+    await seedMissingEntities(
+      CompanySize,
+      COMPANY_SIZES,
+      CompanySize,
+      'CompanySize',
+    );
 
     await em.flush();
   }
