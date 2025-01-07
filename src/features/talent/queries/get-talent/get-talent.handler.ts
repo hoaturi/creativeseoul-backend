@@ -3,18 +3,16 @@ import { GetTalentQuery } from './get-talent.query';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { Talent } from '../../../../domain/talent/talent.entity';
 import { TalentError } from '../../talent.error';
-import {
-  EMPLOYMENT_TYPES,
-  HOURLY_RATE_RANGE,
-  SALARY_RANGE,
-  WORK_LOCATION_TYPES,
-} from '../../../../domain/common/constants';
-import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
-import { MemberLanguageProficiencyResponseDto } from '../../../common/dtos/member-language-proficiency-response.dto';
+import { TalentLocationResponseDto } from '../../dtos/responses/talent-location-response.dto';
+import { TalentLanguageProficiencyResponseDto } from '../../dtos/responses/talent-language-proficiency-response.dto';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { ResultError } from '../../../../common/result/result-error';
 import { Result } from '../../../../common/result/result';
 import { GetTalentResponseDto } from '../../dtos/responses/get-talent-response.dto';
+import { TalentSalaryRangeResponseDto } from '../../dtos/responses/talent-salary-range-response.dto';
+import { TalentWorkLocationTypeResponseDto } from '../../dtos/responses/talent-work-location-type-response.dto';
+import { TalentHourlyRateRangeResponseDto } from '../../dtos/responses/talent-hourly-rate-range-response.dto';
+import { TalentEmploymentTypeResponseDto } from '../../dtos/responses/talent-employment-type-response.dto';
 
 const TALENT_FIELDS = [
   'id',
@@ -24,10 +22,10 @@ const TALENT_FIELDS = [
   'avatarUrl',
   'skills',
   'isAvailable',
-  'salaryRangeId',
-  'hourlyRateRangeId',
-  'locationTypeIds',
-  'employmentTypeIds',
+  'salaryRange',
+  'hourlyRateRange',
+  'workLocationTypes',
+  'employmentTypes',
   'isPublic',
   'email',
   'phone',
@@ -36,6 +34,14 @@ const TALENT_FIELDS = [
   'city.label',
   'languages.language.label',
   'languages.level',
+  'salaryRange.id',
+  'salaryRange.label',
+  'hourlyRateRange.id',
+  'hourlyRateRange.label',
+  'workLocationTypes.id',
+  'workLocationTypes.label',
+  'employmentTypes.id',
+  'employmentTypes.label',
 ] as const;
 
 type TalentFields = (typeof TALENT_FIELDS)[number];
@@ -86,27 +92,35 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
   }
 
   private createTalentResponse(talent: LoadedTalent): GetTalentResponseDto {
-    const location = new MemberLocationResponseDto(
+    const location = new TalentLocationResponseDto(
       talent.country.label,
       talent.city?.label,
     );
 
     const languages = talent.languages.map(
       (language) =>
-        new MemberLanguageProficiencyResponseDto(
+        new TalentLanguageProficiencyResponseDto(
           language.language.label,
           language.level,
         ),
     );
 
-    const { salaryRange, hourlyRateRange } = this.mapCompensationRanges(
-      talent.salaryRangeId,
-      talent.hourlyRateRangeId,
+    const salaryRange = new TalentSalaryRangeResponseDto(
+      talent.salaryRange.id,
+      talent.salaryRange.label,
     );
 
-    const { locationTypes, employmentTypes } = this.mapWorkPreferences(
-      talent.locationTypeIds,
-      talent.employmentTypeIds,
+    const hourlyRateRange = new TalentHourlyRateRangeResponseDto(
+      talent.hourlyRateRange.id,
+      talent.hourlyRateRange.label,
+    );
+
+    const workLocationTypes = talent.workLocationTypes.map(
+      (type) => new TalentWorkLocationTypeResponseDto(type.id, type.label),
+    );
+
+    const employmentTypes = talent.employmentTypes.map(
+      (type) => new TalentEmploymentTypeResponseDto(type.id, type.label),
     );
 
     return new GetTalentResponseDto({
@@ -120,38 +134,11 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
       isAvailable: talent.isAvailable,
       salaryRange,
       hourlyRateRange,
-      locationTypes,
+      workLocationTypes,
       employmentTypes,
       skills: talent.skills,
       email: talent.email,
       phone: talent.phone,
     });
-  }
-
-  private mapCompensationRanges(
-    salaryId?: number,
-    hourlyId?: number,
-  ): { salaryRange?: string; hourlyRateRange?: string } {
-    const salaryRange =
-      salaryId !== undefined ? SALARY_RANGE[salaryId]?.label : undefined;
-    const hourlyRateRange =
-      hourlyId !== undefined ? HOURLY_RATE_RANGE[hourlyId]?.label : undefined;
-    return { salaryRange, hourlyRateRange };
-  }
-
-  private mapWorkPreferences(
-    locationTypeIds: number[],
-    employmentTypeIds: number[],
-  ): {
-    locationTypes: string[];
-    employmentTypes: string[];
-  } {
-    const locationTypes = locationTypeIds.map(
-      (id) => WORK_LOCATION_TYPES[id].label,
-    );
-    const employmentTypes = employmentTypeIds.map(
-      (id) => EMPLOYMENT_TYPES[id].label,
-    );
-    return { locationTypes, employmentTypes };
   }
 }

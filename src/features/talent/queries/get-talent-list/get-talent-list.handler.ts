@@ -97,11 +97,11 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     }
 
     if (employmentTypeIds?.length) {
-      where.employmentTypeIds = { $contains: employmentTypeIds };
+      where.employmentTypes = { $contains: employmentTypeIds };
     }
 
     if (locationTypeIds?.length) {
-      where.locationTypeIds = { $contains: locationTypeIds };
+      where.workLocationTypes = { $contains: locationTypeIds };
     }
 
     if (isAvailable) {

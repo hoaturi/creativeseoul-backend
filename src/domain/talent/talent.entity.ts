@@ -3,6 +3,7 @@ import {
   Entity,
   FullTextType,
   Index,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -16,6 +17,10 @@ import { BaseEntity } from '../base.entity';
 import { User } from '../user/user.entity';
 import { TalentLanguage } from './talent-language.entity';
 import { TalentSocialLinks } from './talent-social-links.interface';
+import { SalaryRange } from '../common/entities/salary-range.entity';
+import { HourlyRateRange } from '../common/entities/hourly-rate-range.entity';
+import { WorkLocationType } from '../common/entities/work-location-type.entity';
+import { EmploymentType } from '../common/entities/employment-type.entity';
 
 const generateSearchVector = (talent: Talent): WeightedFullTextValue => ({
   A: [talent.title, talent.skills?.join(' ')].filter(Boolean).join(' '),
@@ -75,21 +80,19 @@ export class Talent extends BaseEntity {
   @Index()
   public requiresVisaSponsorship!: boolean;
 
-  @Property({ nullable: true })
-  @Index()
-  public salaryRangeId?: number;
+  @ManyToOne(() => SalaryRange, { nullable: true })
+  public salaryRange?: SalaryRange;
 
-  @Property({ nullable: true })
-  @Index()
-  public hourlyRateRangeId?: number;
+  @ManyToOne(() => HourlyRateRange, { nullable: true })
+  public hourlyRateRange?: HourlyRateRange;
 
-  @Property({ columnType: 'integer[]' })
-  @Index()
-  public locationTypeIds: number[];
+  @ManyToMany(() => WorkLocationType)
+  public readonly workLocationTypes: Collection<WorkLocationType> =
+    new Collection<WorkLocationType>(this);
 
-  @Property({ columnType: 'integer[]' })
-  @Index()
-  public employmentTypeIds: number[];
+  @ManyToMany(() => EmploymentType)
+  public readonly employmentTypes: Collection<EmploymentType> =
+    new Collection<EmploymentType>(this);
 
   // Contact information
   @Property()
@@ -137,16 +140,14 @@ export class Talent extends BaseEntity {
       isPublic: boolean;
       isAvailable: boolean;
       isContactable: boolean;
-      locationTypeIds: number[];
-      employmentTypeIds: number[];
       title?: string;
       bio?: string;
       avatarUrl?: string;
       city?: City;
       country?: Country;
       socialLinks?: TalentSocialLinks;
-      salaryRangeId?: number;
-      hourlyRateRangeId?: number;
+      salaryRange?: SalaryRange;
+      hourlyRateRange?: HourlyRateRange;
       skills?: string[];
       email?: string;
       phone?: string;

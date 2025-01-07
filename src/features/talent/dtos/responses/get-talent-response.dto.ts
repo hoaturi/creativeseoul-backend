@@ -1,7 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MemberLocationResponseDto } from '../../../common/dtos/member-location-response.dto';
-import { MemberLanguageProficiencyResponseDto } from '../../../common/dtos/member-language-proficiency-response.dto';
+import { TalentLocationResponseDto } from './talent-location-response.dto';
+import { TalentLanguageProficiencyResponseDto } from './talent-language-proficiency-response.dto';
 import { TalentSocialLinksResponseDto } from './talent-social-links-response.dto';
+import { TalentSalaryRangeResponseDto } from './talent-salary-range-response.dto';
+import { TalentHourlyRateRangeResponseDto } from './talent-hourly-rate-range-response.dto';
+import { TalentWorkLocationTypeResponseDto } from './talent-work-location-type-response.dto';
+import { TalentEmploymentTypeResponseDto } from './talent-employment-type-response.dto';
 
 export class GetTalentResponseDto {
   @ApiProperty()
@@ -17,14 +21,14 @@ export class GetTalentResponseDto {
   public readonly avatarUrl?: string;
 
   @ApiProperty({
-    type: MemberLocationResponseDto,
+    type: TalentLocationResponseDto,
   })
-  public readonly location: MemberLocationResponseDto;
+  public readonly location: TalentLocationResponseDto;
 
   @ApiProperty({
-    type: [MemberLanguageProficiencyResponseDto],
+    type: [TalentLanguageProficiencyResponseDto],
   })
-  public readonly languages: MemberLanguageProficiencyResponseDto[];
+  public readonly languages: TalentLanguageProficiencyResponseDto[];
 
   @ApiPropertyOptional({
     type: TalentSocialLinksResponseDto,
@@ -60,14 +64,14 @@ export class GetTalentResponseDto {
     title: string;
     bio: string;
     avatarUrl?: string;
-    location: MemberLocationResponseDto;
-    languages: MemberLanguageProficiencyResponseDto[];
+    location: TalentLocationResponseDto;
+    languages: TalentLanguageProficiencyResponseDto[];
     socialLinks?: TalentSocialLinksResponseDto;
     isAvailable: boolean;
-    salaryRange?: string;
-    hourlyRateRange?: string;
-    locationTypes: string[];
-    employmentTypes: string[];
+    salaryRange?: TalentSalaryRangeResponseDto;
+    hourlyRateRange?: TalentHourlyRateRangeResponseDto;
+    workLocationTypes: TalentWorkLocationTypeResponseDto[];
+    employmentTypes: TalentEmploymentTypeResponseDto[];
     skills?: string[];
     email?: string;
     phone?: string;

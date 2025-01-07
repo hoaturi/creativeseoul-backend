@@ -13,6 +13,11 @@ import { Language } from '../../../../domain/common/entities/language.entity';
 import { TalentLanguage } from '../../../../domain/talent/talent-language.entity';
 import { TalentScoringService } from '../../../../infrastructure/services/talent-scoring/talent-scoring.service';
 import { TalentLanguageRequestDto } from '../../dtos/requests/talent-language-request.dto';
+import { SalaryRange } from '../../../../domain/common/entities/salary-range.entity';
+import slugify from 'slugify';
+import { HourlyRateRange } from '../../../../domain/common/entities/hourly-rate-range.entity';
+import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
+import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
 
 @CommandHandler(UpsertTalentCommand)
 export class UpsertTalentHandler
@@ -54,28 +59,40 @@ export class UpsertTalentHandler
     userId: string,
     dto: UpsertTalentRequestDto,
   ): Promise<void> {
-    const user = this.em.getReference(User, userId);
-    const country = this.em.getReference(Country, dto.countryId);
-    const city = dto.city
-      ? await this.getOrCreateCity(dto.city, country)
-      : null;
+    const {
+      salaryRangeId,
+      hourlyRateRangeId,
+      locationTypeIds,
+      employmentTypeIds,
+      countryId,
+      city: cityName,
+      languages,
+      ...talentData
+    } = dto;
 
-    const { languages, ...talentData } = dto;
+    const user = this.em.getReference(User, userId);
+
+    const { city, country } = await this.getLocation(cityName, countryId);
+    const { salaryRange, hourlyRateRange } = this.getCompensationRefs(
+      salaryRangeId,
+      hourlyRateRangeId,
+    );
 
     const talent = new Talent(user, {
       ...talentData,
       city,
       country,
-      isAvailable: dto.isAvailable ?? false,
-      isContactable: dto.isContactable ?? false,
-      isPublic: dto.isPublic ?? false,
-      requiresVisaSponsorship: dto.requiresVisaSponsorship ?? false,
-      locationTypeIds: dto.locationTypeIds ?? [],
-      employmentTypeIds: dto.employmentTypeIds ?? [],
+      salaryRange,
+      hourlyRateRange,
+      isAvailable: dto.isAvailable,
+      isContactable: dto.isContactable,
+      isPublic: dto.isPublic,
+      requiresVisaSponsorship: dto.requiresVisaSponsorship,
     });
 
     this.em.persist(talent);
 
+    this.updateWorkPreferences(talent, locationTypeIds, employmentTypeIds);
     this.updateLanguages(talent, languages);
 
     talent.qualityScore = this.scoringService.calculateProfileScore(talent);
@@ -93,26 +110,39 @@ export class UpsertTalentHandler
     talent: Talent,
     dto: UpsertTalentRequestDto,
   ): Promise<void> {
-    const country = this.em.getReference(Country, dto.countryId);
-    const city = dto.city
-      ? await this.getOrCreateCity(dto.city, country)
-      : null;
+    const {
+      salaryRangeId,
+      hourlyRateRangeId,
+      locationTypeIds,
+      employmentTypeIds,
+      countryId,
+      city: cityName,
+      languages,
+      ...talentData
+    } = dto;
 
-    const { languages, ...talentData } = dto;
+    const { city, country } = await this.getLocation(cityName, countryId);
 
-    Object.assign(talent, {
+    const { salaryRange, hourlyRateRange } = this.getCompensationRefs(
+      salaryRangeId,
+      hourlyRateRangeId,
+    );
+
+    const updateData: Partial<Talent> = {
       ...talentData,
       city,
       country,
-      isAvailable: dto.isAvailable ?? talent.isAvailable,
-      isContactable: dto.isContactable ?? talent.isContactable,
-      isPublic: dto.isPublic ?? talent.isPublic,
-      requiresVisaSponsorship:
-        dto.requiresVisaSponsorship ?? talent.requiresVisaSponsorship,
-      locationTypeIds: dto.locationTypeIds ?? talent.locationTypeIds,
-      employmentTypeIds: dto.employmentTypeIds ?? talent.employmentTypeIds,
-    });
+      salaryRange,
+      hourlyRateRange,
+      isAvailable: dto.isAvailable,
+      isContactable: dto.isContactable,
+      isPublic: dto.isPublic,
+      requiresVisaSponsorship: dto.requiresVisaSponsorship,
+    };
 
+    Object.assign(talent, updateData);
+
+    this.updateWorkPreferences(talent, locationTypeIds, employmentTypeIds);
     this.updateLanguages(talent, languages);
 
     talent.qualityScore = this.scoringService.calculateProfileScore(talent);
@@ -124,6 +154,44 @@ export class UpsertTalentHandler
       { talentId: talent.id },
       'talent.upsert-talent.success: Talent profile updated successfully',
     );
+  }
+
+  private getCompensationRefs(
+    salaryId?: number,
+    hourlyId?: number,
+  ): {
+    salaryRange?: SalaryRange;
+    hourlyRateRange?: HourlyRateRange;
+  } {
+    const salaryRange = this.em.getReference(SalaryRange, salaryId);
+    const hourlyRateRange = this.em.getReference(HourlyRateRange, hourlyId);
+
+    return {
+      salaryRange,
+      hourlyRateRange,
+    };
+  }
+
+  private updateWorkPreferences(
+    talent: Talent,
+    workLocationTypeIds: number[],
+    employmentTypeIds: number[],
+  ): {
+    workLocationTypes: WorkLocationType[];
+    employmentTypes: EmploymentType[];
+  } {
+    const workLocationTypes = workLocationTypeIds.map((id) =>
+      this.em.getReference(WorkLocationType, id),
+    );
+
+    const employmentTypes = employmentTypeIds.map((id) =>
+      this.em.getReference(EmploymentType, id),
+    );
+
+    talent.workLocationTypes.set(workLocationTypes);
+    talent.employmentTypes.set(employmentTypes);
+
+    return { workLocationTypes, employmentTypes };
   }
 
   private updateLanguages(
@@ -138,17 +206,23 @@ export class UpsertTalentHandler
     talent.languages.set(talentLanguages);
   }
 
-  private async getOrCreateCity(
+  private async getLocation(
     cityName: string,
-    country: Country,
-  ): Promise<City> {
-    let city = await this.em.findOne(City, { label: cityName, country });
+    countryId: number,
+  ): Promise<{
+    city: City;
+    country: Country;
+  }> {
+    const country = this.em.getReference(Country, countryId);
+
+    const slug = slugify(cityName, { lower: true });
+    let city = await this.em.findOne(City, { slug: slug, country });
 
     if (!city) {
-      city = this.em.create(City, new City(cityName, country));
+      city = this.em.create(City, new City(cityName, slug, country));
     }
 
-    return city;
+    return { city, country };
   }
 
   private handlePromotionUpdate(talent: Talent): void {
