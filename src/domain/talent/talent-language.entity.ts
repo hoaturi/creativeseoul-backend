@@ -1,8 +1,8 @@
-import { Cascade, Entity, Enum } from '@mikro-orm/postgresql';
+import { Cascade, Entity } from '@mikro-orm/postgresql';
 import { ManyToOne } from '@mikro-orm/core';
 import { Language } from '../common/entities/language.entity';
-import { LANGUAGE_LEVELS } from '../common/constants';
 import { Talent } from './talent.entity';
+import { LanguageLevel } from '../common/entities/language-level.entity';
 
 @Entity()
 export class TalentLanguage {
@@ -11,15 +11,15 @@ export class TalentLanguage {
     nullable: false,
     cascade: [Cascade.REMOVE],
   })
-  public talent!: Talent;
+  public readonly talent!: Talent;
 
   @ManyToOne(() => Language, { primary: true })
-  public language!: Language;
+  public readonly language!: Language;
 
-  @Enum(() => LANGUAGE_LEVELS)
-  public level!: number;
+  @ManyToOne(() => LanguageLevel)
+  public readonly level!: LanguageLevel;
 
-  public constructor(language: Language, level: number) {
+  public constructor(language: Language, level: LanguageLevel) {
     this.language = language;
     this.level = level;
   }

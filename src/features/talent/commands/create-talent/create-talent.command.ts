@@ -1,13 +1,13 @@
 import { Command } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
-import { UpsertTalentRequestDto } from '../../dtos/requests/upsert-talent-request.dto';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
+import { CreateTalentRequestDto } from '../../dtos/requests/create-talent-request.dto';
 
-export class UpsertTalentCommand extends Command<Result<void, ResultError>> {
+export class CreateTalentCommand extends Command<Result<string, ResultError>> {
   public constructor(
     public readonly user: AuthenticatedUser,
-    public readonly dto: UpsertTalentRequestDto,
+    public readonly dto: CreateTalentRequestDto,
   ) {
     super();
   }

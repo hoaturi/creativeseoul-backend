@@ -5,9 +5,9 @@ export class TalentLanguageProficiencyResponseDto {
   public readonly name: string;
 
   @ApiProperty()
-  public readonly level: number;
+  public readonly level: string;
 
-  public constructor(name: string, level: number) {
+  public constructor(name: string, level: string) {
     this.name = name;
     this.level = level;
   }

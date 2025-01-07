@@ -8,6 +8,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Max,
   MaxLength,
   Min,
@@ -22,11 +23,13 @@ import {
 } from '../../../../domain/common/constants';
 import { Trim } from '../../../../common/decorators/trim.decorator';
 import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
-import { TalentSocialLinks } from '../../../../domain/talent/talent-social-links.interface';
 import { HasUniqueLanguages } from '../../../../common/decorators/has-unique-languages.decorator';
 import { TalentLanguageRequestDto } from './talent-language-request.dto';
+import { Type } from 'class-transformer';
+import { TalentSocialLinksRequestDto } from './talent-social-links-request.dto';
 
-export class UpsertTalentRequestDto {
+export class UpdateTalentRequestDto {
+  // Basic Profile Information
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -48,35 +51,47 @@ export class UpsertTalentRequestDto {
   @Trim()
   public readonly bio: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUrl()
+  public readonly avatarUrl?: string;
+
+  // Skills and Languages
   @ApiProperty({
     type: TalentLanguageRequestDto,
   })
   @IsArray()
-  @IsNotEmpty()
-  @ValidateNested({ each: true })
   @HasUniqueLanguages()
+  @ValidateNested({ each: true })
+  @Type(() => TalentLanguageRequestDto)
   public readonly languages: TalentLanguageRequestDto[];
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(15)
+  @Trim({ each: true })
+  @RemoveDuplicates()
+  public readonly skills?: string[];
+
+  // Location Information
+  @ApiProperty()
+  @IsNumber()
+  public readonly countryId: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  public readonly avatarUrl?: string;
+  @Trim()
+  public readonly city?: string;
 
-  @ApiProperty()
-  @IsBoolean()
-  public readonly isPublic: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
-  public readonly requiresVisaSponsorship: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
-  public readonly isAvailable: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
-  public readonly isContactable: boolean;
+  // Work Preferences
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(SALARY_RANGE.length)
+  public readonly salaryRangeId?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -84,13 +99,6 @@ export class UpsertTalentRequestDto {
   @Min(1)
   @Max(HOURLY_RATE_RANGE.length)
   public readonly hourlyRateRangeId?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Max(SALARY_RANGE.length)
-  public readonly salaryRangeId?: number;
 
   @ApiProperty()
   @IsArray()
@@ -106,14 +114,24 @@ export class UpsertTalentRequestDto {
   @Max(WORK_LOCATION_TYPES.length, { each: true })
   public readonly locationTypeIds: number[];
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsArray()
-  @ArrayMaxSize(15)
-  @Trim({ each: true })
-  @RemoveDuplicates()
-  public readonly skills?: string[];
+  // Profile Status and Visibility
+  @ApiProperty()
+  @IsBoolean()
+  public readonly isPublic: boolean;
 
+  @ApiProperty()
+  @IsBoolean()
+  public readonly isAvailable: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  public readonly isContactable: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  public readonly requiresVisaSponsorship: boolean;
+
+  // Contact Information
   @ApiPropertyOptional()
   @IsOptional()
   @ValidateIf((o) => o.isContactable === true)
@@ -127,16 +145,9 @@ export class UpsertTalentRequestDto {
   @Trim()
   public readonly phone?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    type: TalentSocialLinksRequestDto,
+  })
   @IsOptional()
-  public readonly socialLinks?: TalentSocialLinks;
-
-  @ApiPropertyOptional()
-  @IsNumber()
-  public readonly countryId?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  public readonly city?: string;
+  public readonly socialLinks?: TalentSocialLinksRequestDto;
 }

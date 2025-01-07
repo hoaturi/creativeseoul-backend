@@ -9,6 +9,12 @@ export class TalentError extends ResultError {
     'Talent not found',
   );
 
+  public static readonly AlreadyExists = new ResultError(
+    TalentErrorCode.ALREADY_EXISTS,
+    HttpStatus.CONFLICT,
+    'Talent already exists',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

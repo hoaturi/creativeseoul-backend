@@ -135,16 +135,16 @@ export class Talent extends BaseEntity {
   public constructor(
     user: User,
     data: {
-      fullName: string;
       requiresVisaSponsorship: boolean;
       isPublic: boolean;
       isAvailable: boolean;
       isContactable: boolean;
-      title?: string;
-      bio?: string;
+      fullName: string;
+      title: string;
+      bio: string;
+      country: Country;
       avatarUrl?: string;
       city?: City;
-      country?: Country;
       socialLinks?: TalentSocialLinks;
       salaryRange?: SalaryRange;
       hourlyRateRange?: HourlyRateRange;
@@ -154,6 +154,22 @@ export class Talent extends BaseEntity {
     },
   ) {
     super();
-    Object.assign(this, { user, ...data });
+    this.user = user;
+    this.requiresVisaSponsorship = data.requiresVisaSponsorship;
+    this.isPublic = data.isPublic;
+    this.isAvailable = data.isAvailable;
+    this.isContactable = data.isContactable;
+    this.fullName = data.fullName;
+    this.title = data.title;
+    this.bio = data.bio;
+    this.country = data.country;
+    this.avatarUrl = data.avatarUrl;
+    this.city = data.city;
+    this.socialLinks = data.socialLinks;
+    this.salaryRange = data.salaryRange;
+    this.hourlyRateRange = data.hourlyRateRange;
+    this.skills = data.skills;
+    this.email = data.email;
+    this.phone = data.phone;
   }
 }

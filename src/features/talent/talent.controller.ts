@@ -4,8 +4,10 @@ import {
   Get,
   HttpException,
   Param,
+  Post,
   Put,
   Query,
+  Session,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -23,15 +25,17 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
-import { UpsertTalentCommand } from './commands/upsert-talent/upsert-talent.command';
+import { UpdateTalentCommand } from './commands/upsert-talent/update-talent.command';
 import { UserRole } from '../../domain/user/user-role.enum';
 import { GetTalentQuery } from './queries/get-talent/get-talent.query';
 import { TalentError } from './talent.error';
 import { GetTalentListResponseDto } from './dtos/responses/get-talent-list-response.dto';
 import { GetTalentListQuery } from './queries/get-talent-list/get-talent-list.query';
 import { GetTalentListQueryDto } from './dtos/requests/get-talent-list-query.dto';
-import { UpsertTalentRequestDto } from './dtos/requests/upsert-talent-request.dto';
+import { UpdateTalentRequestDto } from './dtos/requests/update-talent-request.dto';
 import { GetTalentResponseDto } from './dtos/responses/get-talent-response.dto';
+import { CreateTalentCommand } from './commands/create-talent/create-talent.command';
+import { CreateTalentRequestDto } from './dtos/requests/create-talent-request.dto';
 
 @Controller('talent')
 export class TalentController {
@@ -86,6 +90,37 @@ export class TalentController {
     return result.value;
   }
 
+  @Post('me')
+  @Roles(UserRole.Talent)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async createTalent(
+    @Session() session: Record<string, any>,
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: CreateTalentRequestDto,
+  ): Promise<void> {
+    const command = new CreateTalentCommand(user, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    session.user.profileId = result.value;
+
+    return;
+  }
+
   @Put('me')
   @Roles(UserRole.Talent)
   @UseGuards(AuthGuard, RolesGuard)
@@ -99,11 +134,11 @@ export class TalentController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
-  public async upsertTalent(
+  public async updateTalent(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: UpsertTalentRequestDto,
+    @Body() dto: UpdateTalentRequestDto,
   ): Promise<void> {
-    const command = new UpsertTalentCommand(user, dto);
+    const command = new UpdateTalentCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
 
