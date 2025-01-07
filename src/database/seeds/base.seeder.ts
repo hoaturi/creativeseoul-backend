@@ -4,6 +4,7 @@ import {
   COUNTRIES,
   EMPLOYMENT_TYPES,
   HOURLY_RATE_RANGE,
+  LANGUAGE_LEVELS,
   LANGUAGES,
   SALARY_RANGE,
   WORK_LOCATION_TYPES,
@@ -17,6 +18,7 @@ import { SalaryRange } from '../../domain/common/entities/salary-range.entity';
 import { HourlyRateRange } from '../../domain/common/entities/hourly-rate-range.entity';
 import { WorkLocationType } from '../../domain/common/entities/work-location-type.entity';
 import { EmploymentType } from '../../domain/common/entities/employment-type.entity';
+import { LanguageLevel } from '../../domain/common/entities/language-level.entity';
 
 export class BaseSeeder extends Seeder {
   public async run(em: EntityManager): Promise<void> {
@@ -70,6 +72,13 @@ export class BaseSeeder extends Seeder {
       EMPLOYMENT_TYPES,
       EmploymentType,
       'EmploymentType',
+    );
+
+    await seedMissingEntities(
+      LanguageLevel,
+      LANGUAGE_LEVELS,
+      LanguageLevel,
+      'LanguageLevel',
     );
 
     await em.flush();
