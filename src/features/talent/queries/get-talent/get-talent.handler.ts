@@ -13,6 +13,7 @@ import { TalentSalaryRangeResponseDto } from '../../dtos/responses/talent-salary
 import { TalentWorkLocationTypeResponseDto } from '../../dtos/responses/talent-work-location-type-response.dto';
 import { TalentHourlyRateRangeResponseDto } from '../../dtos/responses/talent-hourly-rate-range-response.dto';
 import { TalentEmploymentTypeResponseDto } from '../../dtos/responses/talent-employment-type-response.dto';
+import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
 const TALENT_FIELDS = [
   'id',
@@ -77,7 +78,7 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
   }
 
   private hasAccessPermission(
-    user: GetTalentQuery['user'],
+    user: AuthenticatedUser,
     talent: LoadedTalent,
   ): boolean {
     const isUserOwner = user.profileId === talent.id;
@@ -101,7 +102,7 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
       (language) =>
         new TalentLanguageProficiencyResponseDto(
           language.language.label,
-          language.level,
+          language.level.label,
         ),
     );
 
