@@ -5,5 +5,3 @@ export const LANGUAGE_LEVELS = [
   { id: 4, label: 'Advanced' },
   { id: 5, label: 'Fluent' },
 ] as const;
-
-export type LanguageLevel = (typeof LANGUAGE_LEVELS)[number]['label'];

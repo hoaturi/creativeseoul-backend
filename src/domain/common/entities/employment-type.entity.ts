@@ -1,15 +1,16 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/postgresql';
+import { Entity, PrimaryKey } from '@mikro-orm/core';
+import { Property } from '@mikro-orm/postgresql';
 
 @Entity()
-export class Language {
+export class EmploymentType {
   @PrimaryKey()
   public readonly id!: number;
 
   @Property({ unique: true })
-  public label!: string;
+  public readonly label!: string;
 
   @Property({ unique: true })
-  public slug!: string;
+  public readonly slug!: string;
 
   public constructor(label: string, slug: string) {
     this.label = label;

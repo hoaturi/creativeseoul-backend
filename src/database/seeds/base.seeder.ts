@@ -1,24 +1,37 @@
 import { Seeder } from '@mikro-orm/seeder';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { COUNTRIES, LANGUAGES } from '../../domain/common/constants';
+import {
+  COUNTRIES,
+  EMPLOYMENT_TYPES,
+  HOURLY_RATE_RANGE,
+  LANGUAGES,
+  SALARY_RANGE,
+  WORK_LOCATION_TYPES,
+} from '../../domain/common/constants';
 import { Language } from '../../domain/common/entities/language.entity';
 import { Country } from '../../domain/common/entities/country.entity';
 import { CATEGORIES } from '../../domain/common/constants/category.constant';
 import { Category } from '../../domain/common/entities/category.entity';
+import slugify from 'slugify';
+import { SalaryRange } from '../../domain/common/entities/salary-range.entity';
+import { HourlyRateRange } from '../../domain/common/entities/hourly-rate-range.entity';
+import { WorkLocationType } from '../../domain/common/entities/work-location-type.entity';
+import { EmploymentType } from '../../domain/common/entities/employment-type.entity';
 
 export class BaseSeeder extends Seeder {
   public async run(em: EntityManager): Promise<void> {
     async function seedMissingEntities<T>(
       entityClass: new (...args: any[]) => T,
       data: ReadonlyArray<{ readonly label: string }>,
-      constructor: new (label: string) => T,
+      constructor: new (label: string, slug: string) => T,
       entityName: string,
     ) {
       let added = 0;
       for (const item of data) {
         const existing = await em.findOne(entityClass, { label: item.label });
         if (!existing) {
-          em.create(entityClass, new constructor(item.label));
+          const slug = slugify(item.label, { lower: true });
+          em.create(entityClass, new constructor(item.label, slug));
           added++;
         }
       }
@@ -30,6 +43,34 @@ export class BaseSeeder extends Seeder {
     await seedMissingEntities(Country, COUNTRIES, Country, 'Countries');
 
     await seedMissingEntities(Category, CATEGORIES, Category, 'Categories');
+
+    await seedMissingEntities(
+      SalaryRange,
+      SALARY_RANGE,
+      SalaryRange,
+      'SalaryRange',
+    );
+
+    await seedMissingEntities(
+      HourlyRateRange,
+      HOURLY_RATE_RANGE,
+      HourlyRateRange,
+      'HourlyRateRange',
+    );
+
+    await seedMissingEntities(
+      WorkLocationType,
+      WORK_LOCATION_TYPES,
+      WorkLocationType,
+      'WorkLocationType',
+    );
+
+    await seedMissingEntities(
+      EmploymentType,
+      EMPLOYMENT_TYPES,
+      EmploymentType,
+      'EmploymentType',
+    );
 
     await em.flush();
   }

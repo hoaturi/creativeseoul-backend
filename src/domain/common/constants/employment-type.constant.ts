@@ -16,5 +16,3 @@ export const EMPLOYMENT_TYPES = [
     label: 'Internship',
   },
 ] as const;
-
-export type EmploymentType = (typeof EMPLOYMENT_TYPES)[number]['label'];

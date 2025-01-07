@@ -2,14 +2,14 @@ import { Entity, PrimaryKey } from '@mikro-orm/core';
 import { Property } from '@mikro-orm/postgresql';
 
 @Entity()
-export class Category {
+export class LanguageLevel {
   @PrimaryKey()
   public readonly id!: number;
 
-  @Property({ unique: true })
+  @Property()
   public readonly label!: string;
 
-  @Property({ unique: true })
+  @Property()
   public readonly slug!: string;
 
   public constructor(label: string, slug: string) {

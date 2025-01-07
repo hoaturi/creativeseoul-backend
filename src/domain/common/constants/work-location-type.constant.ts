@@ -12,5 +12,3 @@ export const WORK_LOCATION_TYPES = [
     label: 'Hybrid',
   },
 ] as const;
-
-export type WorkLocationType = (typeof WORK_LOCATION_TYPES)[number]['label'];
