@@ -19,6 +19,7 @@ import { UploadModule } from './features/upload/upload.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
 import { TalentScoringService } from './infrastructure/services/talent-scoring/talent-scoring.service';
+import { CompanyModule } from './features/company/company.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { TalentScoringService } from './infrastructure/services/talent-scoring/t
     UserModule,
     TalentModule,
     UploadModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [
