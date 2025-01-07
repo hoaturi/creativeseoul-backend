@@ -24,25 +24,19 @@ export class GetTalentListQueryDto {
   @IsOptional()
   @IsArray()
   @IsNumber({}, { each: true })
-  @Transform(({ value }) => {
-    if (!value) return undefined;
-    return Array.isArray(value)
-      ? value.map((v) => parseInt(v))
-      : [parseInt(value)];
-  })
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map((v) => parseInt(v)) : [parseInt(value)],
+  )
   public readonly employmentTypeIds?: number[];
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsArray()
   @IsNumber({}, { each: true })
-  @Transform(({ value }) => {
-    if (!value) return undefined;
-    return Array.isArray(value)
-      ? value.map((v) => parseInt(v))
-      : [parseInt(value)];
-  })
-  public readonly locationTypeIds?: number[];
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map((v) => parseInt(v)) : [parseInt(value)],
+  )
+  public readonly workLocationTypeIds?: number[];
 
   @ApiPropertyOptional()
   @IsOptional()

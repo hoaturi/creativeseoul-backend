@@ -70,7 +70,6 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
 
     const [talents, count] = await this.em.findAndCount(Talent, where, {
       fields: TALENT_FIELDS,
-      populate: ['country', 'city'],
       orderBy: {
         [priorityTier]: QueryOrder.desc,
       },
@@ -86,7 +85,8 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     where: QBFilterQuery<Talent>,
     filters: GetTalentListQueryDto,
   ) {
-    const { search, employmentTypeIds, locationTypeIds, isAvailable } = filters;
+    const { search, employmentTypeIds, workLocationTypeIds, isAvailable } =
+      filters;
 
     if (search) {
       const formattedSearch = search
@@ -97,11 +97,11 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     }
 
     if (employmentTypeIds?.length) {
-      where.employmentTypes = { $contains: employmentTypeIds };
+      where.employmentTypes = { $some: { id: { $in: employmentTypeIds } } };
     }
 
-    if (locationTypeIds?.length) {
-      where.workLocationTypes = { $contains: locationTypeIds };
+    if (workLocationTypeIds?.length) {
+      where.workLocationTypes = { $some: { id: { $in: workLocationTypeIds } } };
     }
 
     if (isAvailable) {
