@@ -2096,6 +2096,11 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
+"@paddle/paddle-node-sdk@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@paddle/paddle-node-sdk/-/paddle-node-sdk-2.3.2.tgz#f9b5faa3728ee6cf4afd0ab96600f9f3e9826201"
+  integrity sha512-Q+Qv7jqmI12hWMJ+1N1i/Gq6p5VKNpGg+CH6cHut8v5xDFt9HsCDd1MwuYDwykWSzGwo50gzngm9BYdrbcDgmQ==
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz"
