@@ -31,7 +31,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
   public async execute(
     command: SignupCommand,
   ): Promise<Result<void, ResultError>> {
-    const { email, fullName } = command.dto;
+    const { email } = command.dto;
 
     if (await this.checkEmailExists(email)) {
       return Result.failure(AuthError.EmailAlreadyExists);
@@ -41,7 +41,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
     const emailVerification = await this.createEmailVerification(user);
 
     await this.em.flush();
-    await this.queueVerificationEmail(user, fullName, emailVerification.token);
+    await this.queueVerificationEmail(user, emailVerification.token);
 
     this.logger.log(
       { userId: user.id },
@@ -81,14 +81,9 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
 
   private async queueVerificationEmail(
     user: User,
-    fullName: string,
     verificationToken: string,
   ): Promise<void> {
-    const verifyEmailJob = new VerifyEmailJobDto(
-      user,
-      fullName,
-      verificationToken,
-    );
+    const verifyEmailJob = new VerifyEmailJobDto(user, verificationToken);
 
     await this.emailQueue.add(
       EmailJobType.VERIFY_EMAIL,

@@ -31,7 +31,6 @@ export class EmailService {
     payload: VerifyEmailJobDto,
   ): Promise<void> {
     const templateData: VerificationTemplateData = {
-      fullName: payload.fullName,
       verificationLink: `${this.appConfig.client.baseUrl}?token=${payload.verificationToken}`,
     };
 
