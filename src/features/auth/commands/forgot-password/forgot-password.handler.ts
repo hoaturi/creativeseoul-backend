@@ -5,7 +5,6 @@ import { ResultError } from '../../../../common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { User } from '../../../../domain/user/user.entity';
 import { UserError } from '../../../user/user.error';
-import { Logger } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
 import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
@@ -19,8 +18,6 @@ import { InjectQueue } from '@nestjs/bullmq';
 export class ForgotPasswordHandler
   implements ICommandHandler<ForgotPasswordCommand>
 {
-  private readonly logger = new Logger(ForgotPasswordHandler.name);
-
   public constructor(
     private readonly em: EntityManager,
     @InjectQueue(QueueType.EMAIL)
@@ -46,11 +43,6 @@ export class ForgotPasswordHandler
       EmailJobType.FORGOT_PASSWORD,
       resetEmailJob,
       emailJobOption,
-    );
-
-    this.logger.log(
-      { userId: user.id },
-      'auth.forgot-password.success: Forgot password initiated',
     );
 
     return Result.success();
