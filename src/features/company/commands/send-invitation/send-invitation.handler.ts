@@ -63,7 +63,7 @@ export class SendInvitationHandler
 
     this.em.create(
       CompanyInvitation,
-      new CompanyInvitation(token, expiresAt, company as Company),
+      new CompanyInvitation(token, expiresAt, false, company as Company),
     );
 
     await this.em.flush();
