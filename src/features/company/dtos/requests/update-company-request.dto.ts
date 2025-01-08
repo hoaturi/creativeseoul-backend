@@ -12,9 +12,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Trim } from '../../../common/decorators/trim.decorator';
-import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
-import { COMPANY_SIZES } from '../../../domain/common/constants/company-size.constant';
+import { Trim } from '../../../../common/decorators/trim.decorator';
+import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
+import { COMPANY_SIZES } from '../../../../domain/common/constants/company-size.constant';
 import { CompanySocialLinksRequestDto } from './company-social-links-request.dto';
 
 export class UpdateCompanyRequestDto {

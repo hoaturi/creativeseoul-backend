@@ -14,7 +14,7 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { UserRole } from '../../domain/user/user-role.enum';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { UpdateCompanyRequestDto } from './dtos/update-company-request.dto';
+import { UpdateCompanyRequestDto } from './dtos/requests/update-company-request.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -27,7 +27,7 @@ import { CommonError } from '../common/common.error';
 import { UpdateCompanyCommand } from './commands/update-company/update-company.command';
 import { GetCompanyListQuery } from './queries/get-company-list/get-company-list.query';
 import { GetCompanyListResponseDto } from './dtos/get-company-list-response.dto';
-import { GetCompanyListQueryDto } from './dtos/get-company-list-query.dto';
+import { GetCompanyListQueryDto } from './dtos/requests/get-company-list-query.dto';
 
 @Controller('companies')
 export class CompanyController {
