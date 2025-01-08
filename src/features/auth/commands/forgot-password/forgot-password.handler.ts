@@ -11,7 +11,7 @@ import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
 import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
 import * as crypto from 'crypto';
 import { ForgotPasswordToken } from '../../../../domain/auth/forgot-password-token.entity';
-import { authEmailJobOption } from '../../../../infrastructure/queue/email/auth-email-job.option';
+import { emailJobOption } from '../../../../infrastructure/queue/email/email-job.option';
 import { ForgotPasswordJobDto } from '../../../../infrastructure/queue/email/dtos/forgot-password-job.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 
@@ -45,7 +45,7 @@ export class ForgotPasswordHandler
     await this.emailQueue.add(
       EmailJobType.FORGOT_PASSWORD,
       resetEmailJob,
-      authEmailJobOption,
+      emailJobOption,
     );
 
     this.logger.log(

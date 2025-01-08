@@ -1,6 +1,6 @@
 import { JobsOptions } from 'bullmq';
 
-export const authEmailJobOption: JobsOptions = {
+export const emailJobOption: JobsOptions = {
   attempts: 3,
   backoff: {
     type: 'exponential',

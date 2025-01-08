@@ -10,7 +10,7 @@ import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
 import { VerifyEmailJobDto } from '../../../../infrastructure/queue/email/dtos/verify-email-job.dto';
 import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
 import { Queue } from 'bullmq';
-import { authEmailJobOption } from '../../../../infrastructure/queue/email/auth-email-job.option';
+import { emailJobOption } from '../../../../infrastructure/queue/email/email-job.option';
 import { AuthError } from '../../auth.error';
 import { Logger } from '@nestjs/common';
 import { EmailVerificationToken } from '../../../../domain/auth/email-verification-token.entity';
@@ -88,7 +88,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
     await this.emailQueue.add(
       EmailJobType.VERIFY_EMAIL,
       verifyEmailJob,
-      authEmailJobOption,
+      emailJobOption,
     );
   }
 }
