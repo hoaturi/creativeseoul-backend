@@ -37,6 +37,9 @@ class EnvironmentVariables {
 
   @IsString()
   public readonly EMAIL_FROM: string;
+
+  @IsString()
+  public readonly PADDLE_API_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {

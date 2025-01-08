@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AcceptInvitationCommand } from './accept-invitation.command';
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { CompanyInvitation } from '../../../../domain/company/company-invitation.entity';
@@ -10,6 +10,20 @@ import { AuthError } from '../../../auth/auth.error';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Logger } from '@nestjs/common';
+import { PaymentService } from '../../../../infrastructure/services/payment/payment.service';
+
+const INVITATION_FIELDS = [
+  'id',
+  'isAccepted',
+  'company.id',
+  'company.name',
+  'company.paymentCustomerId',
+  'company.isClaimed',
+  'company.user.id',
+] as const;
+
+type InvitationFields = (typeof INVITATION_FIELDS)[number];
+type LoadedInvitation = Loaded<CompanyInvitation, never, InvitationFields>;
 
 @CommandHandler(AcceptInvitationCommand)
 export class AcceptInvitationHandler
@@ -17,7 +31,10 @@ export class AcceptInvitationHandler
 {
   private readonly logger = new Logger(AcceptInvitationHandler.name);
 
-  public constructor(private readonly em: EntityManager) {}
+  public constructor(
+    private readonly em: EntityManager,
+    private readonly paymentService: PaymentService,
+  ) {}
 
   public async execute(
     command: AcceptInvitationCommand,
@@ -32,7 +49,7 @@ export class AcceptInvitationHandler
         isAccepted: false,
       },
       {
-        fields: ['id', 'isAccepted', 'company.isClaimed', 'company.user.id'],
+        fields: INVITATION_FIELDS,
       },
     );
 
@@ -54,17 +71,11 @@ export class AcceptInvitationHandler
       return Result.failure(AuthError.EmailAlreadyExists);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = this.em.create(
-      User,
-      new User(email, hashedPassword, UserRole.COMPANY),
-    );
-    user.isVerified = true;
-
+    invitation.company.user = await this.createCompanyUser(email, password);
     invitation.isAccepted = true;
-    invitation.company.user = user;
     invitation.company.isClaimed = true;
+
+    await this.setupPaymentCustomer(invitation, email);
 
     await this.em.flush();
 
@@ -79,5 +90,30 @@ export class AcceptInvitationHandler
     );
 
     return Result.success();
+  }
+
+  private async createCompanyUser(
+    email: string,
+    password: string,
+  ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = this.em.create(
+      User,
+      new User(email, hashedPassword, UserRole.COMPANY),
+    );
+    user.isVerified = true;
+    return user;
+  }
+
+  private async setupPaymentCustomer(
+    invitation: LoadedInvitation,
+    email: string,
+  ): Promise<void> {
+    const customer = await this.paymentService.createCustomer(
+      invitation.company.name,
+      email,
+      invitation.company.id,
+    );
+    invitation.company.paymentCustomerId = customer.id;
   }
 }

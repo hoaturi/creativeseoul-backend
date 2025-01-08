@@ -22,4 +22,7 @@ export const applicationConfig = registerAs('app', () => ({
   email: {
     from: process.env.EMAIL_FROM,
   },
+  paddle: {
+    apiKey: process.env.PADDLE_API_KEY,
+  },
 }));
