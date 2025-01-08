@@ -25,8 +25,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
-    .setTitle('FloatSeoul API')
-    .setDescription('Backend API documentation for FloatSeoul')
+    .setTitle('CreativeSeoul API')
+    .setDescription('Backend API documentation for CreativeSeoul')
     .setVersion('0.1')
     .build();
 
