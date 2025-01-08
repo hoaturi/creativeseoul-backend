@@ -8,6 +8,8 @@ import { Template } from './interfaces/template.interface';
 import { VerificationTemplateData } from './interfaces';
 import { ForgotPasswordJobDto } from '../../queue/email/dtos/forgot-password-job.dto';
 import { ForgotPasswordTemplateData } from './interfaces/forgot-password-template-data.interface';
+import { CompanyInvitationJobDto } from '../../queue/email/dtos/company-invitation-job.dto';
+import { CompanyInvitationTemplateData } from './interfaces/company-invitation-template-data.interface';
 
 @Injectable()
 export class EmailService {
@@ -27,7 +29,7 @@ export class EmailService {
     });
   }
 
-  public async sendVerificationEmail(
+  public async sendEmailVerification(
     payload: VerifyEmailJobDto,
   ): Promise<void> {
     const templateData: VerificationTemplateData = {
@@ -45,7 +47,7 @@ export class EmailService {
     );
   }
 
-  public async sendForgotPasswordEmail(
+  public async sendForgotPassword(
     payload: ForgotPasswordJobDto,
   ): Promise<void> {
     const templateData: ForgotPasswordTemplateData = {
@@ -61,6 +63,24 @@ export class EmailService {
     this.logger.log(
       { userId: payload.userId },
       'email.forgot-password.success: Forgot password link sent',
+    );
+  }
+
+  public async sendCompanyInvitationEmail(
+    payload: CompanyInvitationJobDto,
+  ): Promise<void> {
+    const templateData: CompanyInvitationTemplateData = {
+      invitationLink: `${this.appConfig.client.baseUrl}/accept-invitation?token=${payload.token}`,
+    };
+
+    await this.sendEmail(payload.email, {
+      templateType: EmailJobType.COMPANY_INVITATION,
+      templateData,
+    });
+
+    this.logger.log(
+      { email: payload.email },
+      'email.company-invitation.success: Company invitation sent',
     );
   }
 

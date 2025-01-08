@@ -1,4 +1,5 @@
 export enum CompanyErrorCode {
   PROFILE_ALREADY_EXISTS = 'CO001',
   PROFILE_NOT_FOUND = 'CO002',
+  PROFILE_ALREADY_CLAIMED = 'CO003',
 }

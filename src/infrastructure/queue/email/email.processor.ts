@@ -6,6 +6,7 @@ import { EmailService } from '../../services/email/email.service';
 import { VerifyEmailJobDto } from './dtos/verify-email-job.dto';
 import { BaseProcessor } from '../base.processor';
 import { ForgotPasswordJobDto } from './dtos/forgot-password-job.dto';
+import { CompanyInvitationJobDto } from './dtos/company-invitation-job.dto';
 
 @Processor(QueueType.EMAIL)
 export class EmailProcessor extends BaseProcessor {
@@ -20,16 +21,25 @@ export class EmailProcessor extends BaseProcessor {
 
       case EmailJobType.FORGOT_PASSWORD:
         return this.forgotPassword(job);
+
+      case EmailJobType.COMPANY_INVITATION:
+        return this.sendCompanyInvitation(job);
       default:
         new Error(`Job type ${job.name} not supported`);
     }
   }
 
   private async verifyEmail(job: Job<VerifyEmailJobDto>): Promise<void> {
-    await this.emailService.sendVerificationEmail(job.data);
+    await this.emailService.sendEmailVerification(job.data);
   }
 
-  private forgotPassword(job: Job<ForgotPasswordJobDto>): Promise<void> {
-    return this.emailService.sendForgotPasswordEmail(job.data);
+  private async forgotPassword(job: Job<ForgotPasswordJobDto>): Promise<void> {
+    await this.emailService.sendForgotPassword(job.data);
+  }
+
+  private async sendCompanyInvitation(
+    job: Job<CompanyInvitationJobDto>,
+  ): Promise<void> {
+    await this.emailService.sendCompanyInvitationEmail(job.data);
   }
 }

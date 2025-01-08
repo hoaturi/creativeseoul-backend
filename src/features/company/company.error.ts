@@ -15,6 +15,12 @@ export class CompanyError extends ResultError {
     'Company Profile not found',
   );
 
+  public static readonly ProfileAlreadyClaimed = new ResultError(
+    CompanyErrorCode.PROFILE_ALREADY_CLAIMED,
+    HttpStatus.CONFLICT,
+    'Company Profile already claimed',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

@@ -2,6 +2,7 @@ import {
   Cascade,
   Entity,
   Formula,
+  Index,
   ManyToOne,
   PrimaryKey,
 } from '@mikro-orm/core';
@@ -39,8 +40,8 @@ export class Company {
   @Property({ nullable: true })
   public logoUrl?: string;
 
-  @Property({ unique: true, nullable: true })
-  public websiteUrl?: string;
+  @Property({ unique: true })
+  public websiteUrl: string;
 
   @Property({ length: 64, nullable: true })
   public location?: string;
@@ -57,6 +58,10 @@ export class Company {
   })
   public jobs: Collection<Job> = new Collection(this);
 
+  @Property()
+  @Index()
+  public isClaimed: boolean;
+
   @Formula(
     (alias) =>
       `(SELECT COUNT(*)::int FROM job j WHERE j.company_id = ${alias}.id)`,
@@ -65,18 +70,20 @@ export class Company {
 
   public constructor(
     data: {
+      isClaimed: boolean;
       name: string;
-      summary: string;
-      description: string;
-      languages: string[];
-      location: string;
+      websiteUrl: string;
+      summary?: string;
+      description?: string;
+      languages?: string[];
+      location?: string;
       logoUrl?: string;
-      websiteUrl?: string;
       size?: CompanySize;
       socialLinks?: CompanySocialLinks;
     },
     user?: User,
   ) {
+    this.isClaimed = data.isClaimed;
     this.name = data.name;
     this.summary = data.summary;
     this.description = data.description;
