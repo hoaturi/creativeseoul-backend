@@ -6,10 +6,10 @@ import { SendInvitationHandler } from './commands/send-invitation/send-invitatio
 import { BullModule } from '@nestjs/bullmq';
 import { QueueType } from '../../infrastructure/queue/queue-type.enum';
 import { AcceptInvitationHandler } from './commands/accept-invitation/accept-invitation.handler';
-import { PaymentModule } from '../../infrastructure/services/payment/payment.module';
+import { PaddleModule } from '../../infrastructure/services/paddle/paddle.module';
 
 @Module({
-  imports: [BullModule.registerQueue({ name: QueueType.EMAIL }), PaymentModule],
+  imports: [BullModule.registerQueue({ name: QueueType.EMAIL }), PaddleModule],
   providers: [
     UpdateCompanyHandler,
     GetCompanyListHandler,

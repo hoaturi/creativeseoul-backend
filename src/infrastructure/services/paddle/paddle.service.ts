@@ -1,12 +1,17 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Customer, Environment, Paddle } from '@paddle/paddle-node-sdk';
+import {
+  Customer,
+  Environment,
+  EventEntity,
+  Paddle,
+} from '@paddle/paddle-node-sdk';
 import { applicationConfig } from '../../../config/application.config';
 import { ConfigType } from '@nestjs/config';
 
 @Injectable()
-export class PaymentService {
+export class PaddleService {
   private readonly paddle: Paddle;
-  private readonly logger = new Logger(PaymentService.name);
+  private readonly logger = new Logger(PaddleService.name);
 
   public constructor(
     @Inject(applicationConfig.KEY)
@@ -15,6 +20,17 @@ export class PaymentService {
     this.paddle = new Paddle(appConfig.paddle.apiKey, {
       environment: Environment.sandbox,
     });
+  }
+
+  public async getEventData(
+    signature: string,
+    reqBody: string,
+  ): Promise<EventEntity> {
+    return await this.paddle.webhooks.unmarshal(
+      reqBody,
+      this.appConfig.paddle.webhookSecretKey,
+      signature,
+    );
   }
 
   public async createCustomer(

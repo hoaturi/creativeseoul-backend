@@ -10,7 +10,7 @@ import { AuthError } from '../../../auth/auth.error';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Logger } from '@nestjs/common';
-import { PaymentService } from '../../../../infrastructure/services/payment/payment.service';
+import { PaddleService } from '../../../../infrastructure/services/paddle/paddle.service';
 
 const INVITATION_FIELDS = [
   'id',
@@ -33,7 +33,7 @@ export class AcceptInvitationHandler
 
   public constructor(
     private readonly em: EntityManager,
-    private readonly paymentService: PaymentService,
+    private readonly paymentService: PaddleService,
   ) {}
 
   public async execute(
