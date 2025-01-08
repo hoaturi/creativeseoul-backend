@@ -19,10 +19,20 @@ export class CompanyInvitation extends BaseEntity {
   @Index()
   public readonly expiresAt!: Date;
 
-  public constructor(token: string, expiresAt: Date, company: Company) {
+  @Property()
+  @Index()
+  public isAccepted: boolean;
+
+  public constructor(
+    token: string,
+    expiresAt: Date,
+    isAccepted: boolean,
+    company: Company,
+  ) {
     super();
     this.token = token;
     this.expiresAt = expiresAt;
+    this.isAccepted = isAccepted;
     this.company = company;
   }
 }

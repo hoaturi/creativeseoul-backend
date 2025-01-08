@@ -5,6 +5,7 @@ import { GetCompanyListHandler } from './queries/get-company-list/get-company-li
 import { SendInvitationHandler } from './commands/send-invitation/send-invitation.handler';
 import { BullModule } from '@nestjs/bullmq';
 import { QueueType } from '../../infrastructure/queue/queue-type.enum';
+import { AcceptInvitationHandler } from './commands/accept-invitation/accept-invitation.handler';
 
 @Module({
   imports: [BullModule.registerQueue({ name: QueueType.EMAIL })],
@@ -12,6 +13,7 @@ import { QueueType } from '../../infrastructure/queue/queue-type.enum';
     UpdateCompanyHandler,
     GetCompanyListHandler,
     SendInvitationHandler,
+    AcceptInvitationHandler,
   ],
   controllers: [CompanyController],
 })

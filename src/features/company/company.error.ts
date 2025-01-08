@@ -21,6 +21,12 @@ export class CompanyError extends ResultError {
     'Company Profile already claimed',
   );
 
+  public static readonly InvalidInvitationToken = new ResultError(
+    CompanyErrorCode.INVALID_INVITATION_TOKEN,
+    HttpStatus.BAD_REQUEST,
+    'Invalid company invitation token',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
