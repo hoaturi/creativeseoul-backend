@@ -32,9 +32,15 @@ export class SendInvitationHandler
   ): Promise<Result<void, ResultError>> {
     const { dto } = command;
 
-    let company = await this.em.findOne(Company, {
-      websiteUrl: dto.websiteUrl,
-    });
+    let company = await this.em.findOne(
+      Company,
+      {
+        websiteUrl: dto.websiteUrl,
+      },
+      {
+        fields: ['id', 'isClaimed'],
+      },
+    );
 
     let isNewCompany = false;
     if (!company) {
@@ -57,19 +63,23 @@ export class SendInvitationHandler
 
     this.em.create(
       CompanyInvitation,
-      new CompanyInvitation(token, expiresAt, company),
+      new CompanyInvitation(token, expiresAt, company as Company),
     );
 
     await this.em.flush();
 
     if (isNewCompany) {
       this.logger.log(
-        { companyId: company.id, websiteUrl: dto.websiteUrl },
-        'company.created: New company created during invitation process',
+        { companyId: company.id },
+        'company.send-invitation.success: New company created during invitation process',
       );
     }
 
-    const invitationDto = new CompanyInvitationJobDto(dto.email, token);
+    const invitationDto = new CompanyInvitationJobDto(
+      company.id,
+      dto.email,
+      token,
+    );
 
     await this.emailQueue.add(
       EmailJobType.COMPANY_INVITATION,

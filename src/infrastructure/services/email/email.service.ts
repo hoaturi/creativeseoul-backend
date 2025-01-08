@@ -79,7 +79,7 @@ export class EmailService {
     });
 
     this.logger.log(
-      { email: payload.email },
+      { email: payload.companyId },
       'email.company-invitation.success: Company invitation sent',
     );
   }
