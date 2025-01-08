@@ -59,7 +59,7 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
   private async createUser(dto: SignUpRequestDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const user = new User(dto.email, hashedPassword, UserRole.Talent);
+    const user = new User(dto.email, hashedPassword, UserRole.TALENT);
 
     this.em.create(User, user);
 

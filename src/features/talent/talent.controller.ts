@@ -92,7 +92,7 @@ export class TalentController {
   }
 
   @Post('me')
-  @Roles(UserRole.Talent)
+  @Roles(UserRole.TALENT)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({
@@ -126,7 +126,7 @@ export class TalentController {
   }
 
   @Put('me')
-  @Roles(UserRole.Talent)
+  @Roles(UserRole.TALENT)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({

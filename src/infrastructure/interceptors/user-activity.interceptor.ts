@@ -29,7 +29,7 @@ export class UserActivityInterceptor implements NestInterceptor {
     response.on('finish', () => {
       const profileId = user?.profileId;
 
-      if (user?.role === UserRole.Talent && profileId) {
+      if (user?.role === UserRole.TALENT && profileId) {
         this.talentActivityService
           .updateLastActive(profileId)
           .catch((err) =>
