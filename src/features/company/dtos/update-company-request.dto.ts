@@ -17,7 +17,7 @@ import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.d
 import { COMPANY_SIZES } from '../../../domain/common/constants/company-size.constant';
 import { CompanySocialLinksRequestDto } from './company-social-links-request.dto';
 
-export class CreateCompanyRequestDto {
+export class UpdateCompanyRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

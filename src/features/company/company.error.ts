@@ -9,6 +9,12 @@ export class CompanyError extends ResultError {
     'Company Profile already exists',
   );
 
+  public static readonly ProfileNotFound = new ResultError(
+    CompanyErrorCode.PROFILE_NOT_FOUND,
+    HttpStatus.NOT_FOUND,
+    'Company Profile not found',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

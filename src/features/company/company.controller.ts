@@ -3,7 +3,7 @@ import {
   Controller,
   Get,
   HttpException,
-  Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { CurrentUser } from '../../infrastructure/security/decorators/current-us
 import { UserRole } from '../../domain/user/user-role.enum';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { CreateCompanyRequestDto } from './dtos/create-company-request.dto';
+import { UpdateCompanyRequestDto } from './dtos/update-company-request.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -24,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
-import { CreateCompanyCommand } from './commands/create-company/create-company.command';
+import { UpdateCompanyCommand } from './commands/update-company/update-company.command';
 import { GetCompanyListQuery } from './queries/get-company-list/get-company-list.query';
 import { GetCompanyListResponseDto } from './dtos/get-company-list-response.dto';
 import { GetCompanyListQueryDto } from './dtos/get-company-list-query.dto';
@@ -36,7 +36,7 @@ export class CompanyController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Post('me')
+  @Put('me')
   @Roles(UserRole.COMPANY)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiCreatedResponse()
@@ -49,11 +49,11 @@ export class CompanyController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
-  public async createCompany(
+  public async updateCompany(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: CreateCompanyRequestDto,
+    @Body() dto: UpdateCompanyRequestDto,
   ): Promise<void> {
-    const command = new CreateCompanyCommand(user, dto);
+    const command = new UpdateCompanyCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
 
