@@ -9,6 +9,7 @@ import { BaseEntity } from '../base.entity';
 import { Cascade, Index } from '@mikro-orm/core';
 import { UserRole } from './user-role.enum';
 import { Talent } from '../talent/talent.entity';
+import { Company } from '../company/company.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -19,6 +20,11 @@ export class User extends BaseEntity {
     cascade: [Cascade.REMOVE],
   })
   public readonly talent: Talent;
+
+  @OneToOne(() => Company, (company) => company.user, {
+    cascade: [Cascade.REMOVE],
+  })
+  public readonly company?: Company;
 
   @Property({ unique: true, length: 256 })
   @Index()

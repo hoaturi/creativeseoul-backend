@@ -8,6 +8,7 @@ import { ResultError } from '../../../../common/result/result-error';
 import { User } from '../../../../domain/user/user.entity';
 import { AuthError } from '../../auth.error';
 import { LoginCommandResult } from './login-command.result';
+import { UserRole } from '../../../../domain/user/user-role.enum';
 
 @CommandHandler(LoginCommand)
 export class LoginHandler implements ICommandHandler<LoginCommand> {
@@ -23,7 +24,16 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     const user = await this.em.findOne(
       User,
       { email },
-      { fields: ['id', 'password', 'role', 'isVerified', 'talent.id'] },
+      {
+        fields: [
+          'id',
+          'password',
+          'role',
+          'isVerified',
+          'talent.id',
+          'company.id',
+        ],
+      },
     );
 
     if (!user) {
@@ -43,8 +53,16 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       return Result.failure(AuthError.EmailNotVerified);
     }
 
-    // TODO: add company?.id when company is implemented
-    const profileId = user.talent?.id;
+    let profileId: string;
+
+    switch (user.role) {
+      case UserRole.Talent:
+        profileId = user.talent.id;
+        break;
+      case UserRole.COMPANY:
+        profileId = user.company.id;
+        break;
+    }
 
     this.logger.log(
       { userId: user.id },
