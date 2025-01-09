@@ -58,10 +58,6 @@ export class Company {
   })
   public jobs: Collection<Job> = new Collection(this);
 
-  @Property({ nullable: true })
-  @Index()
-  public paymentCustomerId?: string;
-
   @Property()
   @Index()
   public isClaimed: boolean;

@@ -10,14 +10,12 @@ import { AuthError } from '../../../auth/auth.error';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Logger } from '@nestjs/common';
-import { LemonSqueezyService } from '../../../../infrastructure/services/lemon-squeezy/lemon-squeezy.service';
 
 const INVITATION_FIELDS = [
   'id',
   'isAccepted',
   'company.id',
   'company.name',
-  'company.paymentCustomerId',
   'company.isClaimed',
   'company.user.id',
 ] as const;
@@ -28,10 +26,7 @@ export class AcceptInvitationHandler
 {
   private readonly logger = new Logger(AcceptInvitationHandler.name);
 
-  public constructor(
-    private readonly em: EntityManager,
-    private readonly lemonSqueezyService: LemonSqueezyService,
-  ) {}
+  public constructor(private readonly em: EntityManager) {}
 
   public async execute(
     command: AcceptInvitationCommand,
@@ -71,12 +66,6 @@ export class AcceptInvitationHandler
     invitation.company.user = await this.createCompanyUser(email, password);
     invitation.isAccepted = true;
     invitation.company.isClaimed = true;
-
-    invitation.company.paymentCustomerId =
-      await this.lemonSqueezyService.createCustomer(
-        email,
-        invitation.company.name,
-      );
 
     await this.em.flush();
 

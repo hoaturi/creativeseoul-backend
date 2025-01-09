@@ -26,7 +26,7 @@ export class CreateCheckoutHandler
       Company,
       { id: user.profileId },
       {
-        fields: ['paymentCustomerId'],
+        fields: ['id'],
       },
     );
 
@@ -34,18 +34,10 @@ export class CreateCheckoutHandler
       throw new CompanyNotFoundException(user.profileId);
     }
 
-    const customer = await this.lemonSqueezyService.getCustomer(
-      company.paymentCustomerId,
-    );
-
     const checkout = await this.lemonSqueezyService.createCheckout(
       dto.variantId,
-      customer.data.attributes.email,
-      customer.data.attributes.name,
       company.id,
     );
-
-    console.log(checkout.data.attributes.url);
 
     return Result.success(
       new CreateCheckoutResponseDto(checkout.data.attributes.url),

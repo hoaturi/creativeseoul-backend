@@ -6,13 +6,9 @@ import { SendInvitationHandler } from './commands/send-invitation/send-invitatio
 import { BullModule } from '@nestjs/bullmq';
 import { QueueType } from '../../infrastructure/queue/queue-type.enum';
 import { AcceptInvitationHandler } from './commands/accept-invitation/accept-invitation.handler';
-import { LemonSqueezyModule } from '../../infrastructure/services/lemon-squeezy/lemon-squeezy.module';
 
 @Module({
-  imports: [
-    BullModule.registerQueue({ name: QueueType.EMAIL }),
-    LemonSqueezyModule,
-  ],
+  imports: [BullModule.registerQueue({ name: QueueType.EMAIL })],
   providers: [
     UpdateCompanyHandler,
     GetCompanyListHandler,
