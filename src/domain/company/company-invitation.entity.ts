@@ -12,7 +12,9 @@ export class CompanyInvitation extends BaseEntity {
   @Index()
   public readonly token!: string;
 
-  @ManyToOne(() => Company)
+  @ManyToOne(() => Company, {
+    deleteRule: 'cascade',
+  })
   public readonly company!: Company;
 
   @Property()
