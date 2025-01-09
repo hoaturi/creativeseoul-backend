@@ -13,6 +13,7 @@ import { TalentActivityService } from './infrastructure/services/talent-activity
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
+    rawBody: true,
   });
 
   app.use(cookieParser());

@@ -2,10 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { applicationConfig } from '../../../config/application.config';
 import { ConfigType } from '@nestjs/config';
 import {
+  type Checkout,
   createCheckout,
   createCustomer,
+  type Customer,
+  getCustomer,
   lemonSqueezySetup,
 } from '@lemonsqueezy/lemonsqueezy.js';
+import { PaymentCustomerNotFoundException } from '../../../domain/payment/payment-customer-not-found.exception';
 
 @Injectable()
 export class LemonSqueezyService {
@@ -20,7 +24,7 @@ export class LemonSqueezyService {
     });
     this.storeId = appConfig.lemonSqueezy.storeId;
   }
-
+  //TODO: Needs error handling as they are not throwing any errors
   public async createCustomer(email: string, name: string): Promise<string> {
     const customer = await createCustomer(this.storeId, {
       email,
@@ -30,12 +34,22 @@ export class LemonSqueezyService {
     return customer.data.data.id;
   }
 
+  public async getCustomer(customerId: string): Promise<Customer> {
+    const customer = await getCustomer(customerId);
+
+    if (!customer.data.data) {
+      throw new PaymentCustomerNotFoundException(customerId);
+    }
+
+    return customer.data;
+  }
+
   public async createCheckout(
     variantId: number,
     email: string,
     name: string,
     companyId: string,
-  ): Promise<string> {
+  ): Promise<Checkout> {
     const checkout = await createCheckout(this.storeId, variantId, {
       checkoutData: {
         email,
@@ -46,6 +60,6 @@ export class LemonSqueezyService {
       },
     });
 
-    return checkout.data.data.attributes.url;
+    return checkout.data;
   }
 }
