@@ -25,7 +25,7 @@ export class EmailProcessor extends BaseProcessor {
       case EmailJobType.COMPANY_INVITATION:
         return this.sendCompanyInvitation(job);
       default:
-        new Error(`Job type ${job.name} not supported`);
+        throw new Error(`Job type ${job.name} not supported`);
     }
   }
 
