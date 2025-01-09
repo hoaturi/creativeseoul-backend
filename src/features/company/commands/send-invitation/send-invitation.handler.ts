@@ -52,6 +52,7 @@ export class SendInvitationHandler
           websiteUrl: dto.websiteUrl,
         }),
       );
+
       isNewCompany = true;
     } else if (company.isClaimed) {
       return Result.failure(CompanyError.ProfileAlreadyClaimed);

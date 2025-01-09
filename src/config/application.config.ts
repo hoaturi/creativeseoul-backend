@@ -22,7 +22,8 @@ export const applicationConfig = registerAs('app', () => ({
   email: {
     from: process.env.EMAIL_FROM,
   },
-  paddle: {
-    apiKey: process.env.PADDLE_API_KEY,
+  lemonSqueezy: {
+    apiKey: process.env.LEMON_SQUEEZY_API_KEY,
+    storeId: process.env.LEMON_SQUEEZY_STORE_ID,
   },
 }));

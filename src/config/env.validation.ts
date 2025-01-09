@@ -39,7 +39,10 @@ class EnvironmentVariables {
   public readonly EMAIL_FROM: string;
 
   @IsString()
-  public readonly PADDLE_API_KEY: string;
+  public readonly LEMON_SQUEEZY_API_KEY: string;
+
+  @IsString()
+  public readonly LEMON_SQUEEZY_STORE_ID: string;
 }
 
 export function validate(config: Record<string, unknown>) {

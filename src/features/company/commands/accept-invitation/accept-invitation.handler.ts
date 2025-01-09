@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AcceptInvitationCommand } from './accept-invitation.command';
-import { EntityManager, Loaded } from '@mikro-orm/postgresql';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { CompanyInvitation } from '../../../../domain/company/company-invitation.entity';
@@ -10,7 +10,7 @@ import { AuthError } from '../../../auth/auth.error';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Logger } from '@nestjs/common';
-import { PaddleService } from '../../../../infrastructure/services/paddle/paddle.service';
+import { LemonSqueezyService } from '../../../../infrastructure/services/lemon-squeezy/lemon-squeezy.service';
 
 const INVITATION_FIELDS = [
   'id',
@@ -22,9 +22,6 @@ const INVITATION_FIELDS = [
   'company.user.id',
 ] as const;
 
-type InvitationFields = (typeof INVITATION_FIELDS)[number];
-type LoadedInvitation = Loaded<CompanyInvitation, never, InvitationFields>;
-
 @CommandHandler(AcceptInvitationCommand)
 export class AcceptInvitationHandler
   implements ICommandHandler<AcceptInvitationCommand>
@@ -33,7 +30,7 @@ export class AcceptInvitationHandler
 
   public constructor(
     private readonly em: EntityManager,
-    private readonly paymentService: PaddleService,
+    private readonly lemonSqueezyService: LemonSqueezyService,
   ) {}
 
   public async execute(
@@ -75,7 +72,11 @@ export class AcceptInvitationHandler
     invitation.isAccepted = true;
     invitation.company.isClaimed = true;
 
-    await this.setupPaymentCustomer(invitation, email);
+    invitation.company.paymentCustomerId =
+      await this.lemonSqueezyService.createCustomer(
+        email,
+        invitation.company.name,
+      );
 
     await this.em.flush();
 
@@ -103,17 +104,5 @@ export class AcceptInvitationHandler
     );
     user.isVerified = true;
     return user;
-  }
-
-  private async setupPaymentCustomer(
-    invitation: LoadedInvitation,
-    email: string,
-  ): Promise<void> {
-    const customer = await this.paymentService.createCustomer(
-      invitation.company.name,
-      email,
-      invitation.company.id,
-    );
-    invitation.company.paymentCustomerId = customer.id;
   }
 }
