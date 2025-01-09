@@ -42,8 +42,10 @@ export class CreateCheckoutHandler
       dto.variantId,
       customer.data.attributes.email,
       customer.data.attributes.name,
-      company.paymentCustomerId,
+      company.id,
     );
+
+    console.log(checkout.data.attributes.url);
 
     return Result.success(
       new CreateCheckoutResponseDto(checkout.data.attributes.url),
