@@ -40,6 +40,15 @@ class EnvironmentVariables {
 
   @IsString()
   public readonly STRIPE_SECRET_KEY: string;
+
+  @IsString()
+  public readonly STRIPE_WEBHOOK_SECRET: string;
+
+  @IsString()
+  public readonly STRIPE_SINGLE_JOB_CREDIT_PRICE_ID: string;
+
+  @IsString()
+  public readonly STRIPE_THREE_JOB_CREDITS_PRICE_ID: string;
 }
 
 export function validate(config: Record<string, unknown>) {

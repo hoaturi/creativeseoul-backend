@@ -14,6 +14,14 @@ export class StripeService {
     this.stripe = new Stripe(appConfig.stripe.secretKey);
   }
 
+  public verifyWebhook(rawBody: Buffer<ArrayBufferLike>, signature: string) {
+    return this.stripe.webhooks.constructEvent(
+      rawBody,
+      signature,
+      this.appConfig.stripe.webhookSecret,
+    );
+  }
+
   public async createCustomer(
     name: string,
     email: string,
@@ -28,6 +36,7 @@ export class StripeService {
     priceId: string,
     customerId: string,
     companyId: string,
+    metadata: Record<string, any>,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     return await this.stripe.checkout.sessions.create({
       client_reference_id: companyId,
@@ -35,6 +44,7 @@ export class StripeService {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: this.appConfig.client.baseUrl,
       mode: 'payment',
+      metadata,
     });
   }
 }

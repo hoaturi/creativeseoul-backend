@@ -5,7 +5,7 @@ import { CreateCheckoutRequestDto } from '../../dtos/create-checkout-request.dto
 import { CreateCheckoutResponseDto } from '../../dtos/create-checkout-response.dto';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
-export class CreateCheckoutCommand extends Command<
+export class CreateCreditCheckoutCommand extends Command<
   Result<CreateCheckoutResponseDto, ResultError>
 > {
   public constructor(
