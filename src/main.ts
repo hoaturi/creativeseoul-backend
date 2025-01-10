@@ -6,7 +6,7 @@ import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { sessionConfig } from './config/session.config';
-import { GlobalExceptionFilter } from './common/exceptions/global-exception.filter';
+import { GlobalCustomExceptionFilter } from './common/exceptions/global-custom-exception.filter';
 import { UserActivityInterceptor } from './infrastructure/interceptors/user-activity.interceptor';
 import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
 
@@ -39,7 +39,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalFilters(new GlobalCustomExceptionFilter());
   app.useGlobalInterceptors(
     new UserActivityInterceptor(app.get(TalentActivityService)),
   );

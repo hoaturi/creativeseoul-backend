@@ -1,3 +1,4 @@
 export enum CommonErrorCode {
-  VALIDATION_FAILED = 'CO001',
+  INTERNAL_SERVER_ERROR = 'CO001',
+  VALIDATION_FAILED = 'CO002',
 }
