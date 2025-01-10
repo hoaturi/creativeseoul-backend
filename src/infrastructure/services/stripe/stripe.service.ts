@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { applicationConfig } from '../../../config/application.config';
 import { ConfigType } from '@nestjs/config';
 import Stripe from 'stripe';
+import { ProductType } from '../../../domain/payment/product-type.enum';
 
 @Injectable()
 export class StripeService {
@@ -32,19 +33,39 @@ export class StripeService {
     });
   }
 
-  public async createCheckout(
+  public async createCreditCheckout(
     priceId: string,
     customerId: string,
-    companyId: string,
-    metadata: Record<string, any>,
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    const creditAmount =
+      priceId === this.appConfig.stripe.singleJobPriceId ? 1 : 3;
+
+    const metadata = {
+      type: ProductType.CREDIT,
+      creditAmount: creditAmount,
+    };
+
     return await this.stripe.checkout.sessions.create({
-      client_reference_id: companyId,
       customer: customerId,
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: this.appConfig.client.baseUrl,
       mode: 'payment',
       metadata,
+    });
+  }
+
+  public async createSponsorshipCheckout(
+    priceId: string,
+    customerId: string,
+  ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    return await this.stripe.checkout.sessions.create({
+      customer: customerId,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: this.appConfig.client.baseUrl,
+      mode: 'subscription',
+      metadata: {
+        type: ProductType.SPONSORSHIP,
+      },
     });
   }
 }

@@ -9,8 +9,8 @@ import {
   CreditTransaction,
   CreditTransactionType,
 } from '../../../../domain/company/credit-transaction.entity';
-import { CompanyNotFoundException } from '../../../../domain/company/company-not-found.exception';
 import { ProductType } from '../../../../domain/payment/product-type.enum';
+import { CompanyNotFoundByCustomerIdException } from '../../../../domain/company/company-not-found-by-customer-id.exception';
 
 @CommandHandler(ProcessWebhookCommand)
 export class ProcessWebhookHandler
@@ -31,18 +31,18 @@ export class ProcessWebhookHandler
       const creditAmount = event.data.object.metadata.creditAmount;
 
       if (type === ProductType.CREDIT && creditAmount) {
-        const companyId = event.data.object.client_reference_id;
+        const customerId = event.data.object.customer as string;
 
         const company = await this.em.findOne(
           Company,
-          { id: companyId },
+          { customerId: customerId },
           {
             fields: ['id', 'creditBalance', 'creditTransactions'],
           },
         );
 
         if (!company) {
-          throw new CompanyNotFoundException(companyId);
+          throw new CompanyNotFoundByCustomerIdException(customerId);
         }
 
         company.creditBalance += parseInt(creditAmount);

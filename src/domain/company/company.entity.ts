@@ -54,6 +54,7 @@ export class Company {
   public socialLinks?: CompanySocialLinks;
 
   @Property({ nullable: true })
+  @Index()
   public customerId?: string;
 
   @OneToMany(() => Job, (job) => job.company, {
