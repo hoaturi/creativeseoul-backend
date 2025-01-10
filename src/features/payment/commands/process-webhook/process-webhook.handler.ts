@@ -11,6 +11,11 @@ import {
 } from '../../../../domain/company/credit-transaction.entity';
 import { ProductType } from '../../../../domain/payment/product-type.enum';
 import { CompanyNotFoundByCustomerIdException } from '../../../../domain/company/company-not-found-by-customer-id.exception';
+import {
+  Sponsorship,
+  SponsorshipStatus,
+} from '../../../../domain/company/sponsorship.entity';
+import { Stripe } from 'stripe';
 
 @CommandHandler(ProcessWebhookCommand)
 export class ProcessWebhookHandler
@@ -26,39 +31,118 @@ export class ProcessWebhookHandler
   ): Promise<Result<void, ResultError>> {
     const { event } = command;
 
-    if (event.type === 'checkout.session.completed') {
-      const type = event.data.object.metadata.type;
-      const creditAmount = event.data.object.metadata.creditAmount;
+    switch (event.type) {
+      case 'checkout.session.completed':
+        await this.handleCheckoutCompleted(event.data.object);
+        break;
 
-      if (type === ProductType.CREDIT && creditAmount) {
-        const customerId = event.data.object.customer as string;
+      case 'invoice.paid':
+        await this.handleInvoicePaid(event.data.object);
+        break;
 
-        const company = await this.em.findOne(
-          Company,
-          { customerId: customerId },
-          {
-            fields: ['id', 'creditBalance', 'creditTransactions'],
-          },
-        );
-
-        if (!company) {
-          throw new CompanyNotFoundByCustomerIdException(customerId);
-        }
-
-        company.creditBalance += parseInt(creditAmount);
-
-        const transaction = this.em.create(CreditTransaction, {
-          company: company as unknown as Company,
-          amount: parseInt(creditAmount),
-          type: CreditTransactionType.PURCHASE,
-          checkoutId: event.data.object.id,
-        });
-
-        company.creditTransactions.add(transaction);
-
-        await this.em.flush();
-      }
+      case 'customer.subscription.deleted':
+        await this.handleSubscriptionDeleted(event.data.object);
+        break;
     }
+
     return Result.success();
+  }
+
+  private async handleCheckoutCompleted(
+    checkoutSession: Stripe.Checkout.Session,
+  ) {
+    const { type, creditAmount } = checkoutSession.metadata;
+
+    if (type !== ProductType.CREDIT || !creditAmount) {
+      return;
+    }
+
+    const isAlreadyProcessed = await this.em.findOne(CreditTransaction, {
+      checkoutId: checkoutSession.id,
+    });
+
+    if (isAlreadyProcessed) {
+      return;
+    }
+
+    const company = await this.findCompanyByCustomerId(
+      checkoutSession.customer as string,
+      ['id', 'creditBalance', 'creditTransactions'],
+    );
+
+    const parsedCreditAmount = parseInt(creditAmount);
+    company.creditBalance += parsedCreditAmount;
+
+    const transaction = this.em.create(CreditTransaction, {
+      company: company as unknown as Company,
+      amount: parsedCreditAmount,
+      type: CreditTransactionType.PURCHASE,
+      checkoutId: checkoutSession.id,
+    });
+
+    company.creditTransactions.add(transaction);
+    await this.em.flush();
+  }
+
+  private async handleInvoicePaid(invoice: Stripe.Invoice) {
+    const sponsorship = await this.em.findOne(Sponsorship, {
+      subscriptionId: invoice.subscription as string,
+    });
+
+    if (!sponsorship) {
+      await this.createNewSponsorship(invoice);
+    } else {
+      await this.renewExistingSponsorship(sponsorship, invoice);
+    }
+  }
+
+  private async createNewSponsorship(invoice: Stripe.Invoice) {
+    const company = await this.findCompanyByCustomerId(
+      invoice.customer as string,
+      ['id'],
+    );
+
+    this.em.create(
+      Sponsorship,
+      new Sponsorship({
+        company: company as unknown as Company,
+        subscriptionId: invoice.subscription as string,
+        status: SponsorshipStatus.ACTIVE,
+        currentPeriodStart: new Date(invoice.period_start * 1000),
+        currentPeriodEnd: new Date(invoice.period_end * 1000),
+      }),
+    );
+
+    await this.em.flush();
+  }
+
+  private async renewExistingSponsorship(
+    sponsorship: Sponsorship,
+    invoice: Stripe.Invoice,
+  ) {
+    sponsorship.currentPeriodStart = new Date(invoice.period_start * 1000);
+    sponsorship.currentPeriodEnd = new Date(invoice.period_end * 1000);
+    await this.em.flush();
+  }
+
+  private async handleSubscriptionDeleted(subscription: any) {
+    const sponsorship = await this.em.findOne(Sponsorship, {
+      subscriptionId: subscription.id,
+    });
+
+    if (sponsorship) {
+      sponsorship.status = SponsorshipStatus.CANCELLED;
+      await this.em.flush();
+    }
+  }
+
+  private async findCompanyByCustomerId(customerId: string, fields: any[]) {
+    const company = await this.em.findOne(Company, { customerId }, { fields });
+
+    if (!company) {
+      throw new CompanyNotFoundByCustomerIdException(customerId);
+    }
+
+    return company;
   }
 }

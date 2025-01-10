@@ -3,7 +3,7 @@ import { GetCompanyListQuery } from './get-company-list.query';
 import {
   CompanyListItemDto,
   GetCompanyListResponseDto,
-} from '../../dtos/get-company-list-response.dto';
+} from '../../dtos/responses/get-company-list-response.dto';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';

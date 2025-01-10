@@ -30,7 +30,7 @@ import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { UpdateCompanyCommand } from './commands/update-company/update-company.command';
 import { GetCompanyListQuery } from './queries/get-company-list/get-company-list.query';
-import { GetCompanyListResponseDto } from './dtos/get-company-list-response.dto';
+import { GetCompanyListResponseDto } from './dtos/responses/get-company-list-response.dto';
 import { GetCompanyListQueryDto } from './dtos/requests/get-company-list-query.dto';
 import { SendInvitationRequestDto } from './dtos/requests/send-invitation-request.dto';
 import { SendInvitationCommand } from './commands/send-invitation/send-invitation.command';
