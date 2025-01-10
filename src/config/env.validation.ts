@@ -49,6 +49,9 @@ class EnvironmentVariables {
 
   @IsString()
   public readonly STRIPE_THREE_JOB_CREDITS_PRICE_ID: string;
+
+  @IsString()
+  public readonly STRIPE_SPONSORSHIP_PRICE_ID: string;
 }
 
 export function validate(config: Record<string, unknown>) {

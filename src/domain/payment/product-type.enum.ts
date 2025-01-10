@@ -1,4 +1,4 @@
 export enum ProductType {
   CREDIT = 'credit',
-  SUBSCRIPTION = 'subscription',
+  SPONSORSHIP = 'sponsorship',
 }

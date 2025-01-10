@@ -27,5 +27,6 @@ export const applicationConfig = registerAs('app', () => ({
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
     singleJobPriceId: process.env.STRIPE_SINGLE_JOB_CREDIT_PRICE_ID,
     threeJobsPriceId: process.env.STRIPE_THREE_JOB_CREDITS_PRICE_ID,
+    sponsorshipPriceId: process.env.STRIPE_SPONSORSHIP_PRICE_ID,
   },
 }));

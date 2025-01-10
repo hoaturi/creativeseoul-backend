@@ -34,6 +34,7 @@ import { Roles } from '../../infrastructure/security/decorators/roles.decorator'
 import { UserRole } from '../../domain/user/user-role.enum';
 import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 import { StripeService } from '../../infrastructure/services/stripe/stripe.service';
+import { CreateSponsorshipCheckoutCommand } from './commands/create-sponsorship-checkout/create-sponsorship-checkout.command';
 
 @Controller('payments')
 export class PaymentController {
@@ -58,7 +59,7 @@ export class PaymentController {
     return result.value;
   }
 
-  @Post('checkout')
+  @Post('checkout/credit')
   @HttpCode(HttpStatus.OK)
   @Roles(UserRole.COMPANY)
   @UseGuards(AuthGuard, RolesGuard)
@@ -74,11 +75,35 @@ export class PaymentController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
-  public async createCheckout(
+  public async createCreditCheckout(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateCheckoutRequestDto,
   ): Promise<CreateCheckoutResponseDto> {
     const command = new CreateCreditCheckoutCommand(user, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Post('checkout/sponsorship')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: CreateCheckoutResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  public async createSponsorshipCheckout(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<CreateCheckoutResponseDto> {
+    const command = new CreateSponsorshipCheckoutCommand(user);
 
     const result = await this.commandBus.execute(command);
 
