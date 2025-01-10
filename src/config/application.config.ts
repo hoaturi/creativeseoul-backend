@@ -22,8 +22,7 @@ export const applicationConfig = registerAs('app', () => ({
   email: {
     from: process.env.EMAIL_FROM,
   },
-  lemonSqueezy: {
-    apiKey: process.env.LEMON_SQUEEZY_API_KEY,
-    storeId: process.env.LEMON_SQUEEZY_STORE_ID,
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY,
   },
 }));

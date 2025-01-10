@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Inject,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -22,14 +23,24 @@ import {
 import { CreateCheckoutResponseDto } from './dtos/create-checkout-response.dto';
 import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
+import { applicationConfig } from '../../config/application.config';
+import { ConfigType } from '@nestjs/config';
+import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
+import { UserRole } from '../../domain/user/user-role.enum';
+import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 
 @Controller('payments')
 export class PaymentController {
-  public constructor(private readonly commandBus: CommandBus) {}
+  public constructor(
+    private readonly commandBus: CommandBus,
+    @Inject(applicationConfig.KEY)
+    private readonly appConfig: ConfigType<typeof applicationConfig>,
+  ) {}
 
   @Post('checkout')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse({
     type: CreateCheckoutResponseDto,
   })

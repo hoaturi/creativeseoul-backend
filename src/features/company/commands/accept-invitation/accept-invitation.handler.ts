@@ -10,6 +10,7 @@ import { AuthError } from '../../../auth/auth.error';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Logger } from '@nestjs/common';
+import { StripeService } from '../../../../infrastructure/services/stripe/stripe.service';
 
 const INVITATION_FIELDS = [
   'id',
@@ -17,6 +18,7 @@ const INVITATION_FIELDS = [
   'company.id',
   'company.name',
   'company.isClaimed',
+  'company.customerId',
   'company.user.id',
 ] as const;
 
@@ -26,7 +28,10 @@ export class AcceptInvitationHandler
 {
   private readonly logger = new Logger(AcceptInvitationHandler.name);
 
-  public constructor(private readonly em: EntityManager) {}
+  public constructor(
+    private readonly em: EntityManager,
+    private readonly stripeService: StripeService,
+  ) {}
 
   public async execute(
     command: AcceptInvitationCommand,
@@ -66,6 +71,12 @@ export class AcceptInvitationHandler
     invitation.company.user = await this.createCompanyUser(email, password);
     invitation.isAccepted = true;
     invitation.company.isClaimed = true;
+
+    const customer = await this.stripeService.createCustomer(
+      invitation.company.name,
+      email,
+    );
+    invitation.company.customerId = customer.id;
 
     await this.em.flush();
 

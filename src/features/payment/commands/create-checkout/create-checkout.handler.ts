@@ -3,7 +3,7 @@ import { CreateCheckoutCommand } from './create-checkout.command';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { CreateCheckoutResponseDto } from '../../dtos/create-checkout-response.dto';
-import { LemonSqueezyService } from '../../../../infrastructure/services/lemon-squeezy/lemon-squeezy.service';
+import { StripeService } from '../../../../infrastructure/services/stripe/stripe.service';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Company } from '../../../../domain/company/company.entity';
 import { CompanyNotFoundException } from '../../../../domain/company/company-not-found.exception';
@@ -14,7 +14,7 @@ export class CreateCheckoutHandler
 {
   public constructor(
     private readonly em: EntityManager,
-    private readonly lemonSqueezyService: LemonSqueezyService,
+    private readonly stripeService: StripeService,
   ) {}
 
   public async execute(
@@ -26,7 +26,7 @@ export class CreateCheckoutHandler
       Company,
       { id: user.profileId },
       {
-        fields: ['id'],
+        fields: ['id', 'customerId'],
       },
     );
 
@@ -34,13 +34,12 @@ export class CreateCheckoutHandler
       throw new CompanyNotFoundException(user.profileId);
     }
 
-    const checkout = await this.lemonSqueezyService.createCheckout(
-      dto.variantId,
+    const checkout = await this.stripeService.createCheckout(
+      dto.priceId,
+      company.customerId,
       company.id,
     );
 
-    return Result.success(
-      new CreateCheckoutResponseDto(checkout.data.attributes.url),
-    );
+    return Result.success(new CreateCheckoutResponseDto(checkout.url));
   }
 }

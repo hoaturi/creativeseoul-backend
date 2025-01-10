@@ -16,6 +16,7 @@ import { User } from '../user/user.entity';
 import { Job } from '../job/job.entity';
 import { CompanySize } from '../common/entities/company-size.entity';
 import { CompanySocialLinks } from './company-social-links.interface';
+import { CreditTransaction } from './credit-transaction.entity';
 
 @Entity()
 export class Company {
@@ -52,6 +53,9 @@ export class Company {
   @Property({ type: 'jsonb', nullable: true })
   public socialLinks?: CompanySocialLinks;
 
+  @Property({ nullable: true })
+  public customerId?: string;
+
   @OneToMany(() => Job, (job) => job.company, {
     cascade: [Cascade.REMOVE],
     orphanRemoval: true,
@@ -68,21 +72,32 @@ export class Company {
   )
   public readonly jobCount!: number;
 
-  public constructor(
-    data: {
-      isClaimed: boolean;
-      name: string;
-      websiteUrl: string;
-      summary?: string;
-      description?: string;
-      languages?: string[];
-      location?: string;
-      logoUrl?: string;
-      size?: CompanySize;
-      socialLinks?: CompanySocialLinks;
+  @Property({ nullable: true })
+  public creditBalance: number;
+
+  @OneToMany(
+    () => CreditTransaction,
+    (creditTransaction) => creditTransaction.company,
+    {
+      cascade: [Cascade.ALL],
     },
-    user?: User,
-  ) {
+  )
+  public readonly creditTransactions: Collection<CreditTransaction> =
+    new Collection(this);
+
+  public constructor(data: {
+    isClaimed: boolean;
+    name: string;
+    websiteUrl: string;
+    summary?: string;
+    description?: string;
+    languages?: string[];
+    location?: string;
+    logoUrl?: string;
+    size?: CompanySize;
+    socialLinks?: CompanySocialLinks;
+    user?: User;
+  }) {
     this.isClaimed = data.isClaimed;
     this.name = data.name;
     this.summary = data.summary;
@@ -93,6 +108,6 @@ export class Company {
     this.websiteUrl = data.websiteUrl;
     this.size = data.size;
     this.socialLinks = data.socialLinks;
-    this.user = user;
+    this.user = data.user;
   }
 }
