@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Put,
   Query,
@@ -23,6 +24,7 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -37,6 +39,8 @@ import { SendInvitationCommand } from './commands/send-invitation/send-invitatio
 import { AcceptInvitationRequestDto } from './dtos/requests/accept-invitation-request.dto';
 import { AcceptInvitationCommand } from './commands/accept-invitation/accept-invitation.command';
 import { CompanyError } from './company.error';
+import { GetCompanyResponseDto } from './dtos/responses/get-company-response.dto';
+import { GetCompanyQuery } from './queries/get-company/get-company.query';
 
 @Controller('companies')
 export class CompanyController {
@@ -145,6 +149,27 @@ export class CompanyController {
     @Query() queryDto: GetCompanyListQueryDto,
   ): Promise<GetCompanyListResponseDto> {
     const command = new GetCompanyListQuery(queryDto);
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get(':id')
+  @ApiOkResponse({
+    type: GetCompanyResponseDto,
+  })
+  @ApiNotFoundResponse({
+    example: CompanyError.ProfileNotFound,
+  })
+  public async getCompany(
+    @Param('id') id: string,
+  ): Promise<GetCompanyResponseDto> {
+    const command = new GetCompanyQuery(id);
 
     const result = await this.queryBus.execute(command);
 
