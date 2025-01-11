@@ -57,7 +57,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
 
     switch (user.role) {
       case UserRole.TALENT:
-        profileId = user.talent.id;
+        profileId = user.talent?.id;
         break;
       case UserRole.COMPANY:
         profileId = user.company.id;
