@@ -19,26 +19,26 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
-import { AuthError } from '../auth/auth.error';
-import { CommonError } from '../common/common.error';
-import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
-import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
-import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
-import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
-import { UpdateTalentCommand } from './commands/upsert-talent/update-talent.command';
-import { UserRole } from '../../domain/user/user-role.enum';
-import { GetTalentQuery } from './queries/get-talent/get-talent.query';
-import { TalentError } from './talent.error';
-import { GetTalentListResponseDto } from './dtos/responses/get-talent-list-response.dto';
-import { GetTalentListQuery } from './queries/get-talent-list/get-talent-list.query';
-import { GetTalentListQueryDto } from './dtos/requests/get-talent-list-query.dto';
-import { UpdateTalentRequestDto } from './dtos/requests/update-talent-request.dto';
-import { GetTalentResponseDto } from './dtos/responses/get-talent-response.dto';
-import { CreateTalentCommand } from './commands/create-talent/create-talent.command';
-import { CreateTalentRequestDto } from './dtos/requests/create-talent-request.dto';
+import { AuthGuard } from '../../../infrastructure/security/guards/auth.guard';
+import { AuthError } from '../../auth/auth.error';
+import { CommonError } from '../../common/common.error';
+import { CurrentUser } from '../../../infrastructure/security/decorators/current-user.decorator';
+import { AuthenticatedUser } from '../../../infrastructure/security/authenticated-user.interface';
+import { Roles } from '../../../infrastructure/security/decorators/roles.decorator';
+import { RolesGuard } from '../../../infrastructure/security/guards/roles.guard';
+import { UpdateTalentCommand } from '../commands/upsert-talent/update-talent.command';
+import { UserRole } from '../../../domain/user/user-role.enum';
+import { GetTalentQuery } from '../queries/get-talent/get-talent.query';
+import { TalentError } from '../talent.error';
+import { GetTalentListResponseDto } from '../dtos/responses/get-talent-list-response.dto';
+import { GetTalentListQuery } from '../queries/get-talent-list/get-talent-list.query';
+import { GetTalentListQueryDto } from '../dtos/requests/get-talent-list-query.dto';
+import { UpdateTalentRequestDto } from '../dtos/requests/update-talent-request.dto';
+import { GetTalentResponseDto } from '../dtos/responses/get-talent-response.dto';
+import { CreateTalentCommand } from '../commands/create-talent/create-talent.command';
+import { CreateTalentRequestDto } from '../dtos/requests/create-talent-request.dto';
 
-@Controller('talent')
+@Controller('talents')
 export class TalentController {
   public constructor(
     private readonly commandBus: CommandBus,
