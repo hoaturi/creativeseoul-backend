@@ -86,9 +86,6 @@ export class GetCompanyResponseDto {
   public description: string;
 
   @ApiPropertyOptional()
-  public languages?: string[];
-
-  @ApiPropertyOptional()
   public logoUrl?: string;
 
   @ApiProperty()
@@ -100,17 +97,20 @@ export class GetCompanyResponseDto {
   @ApiPropertyOptional()
   public size?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    type: CompanySocialLinksResponseDto,
+  })
   public socialLinks?: CompanySocialLinksResponseDto;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [CompanyJobItemResponseDto],
+  })
   public jobs: CompanyJobItemResponseDto[];
 
   public constructor(data: {
     name: string;
     summary: string;
     description: string;
-    languages?: string[];
     logoUrl?: string;
     websiteUrl: string;
     location?: string;
@@ -121,7 +121,6 @@ export class GetCompanyResponseDto {
     this.name = data.name;
     this.summary = data.summary;
     this.description = data.description;
-    this.languages = data.languages;
     this.logoUrl = data.logoUrl;
     this.websiteUrl = data.websiteUrl;
     this.location = data.location;
