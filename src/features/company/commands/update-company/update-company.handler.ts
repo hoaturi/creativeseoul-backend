@@ -29,7 +29,6 @@ export class UpdateCompanyHandler
     company.name = dto.name;
     company.summary = dto.summary;
     company.description = dto.description;
-    company.languages = dto.languages;
     company.logoUrl = dto.logoUrl;
     company.websiteUrl = dto.websiteUrl;
     company.location = dto.location;

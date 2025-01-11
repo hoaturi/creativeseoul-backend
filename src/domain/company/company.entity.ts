@@ -35,9 +35,6 @@ export class Company {
   @Property({ nullable: true })
   public description?: string;
 
-  @Property({ type: 'array', nullable: true })
-  public languages?: string[];
-
   @Property({ nullable: true })
   public logoUrl?: string;
 
@@ -92,7 +89,6 @@ export class Company {
     websiteUrl: string;
     summary?: string;
     description?: string;
-    languages?: string[];
     location?: string;
     logoUrl?: string;
     size?: CompanySize;
@@ -103,7 +99,6 @@ export class Company {
     this.name = data.name;
     this.summary = data.summary;
     this.description = data.description;
-    this.languages = data.languages;
     this.location = data.location;
     this.logoUrl = data.logoUrl;
     this.websiteUrl = data.websiteUrl;

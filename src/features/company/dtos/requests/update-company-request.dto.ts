@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsArray,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -13,7 +12,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Trim } from '../../../../common/decorators/trim.decorator';
-import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
 import { COMPANY_SIZES } from '../../../../domain/common/constants/company-size.constant';
 import { CompanySocialLinksRequestDto } from './company-social-links-request.dto';
 
@@ -37,14 +35,6 @@ export class UpdateCompanyRequestDto {
   @IsNotEmpty()
   @Trim()
   public readonly description: string;
-
-  @ApiProperty()
-  @IsArray()
-  @IsString({ each: true })
-  @IsNotEmpty({ each: true })
-  @Trim({ each: true })
-  @RemoveDuplicates()
-  public readonly languages: string[];
 
   @ApiPropertyOptional()
   @IsOptional()
