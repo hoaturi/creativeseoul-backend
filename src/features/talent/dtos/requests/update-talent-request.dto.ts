@@ -33,6 +33,13 @@ export class UpdateTalentRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @MaxLength(16)
+  @Trim()
+  public readonly handle: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   @MaxLength(64)
   @Trim()
   public readonly fullName: string;

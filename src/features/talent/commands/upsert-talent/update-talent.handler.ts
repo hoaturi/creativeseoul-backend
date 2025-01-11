@@ -70,7 +70,8 @@ export class UpdateTalentHandler
       dto.hourlyRateRangeId,
     );
 
-    const basicProperties = {
+    const basicProperties: Partial<Talent> = {
+      handle: dto.handle,
       fullName: dto.fullName,
       title: dto.title,
       bio: dto.bio,
@@ -81,14 +82,14 @@ export class UpdateTalentHandler
       socialLinks: dto.socialLinks,
     };
 
-    const flagProperties = {
+    const flagProperties: Partial<Talent> = {
       isPublic: dto.isPublic,
       isAvailable: dto.isAvailable,
       isContactable: dto.isContactable,
       requiresVisaSponsorship: dto.requiresVisaSponsorship,
     };
 
-    const referenceProperties = {
+    const referenceProperties: Partial<Talent> = {
       city,
       country,
       salaryRange,

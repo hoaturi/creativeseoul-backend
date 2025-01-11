@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayMaxSize,
+  IsAlphanumeric,
   IsArray,
   IsBoolean,
   IsEmail,
@@ -30,6 +31,14 @@ import { TalentSocialLinksRequestDto } from './talent-social-links-request.dto';
 
 export class CreateTalentRequestDto {
   // Basic Profile Information
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @MaxLength(16)
+  @Trim()
+  public readonly handle: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

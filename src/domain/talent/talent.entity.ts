@@ -43,6 +43,10 @@ export class Talent extends BaseEntity {
   public readonly user!: User;
 
   // Basic profile information
+  @Property({ length: 16 })
+  @Index()
+  public handle!: string;
+
   @Property({ length: 64 })
   public fullName: string;
 
@@ -135,6 +139,7 @@ export class Talent extends BaseEntity {
   public constructor(
     user: User,
     data: {
+      handle: string;
       requiresVisaSponsorship: boolean;
       isPublic: boolean;
       isAvailable: boolean;
@@ -159,6 +164,7 @@ export class Talent extends BaseEntity {
     this.isPublic = data.isPublic;
     this.isAvailable = data.isAvailable;
     this.isContactable = data.isContactable;
+    this.handle = data.handle;
     this.fullName = data.fullName;
     this.title = data.title;
     this.bio = data.bio;
