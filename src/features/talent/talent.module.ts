@@ -7,6 +7,7 @@ import { TalentScoringModule } from '../../infrastructure/services/talent-scorin
 import { CreateTalentHandler } from './commands/create-talent/create-talent.handler';
 import { GetTalentAsMemberHandler } from './queries/get-talent-as-member/get-talent-as-member.handler';
 import { MemberController } from './controllers/member.controller';
+import { GetTalentAsMemberListHandler } from './queries/get-talent-as-member-list/get-talent-as-member-list.handler';
 
 const providers: Provider[] = [
   GetTalentHandler,
@@ -14,6 +15,7 @@ const providers: Provider[] = [
   UpdateTalentHandler,
   CreateTalentHandler,
   GetTalentAsMemberHandler,
+  GetTalentAsMemberListHandler,
 ];
 
 @Module({
