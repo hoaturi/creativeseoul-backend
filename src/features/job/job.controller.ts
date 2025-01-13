@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -33,6 +34,9 @@ import { CreateRegularJobRequestDto } from './dtos/create-regular-job-request.dt
 import { GetJobListResponseDto } from './dtos/get-job-list-response.dto';
 import { GetJobListQueryDto } from './dtos/get-job-list-query.dto';
 import { GetJobListQuery } from './queries/get-job-list/get-job-list.query';
+import { GetJobResponseDto } from './dtos/get-job-response.dto';
+import { JobError } from './job.error';
+import { GetJobQuery } from './queries/get-job/get-job.query';
 
 @Controller('jobs')
 export class JobController {
@@ -119,6 +123,28 @@ export class JobController {
     @Query() queryDto: GetJobListQueryDto,
   ): Promise<GetJobListResponseDto> {
     const query = new GetJobListQuery(queryDto);
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get(':slug')
+  @ApiOkResponse({
+    type: GetJobResponseDto,
+  })
+  @ApiNotFoundResponse({
+    example: JobError.NotFound,
+  })
+  public async getJob(
+    @Param('slug') slug: string,
+    @CurrentUser() user?: AuthenticatedUser,
+  ): Promise<GetJobResponseDto> {
+    const query = new GetJobQuery(slug, user);
 
     const result = await this.queryBus.execute(query);
 
