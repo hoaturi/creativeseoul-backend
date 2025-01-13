@@ -20,14 +20,13 @@ export class Job extends BaseEntity {
   @Property()
   public description!: string;
 
-  // Relations
-  @ManyToOne(() => Company, { nullable: true })
-  public company?: Company;
+  @ManyToOne(() => Company)
+  public company!: Company;
 
+  // Job Details
   @ManyToOne(() => Category)
   public category!: Category;
 
-  // Job Details
   @ManyToOne(() => EmploymentType)
   public employmentType!: EmploymentType;
 
@@ -78,7 +77,7 @@ export class Job extends BaseEntity {
   public applicationClickCount!: number;
 
   public constructor(data: {
-    company?: Company;
+    company: Company;
     title: string;
     description: string;
     category: Category;
