@@ -10,6 +10,7 @@ import { SeniorityLevel } from '../../../../domain/common/entities/seniority-lev
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { CreateRegularJobRequestDto } from '../../dtos/create-regular-job-request.dto';
+import slugify from 'slugify';
 import { Company } from '../../../../domain/company/company.entity';
 
 @CommandHandler(CreateRegularJobCommand)
@@ -24,7 +25,6 @@ export class CreateRegularJobHandler
     const { dto } = command;
 
     const {
-      company,
       category,
       employmentType,
       seniorityLevel,
@@ -33,8 +33,21 @@ export class CreateRegularJobHandler
       englishLevel,
     } = this.getReferences(dto);
 
+    const company = await this.em.findOne(
+      Company,
+      { id: dto.companyId },
+      {
+        fields: ['name'],
+      },
+    );
+
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const slug =
+      `${slugify(company.name)}-${slugify(dto.title)}-${randomStr}`.toLowerCase();
+
     const newJob = new Job({
-      company,
+      company: company as Company,
+      slug,
       title: dto.title,
       description: dto.description,
       category,
@@ -62,7 +75,6 @@ export class CreateRegularJobHandler
   }
 
   private getReferences(dto: CreateRegularJobRequestDto): {
-    company: Company;
     category: Category;
     employmentType: EmploymentType;
     seniorityLevel: SeniorityLevel;
@@ -70,7 +82,6 @@ export class CreateRegularJobHandler
     koreanLevel: LanguageLevel;
     englishLevel: LanguageLevel;
   } {
-    const company = this.em.getReference(Company, dto.companyId);
     const category = this.em.getReference(Category, dto.categoryId);
     const employmentType = this.em.getReference(
       EmploymentType,
@@ -91,7 +102,6 @@ export class CreateRegularJobHandler
     );
 
     return {
-      company,
       category,
       employmentType,
       seniorityLevel,

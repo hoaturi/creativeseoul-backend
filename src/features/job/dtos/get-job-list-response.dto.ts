@@ -18,13 +18,13 @@ export class GetJobListItemCompanyDto {
 }
 
 export class GetJobListItemDto {
-  @ApiProperty()
-  public readonly id: string;
-
   @ApiProperty({
     type: GetJobListItemCompanyDto,
   })
   public readonly company: GetJobListItemCompanyDto;
+
+  @ApiProperty()
+  public readonly slug: string;
 
   @ApiProperty()
   public readonly title: string;
@@ -63,8 +63,8 @@ export class GetJobListItemDto {
   public readonly isFeatured: boolean;
 
   public constructor(data: {
-    id: string;
     company: GetJobListItemCompanyDto;
+    slug: string;
     title: string;
     category: string;
     employmentType: string;
@@ -78,8 +78,8 @@ export class GetJobListItemDto {
     residentOnly: boolean;
     isFeatured: boolean;
   }) {
-    this.id = data.id;
     this.company = data.company;
+    this.slug = data.slug;
     this.title = data.title;
     this.category = data.category;
     this.employmentType = data.employmentType;

@@ -24,6 +24,9 @@ export class Job extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
+  @Property({ unique: true })
+  public readonly slug!: string;
+
   // Basic Info
   @Property({ length: 64 })
   public title!: string;
@@ -48,7 +51,7 @@ export class Job extends BaseEntity {
   public workLocationType!: WorkLocationType;
 
   @Property({ length: 64 })
-  public location?: string;
+  public location!: string;
 
   // Compensation
   @Property({ nullable: true })
@@ -98,6 +101,7 @@ export class Job extends BaseEntity {
 
   public constructor(data: {
     company: Company;
+    slug: string;
     title: string;
     description: string;
     category: Category;
@@ -118,6 +122,7 @@ export class Job extends BaseEntity {
   }) {
     super();
     this.company = data.company;
+    this.slug = data.slug;
     this.title = data.title;
     this.description = data.description;
     this.category = data.category;

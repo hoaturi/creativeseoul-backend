@@ -12,7 +12,7 @@ import { GetJobListQueryDto } from '../../dtos/get-job-list-query.dto';
 import { Job } from '../../../../domain/job/job.entity';
 
 const JOB_FIELDS = [
-  'id',
+  'slug',
   'title',
   'description',
   'category.label',
@@ -77,7 +77,7 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
       });
 
       return new GetJobListItemDto({
-        id: job.id,
+        slug: job.slug,
         title: job.title,
         category: job.category.label,
         employmentType: job.employmentType.label,

@@ -17,6 +17,7 @@ import {
   CreditTransactionType,
 } from '../../../../domain/company/credit-transaction.entity';
 import { Logger } from '@nestjs/common';
+import slugify from 'slugify';
 
 @CommandHandler(CreateFeaturedJobCommand)
 export class CreateFeaturedJobHandler
@@ -37,7 +38,7 @@ export class CreateFeaturedJobHandler
         id: user.profileId,
       },
       {
-        fields: ['id', 'creditBalance'],
+        fields: ['id', 'name', 'creditBalance'],
       },
     );
 
@@ -58,8 +59,13 @@ export class CreateFeaturedJobHandler
       englishLevel,
     } = this.getReferences(dto);
 
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const slug =
+      `${slugify(company.name)}-${slugify(dto.title)}-${randomStr}`.toLowerCase();
+
     const newJob = new Job({
       company: company as Company,
+      slug,
       title: dto.title,
       description: dto.description,
       category,
