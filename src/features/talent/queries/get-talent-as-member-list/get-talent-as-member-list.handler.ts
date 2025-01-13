@@ -8,7 +8,7 @@ import {
   GetTalentAsMemberListResponseDto,
 } from '../../dtos/responses/get-talent-as-member-list-response.dto';
 import { Talent } from '../../../../domain/talent/talent.entity';
-import { TalentLocationResponseDto } from '../../dtos/responses/talent-location-response.dto';
+import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
 
 @QueryHandler(GetTalentAsMemberListQuery)
 export class GetTalentAsMemberListHandler
@@ -48,7 +48,7 @@ export class GetTalentAsMemberListHandler
     );
 
     const responseDto = talents.map((talent) => {
-      const location = new TalentLocationResponseDto(
+      const location = new TalentLocationDto(
         talent.country.label,
         talent.city.label,
       );

@@ -5,9 +5,9 @@ import { ResultError } from 'src/common/result/result-error';
 import { GetTalentAsMemberResponseDto } from '../../dtos/responses/get-talent-as-member-response.dto';
 import { Talent } from '../../../../domain/talent/talent.entity';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
-import { TalentLocationResponseDto } from '../../dtos/responses/talent-location-response.dto';
-import { TalentSocialLinksResponseDto } from '../../dtos/responses/talent-social-links-response.dto';
-import { TalentLanguageProficiencyResponseDto } from '../../dtos/responses/talent-language-proficiency-response.dto';
+import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
+import { TalentSocialLinksDto } from '../../dtos/responses/talent-social-links.dto';
+import { TalentLanguageProficiencyDto } from '../../dtos/responses/talent-language-proficiency.dto';
 import { CompanyError } from '../../../company/company.error';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
@@ -69,15 +69,15 @@ export class GetTalentAsMemberHandler
   }
 
   private mapToResponseDto(talent: LoadedTalent): GetTalentAsMemberResponseDto {
-    const location = new TalentLocationResponseDto(
+    const location = new TalentLocationDto(
       talent.country.label,
       talent.city.label,
     );
 
-    const socialLinks = new TalentSocialLinksResponseDto(talent.socialLinks);
+    const socialLinks = new TalentSocialLinksDto(talent.socialLinks);
 
     const languages = talent.languages.getItems().map((language) => {
-      return new TalentLanguageProficiencyResponseDto(
+      return new TalentLanguageProficiencyDto(
         language.language.label,
         language.level.label,
       );

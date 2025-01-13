@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TalentLocationResponseDto } from './talent-location-response.dto';
+import { TalentLocationDto } from './talent-location.dto';
 
 export class GetTalentListItemDto {
   @ApiProperty()
@@ -18,9 +18,9 @@ export class GetTalentListItemDto {
   public readonly avatarUrl: string;
 
   @ApiProperty({
-    type: TalentLocationResponseDto,
+    type: TalentLocationDto,
   })
-  public readonly location: TalentLocationResponseDto;
+  public readonly location: TalentLocationDto;
 
   @ApiProperty()
   public readonly isAvailable: boolean;
@@ -37,7 +37,7 @@ export class GetTalentListItemDto {
     title: string;
     bio: string;
     avatarUrl?: string;
-    location: TalentLocationResponseDto;
+    location: TalentLocationDto;
     isAvailable: boolean;
     skills?: string[];
   }) {

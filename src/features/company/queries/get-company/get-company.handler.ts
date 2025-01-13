@@ -6,8 +6,8 @@ import { ResultError } from 'src/common/result/result-error';
 import { Company } from '../../../../domain/company/company.entity';
 import { CompanyError } from '../../company.error';
 import {
-  CompanyJobItemResponseDto,
-  CompanySocialLinksResponseDto,
+  CompanyJobItemDto,
+  CompanySocialLinksDto,
   GetCompanyResponseDto,
 } from '../../dtos/responses/get-company-response.dto';
 import { Job } from '../../../../domain/job/job.entity';
@@ -73,7 +73,7 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
   private mapBasicInfo(company: LoadedCompany) {
     const size = company.size?.label;
     const socialLinks = company.socialLinks
-      ? new CompanySocialLinksResponseDto(company.socialLinks)
+      ? new CompanySocialLinksDto(company.socialLinks)
       : null;
 
     return {
@@ -88,9 +88,9 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
     };
   }
 
-  private mapJobs(jobs: LoadedJobs): CompanyJobItemResponseDto[] {
+  private mapJobs(jobs: LoadedJobs): CompanyJobItemDto[] {
     return jobs.getItems().map((job) => {
-      return new CompanyJobItemResponseDto({
+      return new CompanyJobItemDto({
         id: job.id,
         title: job.title,
         location: job.location,

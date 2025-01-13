@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CompanySocialLinksResponseDto {
+export class CompanySocialLinksDto {
   @ApiPropertyOptional()
   public linkedin?: string;
 
@@ -13,7 +13,7 @@ export class CompanySocialLinksResponseDto {
   @ApiPropertyOptional()
   public youtube?: string;
 
-  public constructor(data: CompanySocialLinksResponseDto) {
+  public constructor(data: CompanySocialLinksDto) {
     this.linkedin = data.linkedin;
     this.twitter = data.twitter;
     this.instagram = data.instagram;
@@ -21,7 +21,7 @@ export class CompanySocialLinksResponseDto {
   }
 }
 
-export class CompanyJobItemResponseDto {
+export class CompanyJobItemDto {
   public readonly id!: string;
 
   public readonly title!: string;
@@ -94,14 +94,14 @@ export class GetCompanyResponseDto {
   public size?: string;
 
   @ApiPropertyOptional({
-    type: CompanySocialLinksResponseDto,
+    type: CompanySocialLinksDto,
   })
-  public socialLinks?: CompanySocialLinksResponseDto;
+  public socialLinks?: CompanySocialLinksDto;
 
   @ApiProperty({
-    type: [CompanyJobItemResponseDto],
+    type: [CompanyJobItemDto],
   })
-  public jobs: CompanyJobItemResponseDto[];
+  public jobs: CompanyJobItemDto[];
 
   public constructor(data: {
     name: string;
@@ -111,8 +111,8 @@ export class GetCompanyResponseDto {
     websiteUrl: string;
     location?: string;
     size?: string;
-    socialLinks?: CompanySocialLinksResponseDto;
-    jobs: CompanyJobItemResponseDto[];
+    socialLinks?: CompanySocialLinksDto;
+    jobs: CompanyJobItemDto[];
   }) {
     this.name = data.name;
     this.summary = data.summary;

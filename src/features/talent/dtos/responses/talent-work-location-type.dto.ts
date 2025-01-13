@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TalentWorkLocationTypeResponseDto {
+export class TalentWorkLocationTypeDto {
   @ApiProperty()
   public readonly id: number;
 

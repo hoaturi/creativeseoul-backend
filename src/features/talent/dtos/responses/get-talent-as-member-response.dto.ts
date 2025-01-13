@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TalentLocationResponseDto } from './talent-location-response.dto';
-import { TalentLanguageProficiencyResponseDto } from './talent-language-proficiency-response.dto';
-import { TalentSocialLinksResponseDto } from './talent-social-links-response.dto';
+import { TalentLocationDto } from './talent-location.dto';
+import { TalentLanguageProficiencyDto } from './talent-language-proficiency.dto';
+import { TalentSocialLinksDto } from './talent-social-links.dto';
 
 export class GetTalentAsMemberResponseDto {
   @ApiProperty()
@@ -19,24 +19,24 @@ export class GetTalentAsMemberResponseDto {
   @ApiPropertyOptional()
   public readonly avatarUrl?: string;
 
-  @ApiProperty({ type: TalentLocationResponseDto })
-  public readonly location: TalentLocationResponseDto;
+  @ApiProperty({ type: TalentLocationDto })
+  public readonly location: TalentLocationDto;
 
-  @ApiProperty({ type: TalentLanguageProficiencyResponseDto })
-  public readonly languages: TalentLanguageProficiencyResponseDto[];
+  @ApiProperty({ type: TalentLanguageProficiencyDto })
+  public readonly languages: TalentLanguageProficiencyDto[];
 
-  @ApiPropertyOptional({ type: TalentSocialLinksResponseDto })
-  public readonly socialLinks?: TalentSocialLinksResponseDto;
+  @ApiPropertyOptional({ type: TalentSocialLinksDto })
+  public readonly socialLinks?: TalentSocialLinksDto;
 
   public constructor(
     handle: string,
     fullName: string,
     title: string,
     bio: string,
-    location: TalentLocationResponseDto,
-    languages: TalentLanguageProficiencyResponseDto[],
+    location: TalentLocationDto,
+    languages: TalentLanguageProficiencyDto[],
     avatarUrl?: string,
-    socialLinks?: TalentSocialLinksResponseDto,
+    socialLinks?: TalentSocialLinksDto,
   ) {
     this.handle = handle;
     this.fullName = fullName;

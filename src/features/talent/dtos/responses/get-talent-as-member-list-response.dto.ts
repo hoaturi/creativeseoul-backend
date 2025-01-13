@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TalentLocationResponseDto } from './talent-location-response.dto';
+import { TalentLocationDto } from './talent-location.dto';
 
 export class GetTalentAsMemberItemDto {
   @ApiProperty()
@@ -15,16 +15,16 @@ export class GetTalentAsMemberItemDto {
   public readonly avatarUrl?: string;
 
   @ApiProperty({
-    type: TalentLocationResponseDto,
+    type: TalentLocationDto,
   })
-  public readonly location: TalentLocationResponseDto;
+  public readonly location: TalentLocationDto;
 
   public constructor(data: {
     handle: string;
     fullName: string;
     title: string;
     avatarUrl?: string;
-    location: TalentLocationResponseDto;
+    location: TalentLocationDto;
   }) {
     this.handle = data.handle;
     this.fullName = data.fullName;

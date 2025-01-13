@@ -11,7 +11,7 @@ import { City } from '../../../../domain/common/entities/city.entity';
 import { Language } from '../../../../domain/common/entities/language.entity';
 import { TalentLanguage } from '../../../../domain/talent/talent-language.entity';
 import { TalentScoringService } from '../../../../infrastructure/services/talent-scoring/talent-scoring.service';
-import { TalentLanguageRequestDto } from '../../dtos/requests/talent-language-request.dto';
+import { TalentLanguageDto } from '../../dtos/requests/talent-language.dto';
 import { SalaryRange } from '../../../../domain/common/entities/salary-range.entity';
 import slugify from 'slugify';
 import { HourlyRateRange } from '../../../../domain/common/entities/hourly-rate-range.entity';
@@ -142,7 +142,7 @@ export class UpdateTalentHandler
 
   private updateLanguages(
     talent: Talent,
-    languages: TalentLanguageRequestDto[],
+    languages: TalentLanguageDto[],
   ): void {
     const talentLanguages = languages.map((lang) => {
       const language = this.em.getReference(Language, lang.languageId);

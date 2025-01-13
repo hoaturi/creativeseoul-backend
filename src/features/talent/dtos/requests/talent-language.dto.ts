@@ -5,7 +5,7 @@ import {
   LANGUAGES,
 } from '../../../../domain/common/constants';
 
-export class TalentLanguageRequestDto {
+export class TalentLanguageDto {
   @ApiProperty()
   @IsNumber()
   @Min(1)

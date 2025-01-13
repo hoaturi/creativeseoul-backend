@@ -17,7 +17,7 @@ import { EmploymentType } from '../../../../domain/common/entities/employment-ty
 import slugify from 'slugify';
 import { TalentScoringService } from '../../../../infrastructure/services/talent-scoring/talent-scoring.service';
 import { TalentError } from '../../talent.error';
-import { TalentLanguageRequestDto } from '../../dtos/requests/talent-language-request.dto';
+import { TalentLanguageDto } from '../../dtos/requests/talent-language.dto';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { CreateTalentRequestDto } from '../../dtos/requests/create-talent-request.dto';
 
@@ -135,7 +135,7 @@ export class CreateTalentHandler
 
   private updateLanguages(
     talent: Talent,
-    languages: TalentLanguageRequestDto[],
+    languages: TalentLanguageDto[],
   ): void {
     const talentLanguages = languages.map((lang) => {
       const language = this.em.getReference(Language, lang.languageId);

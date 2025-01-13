@@ -25,9 +25,9 @@ import {
 import { Trim } from '../../../../common/decorators/trim.decorator';
 import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
 import { HasUniqueLanguages } from '../../../../common/decorators/has-unique-languages.decorator';
-import { TalentLanguageRequestDto } from './talent-language-request.dto';
+import { TalentLanguageDto } from './talent-language.dto';
 import { Type } from 'class-transformer';
-import { TalentSocialLinksRequestDto } from './talent-social-links-request.dto';
+import { TalentSocialLinksDto } from './talent-social-links.dto';
 
 export class CreateTalentRequestDto {
   // Basic Profile Information
@@ -67,13 +67,13 @@ export class CreateTalentRequestDto {
 
   // Skills and Languages
   @ApiProperty({
-    type: TalentLanguageRequestDto,
+    type: TalentLanguageDto,
   })
   @IsArray()
   @HasUniqueLanguages()
   @ValidateNested({ each: true })
-  @Type(() => TalentLanguageRequestDto)
-  public readonly languages: TalentLanguageRequestDto[];
+  @Type(() => TalentLanguageDto)
+  public readonly languages: TalentLanguageDto[];
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -158,8 +158,8 @@ export class CreateTalentRequestDto {
   public readonly phone?: string;
 
   @ApiPropertyOptional({
-    type: TalentSocialLinksRequestDto,
+    type: TalentSocialLinksDto,
   })
   @IsOptional()
-  public readonly socialLinks?: TalentSocialLinksRequestDto;
+  public readonly socialLinks?: TalentSocialLinksDto;
 }

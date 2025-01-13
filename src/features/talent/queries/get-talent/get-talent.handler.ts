@@ -3,16 +3,16 @@ import { GetTalentQuery } from './get-talent.query';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { Talent } from '../../../../domain/talent/talent.entity';
 import { TalentError } from '../../talent.error';
-import { TalentLocationResponseDto } from '../../dtos/responses/talent-location-response.dto';
-import { TalentLanguageProficiencyResponseDto } from '../../dtos/responses/talent-language-proficiency-response.dto';
+import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
+import { TalentLanguageProficiencyDto } from '../../dtos/responses/talent-language-proficiency.dto';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { ResultError } from '../../../../common/result/result-error';
 import { Result } from '../../../../common/result/result';
 import { GetTalentResponseDto } from '../../dtos/responses/get-talent-response.dto';
-import { TalentSalaryRangeResponseDto } from '../../dtos/responses/talent-salary-range-response.dto';
-import { TalentWorkLocationTypeResponseDto } from '../../dtos/responses/talent-work-location-type-response.dto';
-import { TalentHourlyRateRangeResponseDto } from '../../dtos/responses/talent-hourly-rate-range-response.dto';
-import { TalentEmploymentTypeResponseDto } from '../../dtos/responses/talent-employment-type-response.dto';
+import { TalentSalaryRangeDto } from '../../dtos/responses/talent-salary-range.dto';
+import { TalentWorkLocationTypeDto } from '../../dtos/responses/talent-work-location-type.dto';
+import { TalentHourlyRateRangeDto } from '../../dtos/responses/talent-hourly-rate-range.dto';
+import { TalentEmploymentTypeDto } from '../../dtos/responses/talent-employment-type.dto';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
 const TALENT_FIELDS = [
@@ -93,35 +93,35 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
   }
 
   private createTalentResponse(talent: LoadedTalent): GetTalentResponseDto {
-    const location = new TalentLocationResponseDto(
+    const location = new TalentLocationDto(
       talent.country.label,
       talent.city?.label,
     );
 
     const languages = talent.languages.map(
       (language) =>
-        new TalentLanguageProficiencyResponseDto(
+        new TalentLanguageProficiencyDto(
           language.language.label,
           language.level.label,
         ),
     );
 
-    const salaryRange = new TalentSalaryRangeResponseDto(
+    const salaryRange = new TalentSalaryRangeDto(
       talent.salaryRange.id,
       talent.salaryRange.label,
     );
 
-    const hourlyRateRange = new TalentHourlyRateRangeResponseDto(
+    const hourlyRateRange = new TalentHourlyRateRangeDto(
       talent.hourlyRateRange.id,
       talent.hourlyRateRange.label,
     );
 
     const workLocationTypes = talent.workLocationTypes.map(
-      (type) => new TalentWorkLocationTypeResponseDto(type.id, type.label),
+      (type) => new TalentWorkLocationTypeDto(type.id, type.label),
     );
 
     const employmentTypes = talent.employmentTypes.map(
-      (type) => new TalentEmploymentTypeResponseDto(type.id, type.label),
+      (type) => new TalentEmploymentTypeDto(type.id, type.label),
     );
 
     return new GetTalentResponseDto({

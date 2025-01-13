@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class TalentSocialLinksRequestDto {
+export class TalentSocialLinksDto {
   @ApiPropertyOptional()
   public readonly instagram?: string;
 
