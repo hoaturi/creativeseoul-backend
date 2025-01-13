@@ -25,6 +25,9 @@ import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 import { AuthError } from '../auth/auth.error';
 import { CompanyError } from '../company/company.error';
 import { CreateFeaturedJobCommand } from './commands/create-featured-job/create-featured-job.command';
+import { CreateRegularJobCommand } from './commands/create-regular-job/create-regular-job.command';
+import { CommonError } from '../common/common.error';
+import { CreateRegularJobRequestDto } from './dtos/create-regular-job-request.dto';
 
 @Controller('jobs')
 export class JobController {
@@ -61,6 +64,32 @@ export class JobController {
     @Body() dto: CreateFeaturedJobRequestDto,
   ) {
     const command = new CreateFeaturedJobCommand(user, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Post('regular')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async createRegularJob(@Body() dto: CreateRegularJobRequestDto) {
+    const command = new CreateRegularJobCommand(dto);
 
     const result = await this.commandBus.execute(command);
 
