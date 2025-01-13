@@ -35,9 +35,7 @@ export class CreditTransaction extends BaseEntity {
     company: Company;
     amount: number;
     type: CreditTransactionType;
-    description?: string;
     checkoutId?: string;
-    variantId?: string;
     job?: Job;
   }) {
     super();
