@@ -49,7 +49,7 @@ export class JobController {
       },
       ValidationFailed: {
         summary: 'Validation failed',
-        value: CompanyError.ProfileAlreadyExists,
+        value: CommonError.ValidationFailed,
       },
     },
   })
