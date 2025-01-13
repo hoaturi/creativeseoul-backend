@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -37,6 +38,8 @@ import { GetJobListQuery } from './queries/get-job-list/get-job-list.query';
 import { GetJobResponseDto } from './dtos/get-job-response.dto';
 import { JobError } from './job.error';
 import { GetJobQuery } from './queries/get-job/get-job.query';
+import { UpdateJobRequestDto } from './dtos/update-job-request.dto';
+import { UpdateJobCommand } from './commands/update-job/update-job.command';
 
 @Controller('jobs')
 export class JobController {
@@ -147,6 +150,47 @@ export class JobController {
     const query = new GetJobQuery(slug, user);
 
     const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Put(':slug')
+  @Roles(UserRole.COMPANY, UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    examples: {
+      PermissionDenied: {
+        summary: 'Permission denied',
+        value: JobError.PermissionDenied,
+      },
+      Unauthorized: {
+        summary: 'Unauthorized',
+        value: AuthError.Unauthorized,
+      },
+    },
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  @ApiNotFoundResponse({
+    example: JobError.NotFound,
+  })
+  public async updateJob(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('slug') slug: string,
+    @Body() dto: UpdateJobRequestDto,
+  ) {
+    const command = new UpdateJobCommand(user, slug, dto);
+
+    const result = await this.commandBus.execute(command);
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);

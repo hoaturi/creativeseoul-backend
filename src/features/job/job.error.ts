@@ -8,4 +8,10 @@ export class JobError extends ResultError {
     HttpStatus.NOT_FOUND,
     'Job not found',
   );
+
+  public static readonly PermissionDenied = new ResultError(
+    JobErrorCode.PERMISSION_DENIED,
+    HttpStatus.FORBIDDEN,
+    'Permission denied',
+  );
 }

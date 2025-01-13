@@ -4,6 +4,7 @@ import { CreateFeaturedJobHandler } from './commands/create-featured-job/create-
 import { CreateRegularJobHandler } from './commands/create-regular-job/create-regular-job.handler';
 import { GetJobListHandler } from './queries/get-job-list/get-job-list.handler';
 import { GetJobHandler } from './queries/get-job/get-job.handler';
+import { UpdateJobHandler } from './commands/update-job/update-job.handler';
 
 @Module({
   providers: [
@@ -11,6 +12,7 @@ import { GetJobHandler } from './queries/get-job/get-job.handler';
     CreateRegularJobHandler,
     GetJobListHandler,
     GetJobHandler,
+    UpdateJobHandler,
   ],
   controllers: [JobController],
 })
