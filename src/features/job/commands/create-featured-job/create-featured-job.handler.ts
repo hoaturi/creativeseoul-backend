@@ -12,11 +12,18 @@ import { WorkLocationType } from '../../../../domain/common/entities/work-locati
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { Job } from '../../../../domain/job/job.entity';
 import { CreateFeaturedJobRequestDto } from '../../dtos/create-featured-job-request.dto';
+import {
+  CreditTransaction,
+  CreditTransactionType,
+} from '../../../../domain/company/credit-transaction.entity';
+import { Logger } from '@nestjs/common';
 
 @CommandHandler(CreateFeaturedJobCommand)
 export class CreateFeaturedJobHandler
   implements ICommandHandler<CreateFeaturedJobCommand>
 {
+  private readonly logger = new Logger(CreateFeaturedJobHandler.name);
+
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
@@ -72,11 +79,27 @@ export class CreateFeaturedJobHandler
       isPublished: true,
       applicationClickCount: 0,
     });
-
     this.em.create(Job, newJob);
+
     company.creditBalance -= 1;
 
+    const transaction = new CreditTransaction({
+      company: company as Company,
+      amount: -1,
+      type: CreditTransactionType.USAGE,
+      job: newJob,
+    });
+    this.em.create(CreditTransaction, transaction);
+
     await this.em.flush();
+
+    this.logger.log(
+      {
+        jobId: newJob.id,
+        companyId: company.id,
+      },
+      'job.create-featured-job.success: Featured job created successfully',
+    );
 
     return Result.success();
   }
