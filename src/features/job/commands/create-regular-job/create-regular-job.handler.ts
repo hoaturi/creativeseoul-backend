@@ -47,7 +47,6 @@ export class CreateRegularJobHandler
       tags: dto.tags,
       koreanLevel,
       englishLevel,
-      visaSponsorship: dto.visaSponsorship,
       residentOnly: dto.residentOnly,
       applicationUrl: dto.applicationUrl,
       isFeatured: false,

@@ -99,10 +99,6 @@ export class CreateFeaturedJobRequestDto {
 
   @ApiProperty()
   @IsBoolean()
-  public readonly visaSponsorship: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
   public readonly residentOnly: boolean;
 
   @ApiProperty()

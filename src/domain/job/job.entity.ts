@@ -57,9 +57,6 @@ export class Job extends BaseEntity {
   public englishLevel!: LanguageLevel;
 
   @Property()
-  public visaSponsorship!: boolean;
-
-  @Property()
   public residentOnly!: boolean;
 
   // Application
