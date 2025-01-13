@@ -1,12 +1,23 @@
 import { BaseEntity } from '../base.entity';
 import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
-import { Property } from '@mikro-orm/postgresql';
+import {
+  FullTextType,
+  Index,
+  Property,
+  WeightedFullTextValue,
+} from '@mikro-orm/postgresql';
 import { Company } from '../company/company.entity';
 import { Category } from '../common/entities/category.entity';
 import { EmploymentType } from '../common/entities/employment-type.entity';
 import { SeniorityLevel } from '../common/entities/seniority-level.entity';
 import { WorkLocationType } from '../common/entities/work-location-type.entity';
 import { LanguageLevel } from '../common/entities/language-level.entity';
+
+const generateSearchVector = (job: Job): WeightedFullTextValue => ({
+  A: [job.title].filter(Boolean).join(' '),
+  B: [job.tags?.join(' '), job.company.name].filter(Boolean).join(' '),
+  C: [job.description, job.location].filter(Boolean).join(' '),
+});
 
 @Entity()
 export class Job extends BaseEntity {
@@ -57,6 +68,7 @@ export class Job extends BaseEntity {
   public englishLevel!: LanguageLevel;
 
   @Property()
+  @Index()
   public residentOnly!: boolean;
 
   // Application
@@ -65,13 +77,24 @@ export class Job extends BaseEntity {
 
   // Status
   @Property()
+  @Index()
   public isPublished!: boolean;
 
   @Property()
+  @Index()
   public isFeatured!: boolean;
 
   @Property()
   public applicationClickCount!: number;
+
+  // Search
+  @Index({ type: 'fulltext' })
+  @Property({
+    type: new FullTextType('english'),
+    onCreate: (job: Job) => generateSearchVector(job),
+    onUpdate: (job: Job) => generateSearchVector(job),
+  })
+  public searchVector!: WeightedFullTextValue;
 
   public constructor(data: {
     company: Company;
@@ -87,7 +110,6 @@ export class Job extends BaseEntity {
     tags?: string[];
     koreanLevel: LanguageLevel;
     englishLevel: LanguageLevel;
-    visaSponsorship: boolean;
     residentOnly: boolean;
     applicationUrl: string;
     isPublished: boolean;
@@ -108,7 +130,6 @@ export class Job extends BaseEntity {
     this.tags = data.tags;
     this.koreanLevel = data.koreanLevel;
     this.englishLevel = data.englishLevel;
-    this.visaSponsorship = data.visaSponsorship;
     this.residentOnly = data.residentOnly;
     this.applicationUrl = data.applicationUrl;
     this.isPublished = data.isPublished;
