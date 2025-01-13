@@ -21,6 +21,7 @@ import { TalentActivityService } from './infrastructure/services/talent-activity
 import { TalentScoringService } from './infrastructure/services/talent-scoring/talent-scoring.service';
 import { CompanyModule } from './features/company/company.module';
 import { PaymentModule } from './features/payment/payment.module';
+import { JobModule } from './features/job/job.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { PaymentModule } from './features/payment/payment.module';
     UploadModule,
     CompanyModule,
     PaymentModule,
+    JobModule,
   ],
   controllers: [AppController],
   providers: [

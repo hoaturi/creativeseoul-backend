@@ -74,7 +74,7 @@ export class Job extends BaseEntity {
   @Property()
   public isFeatured!: boolean;
 
-  @Property({ default: 0 })
+  @Property()
   public applicationClickCount!: number;
 
   public constructor(data: {
@@ -94,8 +94,12 @@ export class Job extends BaseEntity {
     visaSponsorship: boolean;
     residentOnly: boolean;
     applicationUrl: string;
+    isPublished: boolean;
+    isFeatured: boolean;
+    applicationClickCount: number;
   }) {
     super();
+    this.company = data.company;
     this.title = data.title;
     this.description = data.description;
     this.category = data.category;
@@ -111,5 +115,8 @@ export class Job extends BaseEntity {
     this.visaSponsorship = data.visaSponsorship;
     this.residentOnly = data.residentOnly;
     this.applicationUrl = data.applicationUrl;
+    this.isPublished = data.isPublished;
+    this.isFeatured = data.isFeatured;
+    this.applicationClickCount = data.applicationClickCount;
   }
 }

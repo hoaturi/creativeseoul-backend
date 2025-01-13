@@ -27,6 +27,12 @@ export class CompanyError extends ResultError {
     'Invalid company invitation token',
   );
 
+  public static readonly InsufficientCreditBalance = new ResultError(
+    CompanyErrorCode.INSUFFICIENT_CREDIT_BALANCE,
+    HttpStatus.BAD_REQUEST,
+    'Insufficient credit balance',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
