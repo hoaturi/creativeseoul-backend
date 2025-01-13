@@ -11,6 +11,7 @@ import { SeniorityLevel } from '../../../../domain/common/entities/seniority-lev
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { Job } from '../../../../domain/job/job.entity';
+import { CreateFeaturedJobRequestDto } from '../../dtos/create-featured-job-request.dto';
 
 @CommandHandler(CreateFeaturedJobCommand)
 export class CreateFeaturedJobHandler
@@ -41,25 +42,14 @@ export class CreateFeaturedJobHandler
       return Result.failure(CompanyError.InsufficientCreditBalance);
     }
 
-    const category = this.em.getReference(Category, dto.categoryId);
-    const employmentType = this.em.getReference(
-      EmploymentType,
-      dto.employmentTypeId,
-    );
-    const seniorityLevel = this.em.getReference(
-      SeniorityLevel,
-      dto.seniorityLevelId,
-    );
-    const workLocationType = this.em.getReference(
-      WorkLocationType,
-      dto.workLocationTypeId,
-    );
-
-    const koreanLevel = this.em.getReference(LanguageLevel, dto.koreanLevelId);
-    const englishLevel = this.em.getReference(
-      LanguageLevel,
-      dto.englishLevelId,
-    );
+    const {
+      category,
+      employmentType,
+      seniorityLevel,
+      workLocationType,
+      koreanLevel,
+      englishLevel,
+    } = this.getReferences(dto);
 
     const newJob = new Job({
       company: company as Company,
@@ -89,5 +79,35 @@ export class CreateFeaturedJobHandler
     await this.em.flush();
 
     return Result.success();
+  }
+
+  private getReferences(dto: CreateFeaturedJobRequestDto) {
+    const category = this.em.getReference(Category, dto.categoryId);
+    const employmentType = this.em.getReference(
+      EmploymentType,
+      dto.employmentTypeId,
+    );
+    const seniorityLevel = this.em.getReference(
+      SeniorityLevel,
+      dto.seniorityLevelId,
+    );
+    const workLocationType = this.em.getReference(
+      WorkLocationType,
+      dto.workLocationTypeId,
+    );
+    const koreanLevel = this.em.getReference(LanguageLevel, dto.koreanLevelId);
+    const englishLevel = this.em.getReference(
+      LanguageLevel,
+      dto.englishLevelId,
+    );
+
+    return {
+      category,
+      employmentType,
+      seniorityLevel,
+      workLocationType,
+      koreanLevel,
+      englishLevel,
+    };
   }
 }
