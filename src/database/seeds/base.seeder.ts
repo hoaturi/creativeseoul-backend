@@ -7,6 +7,7 @@ import {
   LANGUAGE_LEVELS,
   LANGUAGES,
   SALARY_RANGE,
+  SENIORITY_LEVELS,
   WORK_LOCATION_TYPES,
 } from '../../domain/common/constants';
 import { Language } from '../../domain/common/entities/language.entity';
@@ -21,6 +22,7 @@ import { EmploymentType } from '../../domain/common/entities/employment-type.ent
 import { LanguageLevel } from '../../domain/common/entities/language-level.entity';
 import { CompanySize } from '../../domain/common/entities/company-size.entity';
 import { COMPANY_SIZES } from '../../domain/common/constants/company-size.constant';
+import { SeniorityLevel } from '../../domain/common/entities/seniority-level.entity';
 
 interface BaseEntity {
   id: number;
@@ -94,6 +96,12 @@ export class BaseSeeder extends Seeder {
       COMPANY_SIZES,
       CompanySize,
       'CompanySize',
+    );
+    await seedMissingEntities(
+      SeniorityLevel,
+      SENIORITY_LEVELS,
+      SeniorityLevel,
+      'SeniorityLevel',
     );
 
     await em.flush();
