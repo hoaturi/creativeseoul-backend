@@ -28,9 +28,8 @@ const COMPANY_FIELDS = [
   'jobs.employmentType.label',
   'jobs.minSalary',
   'jobs.maxSalary',
-  'jobs.salaryType',
-  'jobs.requiredKoreanLevel.label',
-  'jobs.requiresKoreanResidency',
+  'jobs.koreanLevel.label',
+  'jobs.residentOnly',
   'jobs.tags',
   'jobs.isFeatured',
 ] as const;
@@ -99,9 +98,8 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
         employmentType: job.employmentType.label,
         minSalary: job.minSalary,
         maxSalary: job.maxSalary,
-        salaryType: job.salaryType,
-        requiredKoreanLevel: job.requiredKoreanLevel.label,
-        requiresKoreanResidency: job.requiresKoreanResidency,
+        koreanLevel: job.koreanLevel.label,
+        residentOnly: job.residentOnly,
         tags: job.tags,
         isFeatured: job.isFeatured,
       });

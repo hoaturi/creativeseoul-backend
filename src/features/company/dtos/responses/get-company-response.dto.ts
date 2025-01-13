@@ -36,11 +36,9 @@ export class CompanyJobItemResponseDto {
 
   public readonly maxSalary?: number;
 
-  public readonly salaryType!: string;
+  public readonly koreanLevel!: string;
 
-  public readonly requiredKoreanLevel!: string;
-
-  public readonly requiresKoreanResidency!: boolean;
+  public readonly residentOnly!: boolean;
 
   public readonly tags?: string[];
 
@@ -54,9 +52,8 @@ export class CompanyJobItemResponseDto {
     employmentType: string;
     minSalary?: number;
     maxSalary?: number;
-    salaryType: string;
-    requiredKoreanLevel: string;
-    requiresKoreanResidency: boolean;
+    koreanLevel: string;
+    residentOnly: boolean;
     tags?: string[];
     isFeatured: boolean;
   }) {
@@ -67,9 +64,8 @@ export class CompanyJobItemResponseDto {
     this.employmentType = data.employmentType;
     this.minSalary = data.minSalary;
     this.maxSalary = data.maxSalary;
-    this.salaryType = data.salaryType;
-    this.requiredKoreanLevel = data.requiredKoreanLevel;
-    this.requiresKoreanResidency = data.requiresKoreanResidency;
+    this.koreanLevel = data.koreanLevel;
+    this.residentOnly = data.residentOnly;
     this.tags = data.tags;
     this.isFeatured = data.isFeatured;
   }

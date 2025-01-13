@@ -1,9 +1,8 @@
 import { BaseEntity } from '../base.entity';
 import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
-import { Enum, Property } from '@mikro-orm/postgresql';
+import { Property } from '@mikro-orm/postgresql';
 import { Company } from '../company/company.entity';
 import { Category } from '../common/entities/category.entity';
-import { SALARY_TYPES, SalaryType } from './salary-type.constant';
 import { EmploymentType } from '../common/entities/employment-type.entity';
 import { SeniorityLevel } from '../common/entities/seniority-level.entity';
 import { WorkLocationType } from '../common/entities/work-location-type.entity';
@@ -35,11 +34,10 @@ export class Job extends BaseEntity {
   @ManyToOne(() => SeniorityLevel)
   public seniorityLevel!: SeniorityLevel;
 
-  // Location
   @ManyToOne(() => WorkLocationType)
   public workLocationType!: WorkLocationType;
 
-  @Property({ nullable: true })
+  @Property({ length: 64 })
   public location?: string;
 
   // Compensation
@@ -49,25 +47,21 @@ export class Job extends BaseEntity {
   @Property({ nullable: true })
   public maxSalary?: number;
 
-  @Property({ nullable: true })
-  @Enum(() => SALARY_TYPES.map((type) => type.label))
-  public salaryType!: SalaryType;
-
   // Requirements
   @Property({ type: 'array', nullable: true })
   public tags?: string[];
 
   @ManyToOne(() => LanguageLevel)
-  public requiredKoreanLevel!: LanguageLevel;
+  public koreanLevel!: LanguageLevel;
 
   @ManyToOne(() => LanguageLevel)
-  public requiredEnglishLevel!: LanguageLevel;
+  public englishLevel!: LanguageLevel;
 
   @Property()
-  public providesVisaSponsorship!: boolean;
+  public visaSponsorship!: boolean;
 
   @Property()
-  public requiresKoreanResidency!: boolean;
+  public residentOnly!: boolean;
 
   // Application
   @Property()
@@ -82,4 +76,40 @@ export class Job extends BaseEntity {
 
   @Property({ default: 0 })
   public applicationClickCount!: number;
+
+  public constructor(data: {
+    company?: Company;
+    title: string;
+    description: string;
+    category: Category;
+    employmentType: EmploymentType;
+    seniorityLevel: SeniorityLevel;
+    workLocationType: WorkLocationType;
+    location?: string;
+    minSalary?: number;
+    maxSalary?: number;
+    tags?: string[];
+    koreanLevel: LanguageLevel;
+    englishLevel: LanguageLevel;
+    visaSponsorship: boolean;
+    residentOnly: boolean;
+    applicationUrl: string;
+  }) {
+    super();
+    this.title = data.title;
+    this.description = data.description;
+    this.category = data.category;
+    this.employmentType = data.employmentType;
+    this.seniorityLevel = data.seniorityLevel;
+    this.workLocationType = data.workLocationType;
+    this.location = data.location;
+    this.minSalary = data.minSalary;
+    this.maxSalary = data.maxSalary;
+    this.tags = data.tags;
+    this.koreanLevel = data.koreanLevel;
+    this.englishLevel = data.englishLevel;
+    this.visaSponsorship = data.visaSponsorship;
+    this.residentOnly = data.residentOnly;
+    this.applicationUrl = data.applicationUrl;
+  }
 }
