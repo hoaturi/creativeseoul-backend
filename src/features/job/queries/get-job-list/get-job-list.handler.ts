@@ -95,7 +95,10 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
     });
   }
 
-  private applyFilters(where: QBFilterQuery<Job>, dto: GetJobListQueryDto) {
+  private applyFilters(
+    where: QBFilterQuery<Job>,
+    dto: GetJobListQueryDto,
+  ): void {
     const {
       search,
       categoryIds,
@@ -106,7 +109,7 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
       residentOnly,
     } = dto;
 
-    if (dto.search) {
+    if (search) {
       const formattedSearch = search
         .split(' ')
         .map((word) => word.trim())

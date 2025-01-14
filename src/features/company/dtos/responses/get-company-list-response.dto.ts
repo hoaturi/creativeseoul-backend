@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CompanyListItemDto {
   @ApiProperty()
@@ -10,24 +10,24 @@ export class CompanyListItemDto {
   @ApiProperty()
   public readonly summary: string;
 
-  @ApiProperty()
-  public readonly logoUrl: string;
+  @ApiPropertyOptional()
+  public readonly logoUrl?: string;
 
   @ApiProperty()
   public readonly totalJobs: number;
 
-  public constructor(
-    id: string,
-    name: string,
-    summary: string,
-    logoUrl: string,
-    totalJobs: number,
-  ) {
-    this.id = id;
-    this.name = name;
-    this.summary = summary;
-    this.logoUrl = logoUrl;
-    this.totalJobs = totalJobs;
+  public constructor(data: {
+    id: string;
+    name: string;
+    summary: string;
+    logoUrl?: string;
+    totalJobs: number;
+  }) {
+    this.id = data.id;
+    this.name = data.name;
+    this.summary = data.summary;
+    this.logoUrl = data.logoUrl;
+    this.totalJobs = data.totalJobs;
   }
 }
 

@@ -121,8 +121,6 @@ export class TalentController {
     }
 
     session.user.profileId = result.value;
-
-    return;
   }
 
   @Put('me')
@@ -149,7 +147,5 @@ export class TalentController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 }

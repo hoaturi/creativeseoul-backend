@@ -12,6 +12,16 @@ import { LanguageLevel } from '../../../../domain/common/entities/language-level
 import { CreateRegularJobRequestDto } from '../../dtos/create-regular-job-request.dto';
 import slugify from 'slugify';
 import { Company } from '../../../../domain/company/company.entity';
+import { CompanyError } from '../../../company/company.error';
+
+interface JobReferences {
+  category: Category;
+  employmentType: EmploymentType;
+  seniorityLevel: SeniorityLevel;
+  workLocationType: WorkLocationType;
+  koreanLevel: LanguageLevel;
+  englishLevel: LanguageLevel;
+}
 
 @CommandHandler(CreateRegularJobCommand)
 export class CreateRegularJobHandler
@@ -40,6 +50,10 @@ export class CreateRegularJobHandler
         fields: ['name'],
       },
     );
+
+    if (!company) {
+      return Result.failure(CompanyError.ProfileNotFound);
+    }
 
     const randomStr = Math.random().toString(36).substring(2, 8);
     const slug =
@@ -74,14 +88,7 @@ export class CreateRegularJobHandler
     return Result.success();
   }
 
-  private getReferences(dto: CreateRegularJobRequestDto): {
-    category: Category;
-    employmentType: EmploymentType;
-    seniorityLevel: SeniorityLevel;
-    workLocationType: WorkLocationType;
-    koreanLevel: LanguageLevel;
-    englishLevel: LanguageLevel;
-  } {
+  private getReferences(dto: CreateRegularJobRequestDto): JobReferences {
     const category = this.em.getReference(Category, dto.categoryId);
     const employmentType = this.em.getReference(
       EmploymentType,

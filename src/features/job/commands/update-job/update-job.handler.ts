@@ -14,6 +14,15 @@ import { LanguageLevel } from '../../../../domain/common/entities/language-level
 import { Logger } from '@nestjs/common';
 import { UpdateJobRequestDto } from '../../dtos/update-job-request.dto';
 
+interface JobReferences {
+  category: Category;
+  employmentType: EmploymentType;
+  seniorityLevel: SeniorityLevel;
+  workLocationType: WorkLocationType;
+  koreanLevel: LanguageLevel;
+  englishLevel: LanguageLevel;
+}
+
 @CommandHandler(UpdateJobCommand)
 export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
   private readonly logger = new Logger(UpdateJobHandler.name);
@@ -106,7 +115,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
     return Result.success();
   }
 
-  private getReferences(dto: UpdateJobRequestDto) {
+  private getReferences(dto: UpdateJobRequestDto): JobReferences {
     const category = this.em.getReference(Category, dto.categoryId);
     const employmentType = this.em.getReference(
       EmploymentType,

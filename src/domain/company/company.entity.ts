@@ -27,7 +27,7 @@ export class Company {
   public user?: User;
 
   @Property({ length: 64 })
-  public name!: string;
+  public name: string;
 
   @Property({ length: 128, nullable: true })
   public summary?: string;
@@ -68,7 +68,7 @@ export class Company {
     (alias) =>
       `(SELECT COUNT(*)::int FROM job j WHERE j.company_id = ${alias}.id)`,
   )
-  public readonly jobCount!: number;
+  public readonly totalJobs!: number;
 
   @Property({ nullable: true })
   public creditBalance: number;
@@ -94,6 +94,7 @@ export class Company {
     size?: CompanySize;
     socialLinks?: CompanySocialLinks;
     user?: User;
+    creditBalance: number;
   }) {
     this.isClaimed = data.isClaimed;
     this.name = data.name;
@@ -105,5 +106,6 @@ export class Company {
     this.size = data.size;
     this.socialLinks = data.socialLinks;
     this.user = data.user;
+    this.creditBalance = data.creditBalance;
   }
 }

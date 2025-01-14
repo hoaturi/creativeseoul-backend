@@ -21,6 +21,16 @@ import { TalentLanguageDto } from '../../dtos/requests/talent-language.dto';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { CreateTalentRequestDto } from '../../dtos/requests/create-talent-request.dto';
 
+interface LocationRefs {
+  city?: City;
+  country: Country;
+}
+
+interface CompensationRefs {
+  salaryRange?: SalaryRange;
+  hourlyRateRange?: HourlyRateRange;
+}
+
 @CommandHandler(CreateTalentCommand)
 export class CreateTalentHandler
   implements ICommandHandler<CreateTalentCommand>
@@ -75,7 +85,7 @@ export class CreateTalentHandler
     } = dto;
 
     const userRef = this.em.getReference(User, userId);
-    const { city, country } = await this.getLocation(cityName, countryId);
+    const { city, country } = await this.getLocation(countryId, cityName);
     const { salaryRange, hourlyRateRange } = this.getCompensationRefs(
       salaryRangeId,
       hourlyRateRangeId,
@@ -93,8 +103,16 @@ export class CreateTalentHandler
     );
   }
 
-  private async getLocation(cityName: string, countryId: number) {
+  private async getLocation(
+    countryId: number,
+    cityName?: string,
+  ): Promise<LocationRefs> {
     const country = this.em.getReference(Country, countryId);
+
+    if (!cityName) {
+      return { country };
+    }
+
     const slug = slugify(cityName, { lower: true });
 
     let city = await this.em.findOne(City, { slug, country });
@@ -105,7 +123,10 @@ export class CreateTalentHandler
     return { city, country };
   }
 
-  private getCompensationRefs(salaryId?: number, hourlyId?: number) {
+  private getCompensationRefs(
+    salaryId?: number,
+    hourlyId?: number,
+  ): CompensationRefs {
     const salaryRange = salaryId
       ? this.em.getReference(SalaryRange, salaryId)
       : undefined;

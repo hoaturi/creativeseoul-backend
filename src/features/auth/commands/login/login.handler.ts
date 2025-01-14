@@ -53,14 +53,14 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       return Result.failure(AuthError.EmailNotVerified);
     }
 
-    let profileId: string;
+    let profileId: string | undefined;
 
     switch (user.role) {
       case UserRole.TALENT:
         profileId = user.talent?.id;
         break;
       case UserRole.COMPANY:
-        profileId = user.company.id;
+        profileId = user.company?.id;
         break;
     }
 

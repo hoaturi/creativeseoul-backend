@@ -10,15 +10,15 @@ import {
 export class SendInvitationRequestDto {
   @ApiProperty()
   @IsEmail()
-  public readonly email: string;
+  public readonly email!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
-  public readonly companyName: string;
+  public readonly companyName!: string;
 
   @ApiProperty()
   @IsUrl()
-  public readonly websiteUrl: string;
+  public readonly websiteUrl!: string;
 }

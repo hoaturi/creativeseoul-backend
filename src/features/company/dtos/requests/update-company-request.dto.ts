@@ -21,37 +21,36 @@ export class UpdateCompanyRequestDto {
   @IsNotEmpty()
   @MaxLength(64)
   @Trim()
-  public readonly name: string;
+  public readonly name!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(128)
   @Trim()
-  public readonly summary: string;
+  public readonly summary!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Trim()
-  public readonly description: string;
+  public readonly description!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsUrl()
   public readonly logoUrl?: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @IsUrl()
-  public readonly websiteUrl?: string;
+  public readonly websiteUrl!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
   @Trim()
-  public readonly location: string;
+  public readonly location!: string;
 
   @ApiPropertyOptional()
   @IsOptional()

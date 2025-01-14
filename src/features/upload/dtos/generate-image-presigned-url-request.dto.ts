@@ -9,16 +9,16 @@ export class GenerateImagePresignedUrlRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly mimeType: string;
+  public readonly mimeType!: string;
 
   @ApiProperty()
   @IsNumber()
-  public readonly originalFileSize: number;
+  public readonly originalFileSize!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(0)
   @Max(512 * 1024)
   @IsLessThan('originalFileSize')
-  public readonly compressedFileSize: number;
+  public readonly compressedFileSize!: number;
 }

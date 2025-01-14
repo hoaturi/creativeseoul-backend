@@ -27,57 +27,57 @@ export class CreateRegularJobRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly companyId: string;
+  public readonly companyId!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
-  public readonly title: string;
+  public readonly title!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly description: string;
+  public readonly description!: string;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(CATEGORIES.length)
-  public readonly categoryId: number;
+  public readonly categoryId!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(EMPLOYMENT_TYPES.length)
-  public readonly employmentTypeId: number;
+  public readonly employmentTypeId!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(SENIORITY_LEVELS.length)
-  public readonly seniorityLevelId: number;
+  public readonly seniorityLevelId!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(WORK_LOCATION_TYPES.length)
-  public readonly workLocationTypeId: number;
+  public readonly workLocationTypeId!: number;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly location: string;
+  public readonly location!: string;
 
   @ApiProperty()
   @IsNumber()
   @Min(0)
-  public readonly minSalary: number;
+  public readonly minSalary!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(0)
-  public readonly maxSalary: number;
+  public readonly maxSalary!: number;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -94,19 +94,19 @@ export class CreateRegularJobRequestDto {
   @IsNumber()
   @Min(1)
   @Max(LANGUAGE_LEVELS.length)
-  public readonly koreanLevelId: number;
+  public readonly koreanLevelId!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(LANGUAGE_LEVELS.length)
-  public readonly englishLevelId: number;
+  public readonly englishLevelId!: number;
 
   @ApiProperty()
   @IsBoolean()
-  public readonly residentOnly: boolean;
+  public readonly residentOnly!: boolean;
 
   @ApiProperty()
   @IsUrl()
-  public readonly applicationUrl: string;
+  public readonly applicationUrl!: string;
 }

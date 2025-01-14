@@ -19,7 +19,7 @@ export class User extends BaseEntity {
   @OneToOne(() => Talent, (talent) => talent.user, {
     cascade: [Cascade.REMOVE],
   })
-  public readonly talent: Talent;
+  public readonly talent?: Talent;
 
   @OneToOne(() => Company, (company) => company.user, {
     cascade: [Cascade.REMOVE],
@@ -28,13 +28,13 @@ export class User extends BaseEntity {
 
   @Property({ unique: true, length: 256 })
   @Index()
-  public email!: string;
+  public email: string;
 
   @Property({ length: 128 })
-  public password!: string;
+  public password: string;
 
   @Enum(() => UserRole)
-  public readonly role!: UserRole;
+  public readonly role: UserRole;
 
   @Property({ default: false })
   public isVerified!: boolean;

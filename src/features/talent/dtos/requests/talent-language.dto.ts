@@ -10,11 +10,11 @@ export class TalentLanguageDto {
   @IsNumber()
   @Min(1)
   @Max(LANGUAGES.length)
-  public readonly languageId: number;
+  public readonly languageId!: number;
 
   @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(LANGUAGE_LEVELS.length)
-  public readonly levelId: number;
+  public readonly levelId!: number;
 }

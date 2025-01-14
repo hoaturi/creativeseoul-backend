@@ -29,13 +29,13 @@ export class ResetPasswordHandler
         expiresAt: { $gt: new Date() },
       },
       {
-        fields: ['id', 'usedAt', 'user'],
+        fields: ['id', 'usedAt', 'user.password'],
       },
     );
 
     if (!resetToken) {
       this.logger.log(
-        { token, userId: resetToken?.user.id },
+        { token },
         'auth.reset-password.failed: Invalid or expired token',
       );
       return Result.failure(AuthError.InvalidToken);

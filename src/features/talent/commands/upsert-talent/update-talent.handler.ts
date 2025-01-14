@@ -20,6 +20,11 @@ import { EmploymentType } from '../../../../domain/common/entities/employment-ty
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { TalentError } from '../../talent.error';
 
+interface LocationRefs {
+  city?: City;
+  country: Country;
+}
+
 @CommandHandler(UpdateTalentCommand)
 export class UpdateTalentHandler
   implements ICommandHandler<UpdateTalentCommand>
@@ -37,7 +42,7 @@ export class UpdateTalentHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, user } = command;
 
-    const talent = await this.em.findOne(Talent, user.profileId, {
+    const talent = await this.em.findOne(Talent, user.profileId!, {
       populate: ['languages', 'city', 'country'],
     });
 
@@ -64,7 +69,7 @@ export class UpdateTalentHandler
     talent: Talent,
     dto: UpdateTalentRequestDto,
   ): Promise<void> {
-    const { city, country } = await this.getLocation(dto.city, dto.countryId);
+    const { city, country } = await this.getLocation(dto.countryId, dto.city);
     const { salaryRange, hourlyRateRange } = this.getCompensationRefs(
       dto.salaryRangeId,
       dto.hourlyRateRangeId,
@@ -154,13 +159,14 @@ export class UpdateTalentHandler
   }
 
   private async getLocation(
-    cityName: string,
     countryId: number,
-  ): Promise<{
-    city: City;
-    country: Country;
-  }> {
+    cityName?: string,
+  ): Promise<LocationRefs> {
     const country = this.em.getReference(Country, countryId);
+
+    if (!cityName) {
+      return { country };
+    }
 
     const slug = slugify(cityName, { lower: true });
     let city = await this.em.findOne(City, { slug, country });

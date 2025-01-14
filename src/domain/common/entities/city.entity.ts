@@ -11,7 +11,7 @@ import {
 @Unique({ properties: ['label', 'country'] })
 export class City {
   @PrimaryKey()
-  public readonly id: number;
+  public readonly id!: number;
 
   @Property({ length: 32, unique: true })
   public readonly label: string;

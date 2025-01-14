@@ -64,8 +64,9 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
     const companyDto = new JobCompanyDto({
       id: job.company.id,
       name: job.company.name,
+      description: job.company.description!,
       logoUrl: job.company.logoUrl,
-      size: job.company.size.label,
+      size: job.company.size?.label,
     });
 
     const responseDto = new GetJobResponseDto({

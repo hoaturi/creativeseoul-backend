@@ -23,15 +23,15 @@ export class GeneratePresignedUrlHandler
   public async execute(
     command: GeneratePresignedUrlCommand,
   ): Promise<Result<GeneratePresignedUrlResponseDto, ResultError>> {
-    const user = await this.em.findOne(User, command.userId, {
+    const user = (await this.em.findOne(User, command.userId, {
       fields: ['talent'],
-    });
+    })) as User;
 
     let filePrefix: string;
 
     switch (command.assetType) {
       case AssetType.Avatar: {
-        if (!user.talent.id) {
+        if (!user.talent) {
           return Result.failure(TalentError.ProfileNotFound);
         }
 
@@ -39,7 +39,7 @@ export class GeneratePresignedUrlHandler
         break;
       }
       default: {
-        filePrefix = user.talent.id;
+        return Result.success();
       }
     }
 

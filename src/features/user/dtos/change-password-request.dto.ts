@@ -6,13 +6,13 @@ import { ApiProperty } from '@nestjs/swagger';
 export class ChangePasswordRequestDto {
   @ApiProperty()
   @IsString()
-  public readonly currentPassword: string;
+  public readonly currentPassword!: string;
 
   @ApiProperty()
   @IsPassword()
-  public readonly newPassword: string;
+  public readonly newPassword!: string;
 
   @ApiProperty()
   @MatchesProperty('newPassword')
-  public readonly confirmPassword: string;
+  public readonly confirmPassword!: string;
 }

@@ -15,7 +15,7 @@ export class GetTalentListItemDto {
   public readonly bio: string;
 
   @ApiPropertyOptional()
-  public readonly avatarUrl: string;
+  public readonly avatarUrl?: string;
 
   @ApiProperty({
     type: TalentLocationDto,
@@ -39,9 +39,18 @@ export class GetTalentListItemDto {
     avatarUrl?: string;
     location: TalentLocationDto;
     isAvailable: boolean;
+    requiresVisaSponsorship: boolean;
     skills?: string[];
   }) {
-    Object.assign(this, data);
+    this.id = data.id;
+    this.fullName = data.fullName;
+    this.title = data.title;
+    this.bio = data.bio;
+    this.avatarUrl = data.avatarUrl;
+    this.location = data.location;
+    this.isAvailable = data.isAvailable;
+    this.requiresVisaSponsorship = data.requiresVisaSponsorship;
+    this.skills = data.skills;
   }
 }
 

@@ -2,20 +2,18 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TalentLocationDto } from './talent-location.dto';
 import { TalentLanguageProficiencyDto } from './talent-language-proficiency.dto';
 import { TalentSocialLinksDto } from './talent-social-links.dto';
-import { TalentSalaryRangeDto } from './talent-salary-range.dto';
-import { TalentHourlyRateRangeDto } from './talent-hourly-rate-range.dto';
 import { TalentWorkLocationTypeDto } from './talent-work-location-type.dto';
 import { TalentEmploymentTypeDto } from './talent-employment-type.dto';
 
 export class GetTalentResponseDto {
   @ApiProperty()
-  public readonly fullName: string;
+  public readonly fullName!: string;
 
   @ApiProperty()
-  public readonly title: string;
+  public readonly title!: string;
 
   @ApiProperty()
-  public readonly bio: string;
+  public readonly bio!: string;
 
   @ApiPropertyOptional()
   public readonly avatarUrl?: string;
@@ -23,12 +21,12 @@ export class GetTalentResponseDto {
   @ApiProperty({
     type: TalentLocationDto,
   })
-  public readonly location: TalentLocationDto;
+  public readonly location!: TalentLocationDto;
 
   @ApiProperty({
     type: [TalentLanguageProficiencyDto],
   })
-  public readonly languages: TalentLanguageProficiencyDto[];
+  public readonly languages!: TalentLanguageProficiencyDto[];
 
   @ApiPropertyOptional({
     type: TalentSocialLinksDto,
@@ -36,7 +34,7 @@ export class GetTalentResponseDto {
   public readonly socialLinks?: TalentSocialLinksDto;
 
   @ApiProperty()
-  public readonly isAvailable: boolean;
+  public readonly isAvailable!: boolean;
 
   @ApiPropertyOptional()
   public readonly salaryRange?: string;
@@ -44,11 +42,15 @@ export class GetTalentResponseDto {
   @ApiPropertyOptional()
   public readonly hourlyRateRange?: string;
 
-  @ApiProperty()
-  public readonly locationTypes: string[];
+  @ApiProperty({
+    type: [TalentWorkLocationTypeDto],
+  })
+  public readonly workLocationTypes!: TalentWorkLocationTypeDto[];
 
-  @ApiProperty()
-  public readonly employmentTypes: string[];
+  @ApiProperty({
+    type: [TalentEmploymentTypeDto],
+  })
+  public readonly employmentTypes!: TalentEmploymentTypeDto[];
 
   @ApiPropertyOptional()
   public readonly skills?: string[];
@@ -68,14 +70,28 @@ export class GetTalentResponseDto {
     languages: TalentLanguageProficiencyDto[];
     socialLinks?: TalentSocialLinksDto;
     isAvailable: boolean;
-    salaryRange?: TalentSalaryRangeDto;
-    hourlyRateRange?: TalentHourlyRateRangeDto;
+    salaryRange?: string;
+    hourlyRateRange?: string;
     workLocationTypes: TalentWorkLocationTypeDto[];
     employmentTypes: TalentEmploymentTypeDto[];
     skills?: string[];
     email?: string;
     phone?: string;
   }) {
-    Object.assign(this, data);
+    this.fullName = data.fullName;
+    this.title = data.title;
+    this.bio = data.bio;
+    this.avatarUrl = data.avatarUrl;
+    this.location = data.location;
+    this.languages = data.languages;
+    this.socialLinks = data.socialLinks;
+    this.isAvailable = data.isAvailable;
+    this.salaryRange = data.salaryRange;
+    this.hourlyRateRange = data.hourlyRateRange;
+    this.workLocationTypes = data.workLocationTypes;
+    this.employmentTypes = data.employmentTypes;
+    this.skills = data.skills;
+    this.email = data.email;
+    this.phone = data.phone;
   }
 }

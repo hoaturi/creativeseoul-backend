@@ -25,33 +25,33 @@ export class Job extends BaseEntity {
   public readonly id!: string;
 
   @Property({ unique: true })
-  public readonly slug!: string;
+  public readonly slug: string;
 
   // Basic Info
   @Property({ length: 64 })
-  public title!: string;
+  public title: string;
 
   @Property()
-  public description!: string;
+  public description: string;
 
   @ManyToOne(() => Company)
-  public company!: Company;
+  public company: Company;
 
   // Job Details
   @ManyToOne(() => Category)
-  public category!: Category;
+  public category: Category;
 
   @ManyToOne(() => EmploymentType)
-  public employmentType!: EmploymentType;
+  public employmentType: EmploymentType;
 
   @ManyToOne(() => SeniorityLevel)
-  public seniorityLevel!: SeniorityLevel;
+  public seniorityLevel: SeniorityLevel;
 
   @ManyToOne(() => WorkLocationType)
-  public workLocationType!: WorkLocationType;
+  public workLocationType: WorkLocationType;
 
   @Property({ length: 64 })
-  public location!: string;
+  public location: string;
 
   // Compensation
   @Property({ nullable: true })
@@ -65,30 +65,30 @@ export class Job extends BaseEntity {
   public tags?: string[];
 
   @ManyToOne(() => LanguageLevel)
-  public koreanLevel!: LanguageLevel;
+  public koreanLevel: LanguageLevel;
 
   @ManyToOne(() => LanguageLevel)
-  public englishLevel!: LanguageLevel;
+  public englishLevel: LanguageLevel;
 
   @Property()
   @Index()
-  public residentOnly!: boolean;
+  public residentOnly: boolean;
 
   // Application
   @Property()
-  public applicationUrl!: string;
+  public applicationUrl: string;
 
   // Status
   @Property()
   @Index()
-  public isPublished!: boolean;
+  public isPublished: boolean;
 
   @Property()
   @Index()
-  public isFeatured!: boolean;
+  public isFeatured: boolean;
 
   @Property()
-  public applicationClickCount!: number;
+  public applicationClickCount: number;
 
   // Search
   @Index({ type: 'fulltext' })
@@ -108,7 +108,7 @@ export class Job extends BaseEntity {
     employmentType: EmploymentType;
     seniorityLevel: SeniorityLevel;
     workLocationType: WorkLocationType;
-    location?: string;
+    location: string;
     minSalary?: number;
     maxSalary?: number;
     tags?: string[];

@@ -19,6 +19,15 @@ import {
 import { Logger } from '@nestjs/common';
 import slugify from 'slugify';
 
+interface JobReferences {
+  category: Category;
+  employmentType: EmploymentType;
+  seniorityLevel: SeniorityLevel;
+  workLocationType: WorkLocationType;
+  koreanLevel: LanguageLevel;
+  englishLevel: LanguageLevel;
+}
+
 @CommandHandler(CreateFeaturedJobCommand)
 export class CreateFeaturedJobHandler
   implements ICommandHandler<CreateFeaturedJobCommand>
@@ -35,7 +44,7 @@ export class CreateFeaturedJobHandler
     const company = await this.em.findOne(
       Company,
       {
-        id: user.profileId,
+        id: user.profileId!,
       },
       {
         fields: ['id', 'name', 'creditBalance'],
@@ -109,7 +118,7 @@ export class CreateFeaturedJobHandler
     return Result.success();
   }
 
-  private getReferences(dto: CreateFeaturedJobRequestDto) {
+  private getReferences(dto: CreateFeaturedJobRequestDto): JobReferences {
     const category = this.em.getReference(Category, dto.categoryId);
     const employmentType = this.em.getReference(
       EmploymentType,

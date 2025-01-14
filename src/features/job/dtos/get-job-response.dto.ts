@@ -10,20 +10,22 @@ export class JobCompanyDto {
   @ApiProperty()
   public readonly description: string;
 
-  @ApiProperty()
-  public readonly logoUrl: string;
+  @ApiPropertyOptional()
+  public readonly logoUrl?: string;
 
-  @ApiProperty()
-  public readonly size: string;
+  @ApiPropertyOptional()
+  public readonly size?: string;
 
   public constructor(data: {
     id: string;
     name: string;
-    logoUrl: string;
-    size: string;
+    description: string;
+    logoUrl?: string;
+    size?: string;
   }) {
     this.id = data.id;
     this.name = data.name;
+    this.description = data.description;
     this.logoUrl = data.logoUrl;
     this.size = data.size;
   }

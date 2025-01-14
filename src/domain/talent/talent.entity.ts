@@ -40,21 +40,21 @@ export class Talent extends BaseEntity {
     owner: true,
     deleteRule: 'cascade',
   })
-  public readonly user!: User;
+  public readonly user: User;
 
   // Basic profile information
   @Property({ length: 16 })
   @Index()
-  public handle!: string;
+  public handle: string;
 
   @Property({ length: 64 })
   public fullName: string;
 
   @Property({ length: 128 })
-  public title!: string;
+  public title: string;
 
   @Property({ length: 2048 })
-  public bio!: string;
+  public bio: string;
 
   @Property({ nullable: true })
   public avatarUrl?: string;
@@ -64,7 +64,7 @@ export class Talent extends BaseEntity {
   public city?: City;
 
   @ManyToOne(() => Country)
-  public country!: Country;
+  public country: Country;
 
   // Skills and languages
   @Property({ type: 'array', nullable: true })
@@ -78,11 +78,11 @@ export class Talent extends BaseEntity {
   // Employment preferences
   @Property()
   @Index()
-  public isAvailable!: boolean;
+  public isAvailable: boolean;
 
   @Property()
   @Index()
-  public requiresVisaSponsorship!: boolean;
+  public requiresVisaSponsorship: boolean;
 
   @ManyToOne(() => SalaryRange, { nullable: true })
   public salaryRange?: SalaryRange;
@@ -100,7 +100,7 @@ export class Talent extends BaseEntity {
 
   // Contact information
   @Property()
-  public isContactable!: boolean;
+  public isContactable: boolean;
 
   @Property({ nullable: true })
   public email?: string;
@@ -113,11 +113,11 @@ export class Talent extends BaseEntity {
 
   // Visibility and status
   @Property()
-  public isPublic!: boolean;
+  public isPublic: boolean;
 
   @Property({ nullable: true })
   @Index()
-  public qualityScore: number;
+  public qualityScore?: number;
 
   @Property({ nullable: true })
   @Index()

@@ -71,7 +71,7 @@ export class GetTalentAsMemberHandler
   private mapToResponseDto(talent: LoadedTalent): GetTalentAsMemberResponseDto {
     const location = new TalentLocationDto(
       talent.country.label,
-      talent.city.label,
+      talent.city?.label,
     );
 
     const socialLinks = new TalentSocialLinksDto(talent.socialLinks);

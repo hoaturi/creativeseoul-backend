@@ -73,8 +73,6 @@ export class CompanyController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Post('invitations/accept')
@@ -109,8 +107,6 @@ export class CompanyController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Put('me')
@@ -137,8 +133,6 @@ export class CompanyController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Get()

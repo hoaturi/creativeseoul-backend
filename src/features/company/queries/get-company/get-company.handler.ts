@@ -43,6 +43,17 @@ type JobFields =
 type LoadedCompany = Loaded<Company, never, CompanyFields>;
 type LoadedJobs = LoadedCollection<Loaded<Job, never, JobFields>>;
 
+interface CompanyBasicInfo {
+  name: string;
+  summary: string;
+  description: string;
+  logoUrl?: string;
+  websiteUrl: string;
+  location: string;
+  size?: string;
+  socialLinks?: CompanySocialLinksDto;
+}
+
 @QueryHandler(GetCompanyQuery)
 export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
   public constructor(private readonly em: EntityManager) {}
@@ -70,19 +81,19 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
     return Result.success(responseDto);
   }
 
-  private mapBasicInfo(company: LoadedCompany) {
+  private mapBasicInfo(company: LoadedCompany): CompanyBasicInfo {
     const size = company.size?.label;
     const socialLinks = company.socialLinks
       ? new CompanySocialLinksDto(company.socialLinks)
-      : null;
+      : undefined;
 
     return {
       name: company.name,
-      summary: company.summary,
-      description: company.description,
+      summary: company.summary!,
+      description: company.description!,
       logoUrl: company.logoUrl,
       websiteUrl: company.websiteUrl,
-      location: company.location,
+      location: company.location!,
       size,
       socialLinks,
     };

@@ -77,7 +77,7 @@ export class JobController {
   public async createFeaturedJob(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateFeaturedJobRequestDto,
-  ) {
+  ): Promise<void> {
     const command = new CreateFeaturedJobCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
@@ -85,8 +85,6 @@ export class JobController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Post('regular')
@@ -103,7 +101,9 @@ export class JobController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
-  public async createRegularJob(@Body() dto: CreateRegularJobRequestDto) {
+  public async createRegularJob(
+    @Body() dto: CreateRegularJobRequestDto,
+  ): Promise<void> {
     const command = new CreateRegularJobCommand(dto);
 
     const result = await this.commandBus.execute(command);
@@ -111,8 +111,6 @@ export class JobController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Get()
@@ -187,7 +185,7 @@ export class JobController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('slug') slug: string,
     @Body() dto: UpdateJobRequestDto,
-  ) {
+  ): Promise<void> {
     const command = new UpdateJobCommand(user, slug, dto);
 
     const result = await this.commandBus.execute(command);
@@ -195,7 +193,5 @@ export class JobController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 }

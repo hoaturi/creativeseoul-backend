@@ -6,7 +6,7 @@ import { ResultError } from '../../../../common/result/result-error';
 export class GetTalentAsMemberListQuery extends Query<
   Result<GetTalentAsMemberListResponseDto, ResultError>
 > {
-  public constructor(public readonly page: number) {
+  public constructor(public readonly page?: number) {
     super();
   }
 }

@@ -5,13 +5,13 @@ import { IsPassword } from '../../../../common/decorators/is-password.decorator'
 export class AcceptInvitationRequestDto {
   @ApiProperty()
   @IsEmail()
-  public readonly email: string;
+  public readonly email!: string;
 
   @ApiProperty()
   @IsPassword()
-  public readonly password: string;
+  public readonly password!: string;
 
   @ApiProperty()
   @IsString()
-  public readonly token: string;
+  public readonly token!: string;
 }

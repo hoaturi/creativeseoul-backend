@@ -50,7 +50,7 @@ export class GetTalentAsMemberListHandler
     const responseDto = talents.map((talent) => {
       const location = new TalentLocationDto(
         talent.country.label,
-        talent.city.label,
+        talent.city?.label,
       );
 
       return new GetTalentAsMemberItemDto({

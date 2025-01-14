@@ -14,7 +14,7 @@ const COMPANY_FIELDS = [
   'name',
   'summary',
   'logoUrl',
-  'jobCount',
+  'totalJobs',
 ] as const;
 
 @QueryHandler(GetCompanyListQuery)
@@ -40,13 +40,13 @@ export class GetCompanyListHandler
 
     const companyDtos = companies.map(
       (company) =>
-        new CompanyListItemDto(
-          company.id,
-          company.name,
-          company.summary,
-          company.logoUrl,
-          company.jobCount,
-        ),
+        new CompanyListItemDto({
+          id: company.id,
+          name: company.name,
+          summary: company.summary!,
+          logoUrl: company.logoUrl,
+          totalJobs: company.totalJobs,
+        }),
     );
 
     return Result.success(new GetCompanyListResponseDto(companyDtos, count));

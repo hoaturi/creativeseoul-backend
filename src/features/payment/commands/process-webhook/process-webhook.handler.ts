@@ -1,6 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ProcessWebhookCommand } from './process-webhook.command';
-import { StripeService } from '../../../../infrastructure/services/stripe/stripe.service';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
@@ -21,10 +20,7 @@ import { Stripe } from 'stripe';
 export class ProcessWebhookHandler
   implements ICommandHandler<ProcessWebhookCommand>
 {
-  public constructor(
-    private readonly stripeService: StripeService,
-    private readonly em: EntityManager,
-  ) {}
+  public constructor(private readonly em: EntityManager) {}
 
   public async execute(
     command: ProcessWebhookCommand,
@@ -50,8 +46,11 @@ export class ProcessWebhookHandler
 
   private async handleCheckoutCompleted(
     checkoutSession: Stripe.Checkout.Session,
-  ) {
-    const { type, creditAmount } = checkoutSession.metadata;
+  ): Promise<void> {
+    const { type, creditAmount } = checkoutSession.metadata as {
+      type: ProductType;
+      creditAmount: string;
+    };
 
     if (type !== ProductType.CREDIT || !creditAmount) {
       return;
@@ -73,18 +72,21 @@ export class ProcessWebhookHandler
     const parsedCreditAmount = parseInt(creditAmount);
     company.creditBalance += parsedCreditAmount;
 
-    const transaction = this.em.create(CreditTransaction, {
-      company: company as unknown as Company,
-      amount: parsedCreditAmount,
-      type: CreditTransactionType.PURCHASE,
-      checkoutId: checkoutSession.id,
-    });
+    const transaction = this.em.create(
+      CreditTransaction,
+      new CreditTransaction({
+        company: company as Company,
+        amount: parsedCreditAmount,
+        type: CreditTransactionType.PURCHASE,
+        checkoutId: checkoutSession.id,
+      }),
+    );
 
     company.creditTransactions.add(transaction);
     await this.em.flush();
   }
 
-  private async handleInvoicePaid(invoice: Stripe.Invoice) {
+  private async handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
     const sponsorship = await this.em.findOne(Sponsorship, {
       subscriptionId: invoice.subscription as string,
     });
@@ -96,7 +98,7 @@ export class ProcessWebhookHandler
     }
   }
 
-  private async createNewSponsorship(invoice: Stripe.Invoice) {
+  private async createNewSponsorship(invoice: Stripe.Invoice): Promise<void> {
     const company = await this.findCompanyByCustomerId(
       invoice.customer as string,
       ['id'],
@@ -119,13 +121,15 @@ export class ProcessWebhookHandler
   private async renewExistingSponsorship(
     sponsorship: Sponsorship,
     invoice: Stripe.Invoice,
-  ) {
+  ): Promise<void> {
     sponsorship.currentPeriodStart = new Date(invoice.period_start * 1000);
     sponsorship.currentPeriodEnd = new Date(invoice.period_end * 1000);
     await this.em.flush();
   }
 
-  private async handleSubscriptionDeleted(subscription: any) {
+  private async handleSubscriptionDeleted(
+    subscription: Stripe.Subscription,
+  ): Promise<void> {
     const sponsorship = await this.em.findOne(Sponsorship, {
       subscriptionId: subscription.id,
     });
@@ -136,7 +140,10 @@ export class ProcessWebhookHandler
     }
   }
 
-  private async findCompanyByCustomerId(customerId: string, fields: any[]) {
+  private async findCompanyByCustomerId(
+    customerId: string,
+    fields: any[],
+  ): Promise<Company> {
     const company = await this.em.findOne(Company, { customerId }, { fields });
 
     if (!company) {

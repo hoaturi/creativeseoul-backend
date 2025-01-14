@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
 
     const user: AuthenticatedUser | undefined = request.session.user;
 
-    if (!requiredRoles.some((role) => user.role.includes(role))) {
+    if (!requiredRoles.some((role) => user?.role.includes(role))) {
       throw new HttpException(AuthError.Unauthorized, HttpStatus.FORBIDDEN);
     }
 

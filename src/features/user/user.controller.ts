@@ -71,7 +71,5 @@ export class UserController {
         resolve();
       });
     });
-
-    return result.value;
   }
 }

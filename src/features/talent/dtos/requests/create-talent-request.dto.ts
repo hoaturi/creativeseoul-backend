@@ -37,28 +37,28 @@ export class CreateTalentRequestDto {
   @IsAlphanumeric()
   @MaxLength(16)
   @Trim()
-  public readonly handle: string;
+  public readonly handle!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
   @Trim()
-  public readonly fullName: string;
+  public readonly fullName!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(128)
   @Trim()
-  public readonly title: string;
+  public readonly title!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(2048)
   @Trim()
-  public readonly bio: string;
+  public readonly bio!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -73,7 +73,7 @@ export class CreateTalentRequestDto {
   @HasUniqueLanguages()
   @ValidateNested({ each: true })
   @Type(() => TalentLanguageDto)
-  public readonly languages: TalentLanguageDto[];
+  public readonly languages!: TalentLanguageDto[];
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -87,7 +87,7 @@ export class CreateTalentRequestDto {
   // Location Information
   @ApiProperty()
   @IsNumber()
-  public readonly countryId: number;
+  public readonly countryId!: number;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -116,31 +116,31 @@ export class CreateTalentRequestDto {
   @IsNumber({}, { each: true })
   @Min(1, { each: true })
   @Max(EMPLOYMENT_TYPES.length, { each: true })
-  public readonly employmentTypeIds: number[];
+  public readonly employmentTypeIds!: number[];
 
   @ApiProperty()
   @IsArray()
   @IsNumber({}, { each: true })
   @Min(1, { each: true })
   @Max(WORK_LOCATION_TYPES.length, { each: true })
-  public readonly locationTypeIds: number[];
+  public readonly locationTypeIds!: number[];
 
   // Profile Status and Visibility
   @ApiProperty()
   @IsBoolean()
-  public readonly isPublic: boolean;
+  public readonly isPublic!: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  public readonly isAvailable: boolean;
+  public readonly isAvailable!: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  public readonly isContactable: boolean;
+  public readonly isContactable!: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  public readonly requiresVisaSponsorship: boolean;
+  public readonly requiresVisaSponsorship!: boolean;
 
   // Contact Information
   @ApiPropertyOptional()

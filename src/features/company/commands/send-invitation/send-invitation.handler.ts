@@ -50,6 +50,7 @@ export class SendInvitationHandler
           isClaimed: false,
           name: dto.companyName,
           websiteUrl: dto.websiteUrl,
+          creditBalance: 0,
         }),
       );
 

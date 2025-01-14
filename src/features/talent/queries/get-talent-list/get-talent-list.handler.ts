@@ -84,7 +84,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
   private applyFilters(
     where: QBFilterQuery<Talent>,
     filters: GetTalentListQueryDto,
-  ) {
+  ): void {
     const { search, employmentTypeIds, workLocationTypeIds, isAvailable } =
       filters;
 
@@ -123,6 +123,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
             city: talent.city?.label,
           },
           isAvailable: talent.isAvailable,
+          requiresVisaSponsorship: talent.requiresVisaSponsorship,
           skills: talent.skills,
         }),
     );

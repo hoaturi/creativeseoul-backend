@@ -49,14 +49,12 @@ export class PaymentController {
   public async processWebhook(
     @Headers('stripe-signature') signature: string,
     @Req() req: RawBodyRequest<Request>,
-  ) {
-    const event = this.stripeService.verifyWebhook(req.rawBody, signature);
+  ): Promise<void> {
+    const event = this.stripeService.verifyWebhook(req.rawBody!, signature);
 
     const command = new ProcessWebhookCommand(event);
 
-    const result = await this.commandBus.execute(command);
-
-    return result.value;
+    await this.commandBus.execute(command);
   }
 
   @Post('checkout/credit')

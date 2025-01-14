@@ -36,14 +36,14 @@ export class CreateSponsorshipCheckoutHandler
     );
 
     if (!company) {
-      throw new CompanyNotFoundException(user.profileId);
+      throw new CompanyNotFoundException(user.profileId!);
     }
 
     const checkout = await this.stripeService.createSponsorshipCheckout(
       this.appConfig.stripe.sponsorshipPriceId,
-      company.customerId,
+      company.customerId!,
     );
 
-    return Result.success(new CreateCheckoutResponseDto(checkout.url));
+    return Result.success(new CreateCheckoutResponseDto(checkout.url!));
   }
 }

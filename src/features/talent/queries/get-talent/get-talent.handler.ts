@@ -9,9 +9,7 @@ import { UserRole } from '../../../../domain/user/user-role.enum';
 import { ResultError } from '../../../../common/result/result-error';
 import { Result } from '../../../../common/result/result';
 import { GetTalentResponseDto } from '../../dtos/responses/get-talent-response.dto';
-import { TalentSalaryRangeDto } from '../../dtos/responses/talent-salary-range.dto';
 import { TalentWorkLocationTypeDto } from '../../dtos/responses/talent-work-location-type.dto';
-import { TalentHourlyRateRangeDto } from '../../dtos/responses/talent-hourly-rate-range.dto';
 import { TalentEmploymentTypeDto } from '../../dtos/responses/talent-employment-type.dto';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
@@ -106,15 +104,9 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
         ),
     );
 
-    const salaryRange = new TalentSalaryRangeDto(
-      talent.salaryRange.id,
-      talent.salaryRange.label,
-    );
+    const salaryRange = talent.salaryRange?.label;
 
-    const hourlyRateRange = new TalentHourlyRateRangeDto(
-      talent.hourlyRateRange.id,
-      talent.hourlyRateRange.label,
-    );
+    const hourlyRateRange = talent.hourlyRateRange?.label;
 
     const workLocationTypes = talent.workLocationTypes.map(
       (type) => new TalentWorkLocationTypeDto(type.id, type.label),

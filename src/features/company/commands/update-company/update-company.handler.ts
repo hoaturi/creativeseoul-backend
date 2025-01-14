@@ -6,6 +6,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { CompanySize } from '../../../../domain/common/entities/company-size.entity';
 import { Company } from '../../../../domain/company/company.entity';
 import { CompanyError } from '../../company.error';
+import { CompanyNotFoundException } from '../../../../domain/company/company-not-found.exception';
 
 @CommandHandler(UpdateCompanyCommand)
 export class UpdateCompanyHandler
@@ -26,6 +27,10 @@ export class UpdateCompanyHandler
       id: user.profileId,
     });
 
+    if (!company) {
+      throw new CompanyNotFoundException(user.profileId);
+    }
+
     company.name = dto.name;
     company.summary = dto.summary;
     company.description = dto.description;
@@ -34,7 +39,7 @@ export class UpdateCompanyHandler
     company.location = dto.location;
     company.size = dto.sizeId
       ? this.em.getReference(CompanySize, dto.sizeId)
-      : null;
+      : undefined;
     company.socialLinks = dto.socialLinks;
 
     await this.em.flush();

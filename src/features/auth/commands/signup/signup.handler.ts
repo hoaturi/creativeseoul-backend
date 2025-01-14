@@ -72,11 +72,10 @@ export class SignupHandler implements ICommandHandler<SignupCommand> {
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
 
-    return this.em.create(EmailVerificationToken, {
-      user,
-      token,
-      expiresAt,
-    });
+    return this.em.create(
+      EmailVerificationToken,
+      new EmailVerificationToken(user, token, expiresAt),
+    );
   }
 
   private async queueVerificationEmail(

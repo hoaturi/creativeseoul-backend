@@ -89,8 +89,6 @@ export class AuthController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Post('login')
@@ -150,8 +148,6 @@ export class AuthController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Patch('reset-password')
@@ -176,7 +172,5 @@ export class AuthController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 }

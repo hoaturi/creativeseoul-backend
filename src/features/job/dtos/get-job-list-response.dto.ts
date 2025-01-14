@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class GetJobListItemCompanyDto {
   @ApiProperty()
@@ -7,10 +7,10 @@ export class GetJobListItemCompanyDto {
   @ApiProperty()
   public readonly name: string;
 
-  @ApiProperty()
-  public readonly logoUrl: string;
+  @ApiPropertyOptional()
+  public readonly logoUrl?: string;
 
-  public constructor(data: { id: string; name: string; logoUrl: string }) {
+  public constructor(data: { id: string; name: string; logoUrl?: string }) {
     this.id = data.id;
     this.name = data.name;
     this.logoUrl = data.logoUrl;
@@ -44,14 +44,14 @@ export class GetJobListItemDto {
   @ApiProperty()
   public readonly location: string;
 
-  @ApiProperty()
-  public readonly minSalary: number;
+  @ApiPropertyOptional()
+  public readonly minSalary?: number;
 
-  @ApiProperty()
-  public readonly maxSalary: number;
+  @ApiPropertyOptional()
+  public readonly maxSalary?: number;
 
-  @ApiProperty()
-  public readonly tags: string[];
+  @ApiPropertyOptional()
+  public readonly tags?: string[];
 
   @ApiProperty()
   public readonly koreanLevel: string;
@@ -71,9 +71,9 @@ export class GetJobListItemDto {
     seniorityLevel: string;
     workLocationType: string;
     location: string;
-    minSalary: number;
-    maxSalary: number;
-    tags: string[];
+    minSalary?: number;
+    maxSalary?: number;
+    tags?: string[];
     koreanLevel: string;
     residentOnly: boolean;
     isFeatured: boolean;
