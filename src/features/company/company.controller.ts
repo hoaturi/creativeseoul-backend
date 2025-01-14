@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -41,6 +42,10 @@ import { AcceptInvitationCommand } from './commands/accept-invitation/accept-inv
 import { CompanyError } from './company.error';
 import { GetCompanyResponseDto } from './dtos/responses/get-company-response.dto';
 import { GetCompanyQuery } from './queries/get-company/get-company.query';
+import { GetImageUploadUrlResponseDto } from '../common/dtos/get-image-upload-url-response.dto';
+import { GetMyLogoUploadUrlCommand } from './commands/get-my-logo-upload-url/get-my-logo-upload-url.command';
+import { GetImageUploadUrlRequestDto } from '../common/dtos/get-image-upload-url-request.dto';
+import { GetLogoUploadUrlCommand } from './commands/get-logo-upload-url/get-logo-upload-url.command';
 
 @Controller('companies')
 export class CompanyController {
@@ -166,6 +171,66 @@ export class CompanyController {
     const command = new GetCompanyQuery(id);
 
     const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Put('me/logo')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetImageUploadUrlResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async getMyLogoUploadUrl(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: GetImageUploadUrlRequestDto,
+  ): Promise<GetImageUploadUrlResponseDto> {
+    const command = new GetMyLogoUploadUrlCommand(user, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Put(':id/logo')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetImageUploadUrlResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async getLogoUploadUrl(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: GetImageUploadUrlRequestDto,
+  ): Promise<GetImageUploadUrlResponseDto> {
+    const command = new GetLogoUploadUrlCommand(id, dto);
+
+    const result = await this.commandBus.execute(command);
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);

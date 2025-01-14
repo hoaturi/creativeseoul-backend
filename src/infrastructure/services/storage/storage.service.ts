@@ -3,7 +3,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ConfigType } from '@nestjs/config';
 import { applicationConfig } from '../../../config/application.config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { GenerateImagePresignedUrlRequestDto } from '../../../features/upload/dtos/generate-image-presigned-url-request.dto';
+import { GetImageUploadUrlRequestDto } from '../../../features/common/dtos/get-image-upload-url-request.dto';
 
 @Injectable()
 export class StorageService {
@@ -25,13 +25,13 @@ export class StorageService {
 
   public async generatePresignedUrl(
     fileName: string,
-    dto: GenerateImagePresignedUrlRequestDto,
+    dto: GetImageUploadUrlRequestDto,
   ): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: this.appConfig.cloudflare.r2.bucket,
       Key: fileName,
       ContentType: dto.mimeType,
-      ContentLength: dto.compressedFileSize,
+      ContentLength: dto.fileSize,
     });
 
     return await getSignedUrl(this.S3Client, command);

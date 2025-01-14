@@ -8,6 +8,8 @@ import { CreateTalentHandler } from './commands/create-talent/create-talent.hand
 import { GetTalentAsMemberHandler } from './queries/get-talent-as-member/get-talent-as-member.handler';
 import { MemberController } from './controllers/member.controller';
 import { GetTalentAsMemberListHandler } from './queries/get-talent-as-member-list/get-talent-as-member-list.handler';
+import { GetMyAvatarUploadUrlHandler } from './commands/get-my-avatar-upload-url/get-my-avatar-upload-url.handler';
+import { StorageModule } from '../../infrastructure/services/storage/storage.module';
 
 const providers: Provider[] = [
   GetTalentHandler,
@@ -16,10 +18,11 @@ const providers: Provider[] = [
   CreateTalentHandler,
   GetTalentAsMemberHandler,
   GetTalentAsMemberListHandler,
+  GetMyAvatarUploadUrlHandler,
 ];
 
 @Module({
-  imports: [TalentScoringModule],
+  imports: [TalentScoringModule, StorageModule],
   controllers: [TalentController, MemberController],
   providers: [...providers],
 })

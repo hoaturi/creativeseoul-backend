@@ -37,6 +37,10 @@ import { UpdateTalentRequestDto } from '../dtos/requests/update-talent-request.d
 import { GetTalentResponseDto } from '../dtos/responses/get-talent-response.dto';
 import { CreateTalentCommand } from '../commands/create-talent/create-talent.command';
 import { CreateTalentRequestDto } from '../dtos/requests/create-talent-request.dto';
+import { GetImageUploadUrlResponseDto } from '../../common/dtos/get-image-upload-url-response.dto';
+import { CompanyError } from '../../company/company.error';
+import { GetImageUploadUrlRequestDto } from '../../common/dtos/get-image-upload-url-request.dto';
+import { GetMyAvatarUploadUrlCommand } from '../commands/get-my-avatar-upload-url/get-my-avatar-upload-url.command';
 
 @Controller('talents')
 export class TalentController {
@@ -147,5 +151,38 @@ export class TalentController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+  }
+
+  @Put('me/avatar')
+  @Roles(UserRole.TALENT)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetImageUploadUrlResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  @ApiNotFoundResponse({
+    example: CompanyError.ProfileNotFound,
+  })
+  public async getMyAvatarUploadUrl(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: GetImageUploadUrlRequestDto,
+  ): Promise<GetImageUploadUrlResponseDto> {
+    const command = new GetMyAvatarUploadUrlCommand(user, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
   }
 }

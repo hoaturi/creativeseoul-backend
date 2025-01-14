@@ -8,6 +8,9 @@ import { QueueType } from '../../infrastructure/queue/queue-type.enum';
 import { AcceptInvitationHandler } from './commands/accept-invitation/accept-invitation.handler';
 import { StripeModule } from '../../infrastructure/services/stripe/stripe.module';
 import { GetCompanyHandler } from './queries/get-company/get-company.handler';
+import { GetMyLogoUploadUrlHandler } from './commands/get-my-logo-upload-url/get-my-logo-upload-url.handler';
+import { StorageModule } from '../../infrastructure/services/storage/storage.module';
+import { GetLogoUploadUrlHandler } from './commands/get-logo-upload-url/get-logo-upload-url.handler';
 
 const handlers: Provider[] = [
   UpdateCompanyHandler,
@@ -15,10 +18,16 @@ const handlers: Provider[] = [
   GetCompanyListHandler,
   SendInvitationHandler,
   AcceptInvitationHandler,
+  GetMyLogoUploadUrlHandler,
+  GetLogoUploadUrlHandler,
 ];
 
 @Module({
-  imports: [BullModule.registerQueue({ name: QueueType.EMAIL }), StripeModule],
+  imports: [
+    BullModule.registerQueue({ name: QueueType.EMAIL }),
+    StripeModule,
+    StorageModule,
+  ],
   providers: [...handlers],
   controllers: [CompanyController],
 })
