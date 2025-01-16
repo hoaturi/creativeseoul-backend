@@ -31,7 +31,7 @@ api.md
 *.launch
 .settings/
 *.sublime-workspace
-*.http
+/https
 
 # IDE - VSCode
 .vscode/*
