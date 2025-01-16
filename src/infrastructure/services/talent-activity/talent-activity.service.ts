@@ -7,7 +7,7 @@ import { Talent } from '../../../domain/talent/talent.entity';
 
 @Injectable()
 export class TalentActivityService {
-  private readonly UPDATE_INTERVAL = 4 * 60 * 60;
+  private readonly UPDATE_INTERVAL = 4 * 60 * 60 * 1000;
 
   public constructor(
     private readonly em: EntityManager,
