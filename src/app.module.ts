@@ -15,12 +15,10 @@ import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserModule } from './features/user/user.module';
 import { TalentModule } from './features/talent/talent.module';
-import { CacheModule } from '@nestjs/cache-manager';
-import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
-import { TalentScoringService } from './infrastructure/services/talent-scoring/talent-scoring.service';
 import { CompanyModule } from './features/company/company.module';
 import { PaymentModule } from './features/payment/payment.module';
 import { JobModule } from './features/job/job.module';
+import { TalentActivityModule } from './infrastructure/services/talent-activity/talent-activity.module';
 
 @Module({
   imports: [
@@ -45,10 +43,6 @@ import { JobModule } from './features/job/job.module';
       validate,
       load: [applicationConfig],
     }),
-    CacheModule.register({
-      ttl: 60 * 60 * 4,
-      max: 10000,
-    }),
     CqrsModule.forRoot(),
     MikroOrmModule.forRoot(mikroOrmConfig),
     BullModule.forRoot(bullMqConfig),
@@ -59,13 +53,9 @@ import { JobModule } from './features/job/job.module';
     CompanyModule,
     PaymentModule,
     JobModule,
+    TalentActivityModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    EmailProcessor,
-    TalentActivityService,
-    TalentScoringService,
-  ],
+  providers: [AppService, EmailProcessor],
 })
 export class AppModule {}
