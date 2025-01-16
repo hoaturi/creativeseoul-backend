@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Ip,
   Param,
   Post,
   Put,
@@ -40,6 +41,7 @@ import { JobError } from './job.error';
 import { GetJobQuery } from './queries/get-job/get-job.query';
 import { UpdateJobRequestDto } from './dtos/update-job-request.dto';
 import { UpdateJobCommand } from './commands/update-job/update-job.command';
+import { TrackJobApplicationClickCommand } from './commands/track-job-application-click/track-job-application-click.command';
 
 @Controller('jobs')
 export class JobController {
@@ -187,6 +189,23 @@ export class JobController {
     @Body() dto: UpdateJobRequestDto,
   ): Promise<void> {
     const command = new UpdateJobCommand(user, slug, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+  }
+
+  @Post(':jobId/apply-click')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  public async trackJobApplicationClick(
+    @Param('jobId') jobId: string,
+    @Ip() ipAddress: string,
+  ): Promise<void> {
+    const ipv4 = ipAddress.split(':').pop() as string;
+    const command = new TrackJobApplicationClickCommand(jobId, ipv4);
 
     const result = await this.commandBus.execute(command);
 
