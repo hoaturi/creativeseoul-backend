@@ -34,6 +34,10 @@ export class JobMetricService {
 
   public async syncJobApplicationClicks(): Promise<void> {
     try {
+      this.logger.log(
+        'job-metric.sync-job-application-clicks.started: Starting to sync job application clicks',
+      );
+
       const keys = await this.cacheManager.store.keys('job:*:click-count');
 
       const updates = await Promise.all(
@@ -45,6 +49,9 @@ export class JobMetricService {
       );
 
       if (updates.length === 0) {
+        this.logger.log(
+          'job-metric.sync-job-application-clicks.success: No job application clicks to sync',
+        );
         return;
       }
 
@@ -63,13 +70,23 @@ export class JobMetricService {
           ),
         })
         .where({ id: { $in: updates.map((u) => u.jobId) } })
-        .execute('get');
+        .execute();
 
       await Promise.all(updates.map((u) => this.cacheManager.del(u.key)));
+
+      this.logger.log(
+        {
+          jobIds: updates.map((u) => u.jobId),
+          count: updates.length,
+        },
+        `job-metric.sync-job-application-clicks.success: Synced job application clicks successfully`,
+      );
     } catch (error) {
       this.logger.error(
-        { error },
-        'job-metric-service.sync-job-clicks-failed: Failed to sync job clicks',
+        {
+          error,
+        },
+        'job-metric.sync-job-application-clicks.failed: Failed to sync job application clicks',
       );
     }
   }
