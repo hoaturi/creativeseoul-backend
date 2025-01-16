@@ -5,25 +5,11 @@ import { CreateRegularJobHandler } from './commands/create-regular-job/create-re
 import { GetJobListHandler } from './queries/get-job-list/get-job-list.handler';
 import { GetJobHandler } from './queries/get-job/get-job.handler';
 import { UpdateJobHandler } from './commands/update-job/update-job.handler';
-import { CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { TrackJobApplicationClickHandler } from './commands/track-job-application-click/track-job-application-click.handler';
-import { redisStore } from 'cache-manager-ioredis-yet';
+import { JobMetricModule } from '../../infrastructure/services/job-metric/job-metric.module';
 
 @Module({
-  imports: [
-    CacheModule.registerAsync({
-      useFactory: async () => {
-        const store = await redisStore({
-          host: process.env.REDIS_HOST,
-          port: process.env.REDIS_PORT,
-        });
-
-        return {
-          store: store as unknown as CacheStore,
-        };
-      },
-    }),
-  ],
+  imports: [JobMetricModule],
   providers: [
     CreateFeaturedJobHandler,
     CreateRegularJobHandler,
