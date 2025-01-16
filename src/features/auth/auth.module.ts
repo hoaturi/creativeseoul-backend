@@ -1,7 +1,7 @@
 import { Module, Provider } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { BullModule } from '@nestjs/bullmq';
-import { QueueType } from '../../infrastructure/queue/queue-type.enum';
+import { QueueType } from '../../infrastructure/queues/queue-type.enum';
 import {
   ForgotPasswordHandler,
   LoginHandler,

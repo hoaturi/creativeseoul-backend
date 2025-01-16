@@ -4,7 +4,7 @@ import { UpdateCompanyHandler } from './commands/update-company/update-company.h
 import { GetCompanyListHandler } from './queries/get-company-list/get-company-list.handler';
 import { SendInvitationHandler } from './commands/send-invitation/send-invitation.handler';
 import { BullModule } from '@nestjs/bullmq';
-import { QueueType } from '../../infrastructure/queue/queue-type.enum';
+import { QueueType } from '../../infrastructure/queues/queue-type.enum';
 import { AcceptInvitationHandler } from './commands/accept-invitation/accept-invitation.handler';
 import { StripeModule } from '../../infrastructure/services/stripe/stripe.module';
 import { GetCompanyHandler } from './queries/get-company/get-company.handler';

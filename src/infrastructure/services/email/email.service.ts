@@ -2,13 +2,13 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { SendTemplatedEmailCommand, SESClient } from '@aws-sdk/client-ses';
 import { applicationConfig } from '../../../config/application.config';
-import { VerifyEmailJobDto } from '../../queue/email/dtos/verify-email-job.dto';
-import { EmailJobType } from '../../queue/email/email-job.type.enum';
+import { VerifyEmailJobDto } from '../../queues/email-queue/dtos/verify-email-job.dto';
+import { EmailJobType } from '../../queues/email-queue/email-queue.type.enum';
 import { Template } from './interfaces/template.interface';
 import { VerificationTemplateData } from './interfaces';
-import { ForgotPasswordJobDto } from '../../queue/email/dtos/forgot-password-job.dto';
+import { ForgotPasswordJobDto } from '../../queues/email-queue/dtos/forgot-password-job.dto';
 import { ForgotPasswordTemplateData } from './interfaces/forgot-password-template-data.interface';
-import { CompanyInvitationJobDto } from '../../queue/email/dtos/company-invitation-job.dto';
+import { CompanyInvitationJobDto } from '../../queues/email-queue/dtos/company-invitation-job.dto';
 import { CompanyInvitationTemplateData } from './interfaces/company-invitation-template-data.interface';
 
 @Injectable()

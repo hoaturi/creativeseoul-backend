@@ -7,11 +7,11 @@ import { Company } from '../../../../domain/company/company.entity';
 import { CompanyInvitation } from '../../../../domain/company/company-invitation.entity';
 import * as crypto from 'crypto';
 import { InjectQueue } from '@nestjs/bullmq';
-import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
+import { QueueType } from '../../../../infrastructure/queues/queue-type.enum';
 import { Queue } from 'bullmq';
-import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
-import { emailJobOption } from '../../../../infrastructure/queue/email/email-job.option';
-import { CompanyInvitationJobDto } from '../../../../infrastructure/queue/email/dtos/company-invitation-job.dto';
+import { EmailJobType } from '../../../../infrastructure/queues/email-queue/email-queue.type.enum';
+import { emailJobOption } from '../../../../infrastructure/queues/email-queue/processor/email-job.option';
+import { CompanyInvitationJobDto } from '../../../../infrastructure/queues/email-queue/dtos/company-invitation-job.dto';
 import { Logger } from '@nestjs/common';
 import { CompanyError } from '../../company.error';
 

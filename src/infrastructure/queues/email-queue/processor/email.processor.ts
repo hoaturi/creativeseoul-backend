@@ -1,12 +1,12 @@
 import { Processor } from '@nestjs/bullmq';
-import { QueueType } from '../queue-type.enum';
+import { QueueType } from '../../queue-type.enum';
 import { Job } from 'bullmq';
-import { EmailJobType } from './email-job.type.enum';
-import { EmailService } from '../../services/email/email.service';
-import { VerifyEmailJobDto } from './dtos/verify-email-job.dto';
-import { BaseProcessor } from '../base.processor';
-import { ForgotPasswordJobDto } from './dtos/forgot-password-job.dto';
-import { CompanyInvitationJobDto } from './dtos/company-invitation-job.dto';
+import { EmailJobType } from '../email-queue.type.enum';
+import { EmailService } from '../../../services/email/email.service';
+import { VerifyEmailJobDto } from '../dtos/verify-email-job.dto';
+import { BaseProcessor } from '../../base.processor';
+import { ForgotPasswordJobDto } from '../dtos/forgot-password-job.dto';
+import { CompanyInvitationJobDto } from '../dtos/company-invitation-job.dto';
 
 @Processor(QueueType.EMAIL)
 export class EmailProcessor extends BaseProcessor {

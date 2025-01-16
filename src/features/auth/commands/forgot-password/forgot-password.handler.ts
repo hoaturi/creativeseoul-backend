@@ -6,12 +6,12 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { User } from '../../../../domain/user/user.entity';
 import { UserError } from '../../../user/user.error';
 import { Queue } from 'bullmq';
-import { QueueType } from '../../../../infrastructure/queue/queue-type.enum';
-import { EmailJobType } from '../../../../infrastructure/queue/email/email-job.type.enum';
+import { QueueType } from '../../../../infrastructure/queues/queue-type.enum';
+import { EmailJobType } from '../../../../infrastructure/queues/email-queue/email-queue.type.enum';
 import * as crypto from 'crypto';
 import { ForgotPasswordToken } from '../../../../domain/auth/forgot-password-token.entity';
-import { emailJobOption } from '../../../../infrastructure/queue/email/email-job.option';
-import { ForgotPasswordJobDto } from '../../../../infrastructure/queue/email/dtos/forgot-password-job.dto';
+import { emailJobOption } from '../../../../infrastructure/queues/email-queue/processor/email-job.option';
+import { ForgotPasswordJobDto } from '../../../../infrastructure/queues/email-queue/dtos/forgot-password-job.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 
 @CommandHandler(ForgotPasswordCommand)

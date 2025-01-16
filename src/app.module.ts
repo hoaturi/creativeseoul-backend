@@ -5,11 +5,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import { applicationConfig } from './config/application.config';
-import { BullModule } from '@nestjs/bullmq';
-import { bullMqConfig } from './config/bull-mq.config';
 import { AuthModule } from './features/auth/auth.module';
-import { EmailProcessor } from './infrastructure/queue/email/email.processor';
-import { EmailModule } from './infrastructure/services/email/email.module';
 import { LoggerModule } from 'nestjs-pino';
 import mikroOrmConfig from './config/mikro-orm.config';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -19,6 +15,9 @@ import { CompanyModule } from './features/company/company.module';
 import { PaymentModule } from './features/payment/payment.module';
 import { JobModule } from './features/job/job.module';
 import { TalentActivityModule } from './infrastructure/services/talent-activity/talent-activity.module';
+import { BullModule } from '@nestjs/bullmq';
+import { bullMqConfig } from './config/bull-mq.config';
+import { QueuesModule } from './infrastructure/queues/queues.module';
 
 @Module({
   imports: [
@@ -43,10 +42,9 @@ import { TalentActivityModule } from './infrastructure/services/talent-activity/
       validate,
       load: [applicationConfig],
     }),
+    BullModule.forRoot(bullMqConfig),
     CqrsModule.forRoot(),
     MikroOrmModule.forRoot(mikroOrmConfig),
-    BullModule.forRoot(bullMqConfig),
-    EmailModule,
     AuthModule,
     UserModule,
     TalentModule,
@@ -54,8 +52,9 @@ import { TalentActivityModule } from './infrastructure/services/talent-activity/
     PaymentModule,
     JobModule,
     TalentActivityModule,
+    QueuesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EmailProcessor],
+  providers: [AppService],
 })
 export class AppModule {}
