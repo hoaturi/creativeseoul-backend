@@ -74,20 +74,28 @@ export class JobMetricService {
 
     await Promise.all(updates.map((u) => this.cacheManager.del(u.key)));
 
-      this.logger.log(
-        {
-          jobIds: updates.map((u) => u.jobId),
-          count: updates.length,
-        },
-        `job-metric.sync-job-application-clicks.success: Synced job application clicks successfully`,
-      );
-    } catch (error) {
-      this.logger.error(
-        {
-          error,
-        },
-        'job-metric.sync-job-application-clicks.failed: Failed to sync job application clicks',
-      );
-    }
+    this.logger.log(
+      `job-metric.sync-job-application-clicks.success: Synced job application clicks successfully`,
+    );
+  }
+
+  public async expireFeaturedJobs(): Promise<void> {
+    console.log('Expire featured jobs');
+    this.logger.log(
+      'job-metric.sync-expired-featured-jobs.started: Starting to expire featured jobs',
+    );
+
+    await this.em
+      .createQueryBuilder(Job)
+      .update({ isFeatured: false })
+      .where({
+        isFeatured: true,
+        createdAt: { $lt: new Date(Date.now() - this.FEATURE_DURATION) },
+      })
+      .execute();
+
+    this.logger.log(
+      'job-metric.sync-expired-featured-jobs.success: Expired featured jobs successfully',
+    );
   }
 }

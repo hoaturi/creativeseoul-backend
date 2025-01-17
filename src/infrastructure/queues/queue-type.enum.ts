@@ -1,4 +1,4 @@
 export enum QueueType {
   EMAIL = 'email',
-  CRON = 'cron',
+  JOB_MAINTENANCE = 'job-maintenance',
 }
