@@ -17,9 +17,10 @@ import { Job } from '../job/job.entity';
 import { CompanySize } from '../common/entities/company-size.entity';
 import { CompanySocialLinks } from './company-social-links.interface';
 import { CreditTransaction } from './credit-transaction.entity';
+import { BaseEntity } from '../base.entity';
 
 @Entity()
-export class Company {
+export class Company extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
@@ -96,6 +97,7 @@ export class Company {
     user?: User;
     creditBalance: number;
   }) {
+    super();
     this.isClaimed = data.isClaimed;
     this.name = data.name;
     this.summary = data.summary;
