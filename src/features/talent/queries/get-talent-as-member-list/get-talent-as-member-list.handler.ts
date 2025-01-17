@@ -7,7 +7,7 @@ import {
   GetTalentAsMemberItemDto,
   GetTalentAsMemberListResponseDto,
 } from '../../dtos/responses/get-talent-as-member-list-response.dto';
-import { Talent } from '../../../../domain/talent/talent.entity';
+import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
 
 @QueryHandler(GetTalentAsMemberListQuery)

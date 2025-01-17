@@ -3,17 +3,17 @@ import { ProcessWebhookCommand } from './process-webhook.command';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Company } from '../../../../domain/company/company.entity';
+import { Company } from '../../../../domain/company/entities/company.entity';
 import {
   CreditTransaction,
   CreditTransactionType,
-} from '../../../../domain/company/credit-transaction.entity';
+} from '../../../../domain/company/entities/credit-transaction.entity';
 import { ProductType } from '../../../../domain/payment/product-type.enum';
-import { CompanyNotFoundByCustomerIdException } from '../../../../domain/company/company-not-found-by-customer-id.exception';
+import { CompanyNotFoundByCustomerIdException } from '../../../../domain/company/exceptions/company-not-found-by-customer-id.exception';
 import {
   Sponsorship,
   SponsorshipStatus,
-} from '../../../../domain/company/sponsorship.entity';
+} from '../../../../domain/company/entities/sponsorship.entity';
 import { Stripe } from 'stripe';
 
 @CommandHandler(ProcessWebhookCommand)

@@ -3,7 +3,7 @@ import { GetTalentAsMemberQuery } from './get-talent-as-member.query';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { GetTalentAsMemberResponseDto } from '../../dtos/responses/get-talent-as-member-response.dto';
-import { Talent } from '../../../../domain/talent/talent.entity';
+import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
 import { TalentSocialLinksDto } from '../../dtos/responses/talent-social-links.dto';

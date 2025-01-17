@@ -12,12 +12,12 @@ import {
   OneToOne,
   Property,
 } from '@mikro-orm/postgresql';
-import { User } from '../user/user.entity';
-import { Job } from '../job/job.entity';
-import { CompanySize } from '../common/entities/company-size.entity';
-import { CompanySocialLinks } from './company-social-links.interface';
+import { User } from '../../user/user.entity';
+import { Job } from '../../job/entities/job.entity';
+import { CompanySize } from './company-size.entity';
+import { CompanySocialLinks } from '../company-social-links.interface';
 import { CreditTransaction } from './credit-transaction.entity';
-import { BaseEntity } from '../base.entity';
+import { BaseEntity } from '../../base.entity';
 
 @Entity()
 export class Company extends BaseEntity {

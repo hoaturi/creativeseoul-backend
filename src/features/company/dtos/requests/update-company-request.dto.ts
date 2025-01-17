@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Trim } from '../../../../common/decorators/trim.decorator';
-import { COMPANY_SIZES } from '../../../../domain/common/constants/company-size.constant';
+import { COMPANY_SIZES } from '../../../../domain/company/company-size.constant';
 import { CompanySocialLinksRequestDto } from './company-social-links-request.dto';
 
 export class UpdateCompanyRequestDto {

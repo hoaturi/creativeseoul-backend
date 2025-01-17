@@ -18,8 +18,6 @@ import {
 } from 'class-validator';
 import {
   EMPLOYMENT_TYPES,
-  HOURLY_RATE_RANGE,
-  SALARY_RANGE,
   WORK_LOCATION_TYPES,
 } from '../../../../domain/common/constants';
 import { Trim } from '../../../../common/decorators/trim.decorator';
@@ -28,6 +26,8 @@ import { HasUniqueLanguages } from '../../../../common/decorators/has-unique-lan
 import { TalentLanguageDto } from './talent-language.dto';
 import { Type } from 'class-transformer';
 import { TalentSocialLinksDto } from './talent-social-links.dto';
+import { SALARY_RANGE } from '../../../../domain/talent/constants/salary-range.constant';
+import { HOURLY_RATE_RANGE } from '../../../../domain/talent/constants/hourly-rate-range.constant';
 
 export class CreateTalentRequestDto {
   // Basic Profile Information

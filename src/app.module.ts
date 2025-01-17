@@ -18,6 +18,7 @@ import { TalentActivityModule } from './infrastructure/services/talent-activity/
 import { BullModule } from '@nestjs/bullmq';
 import { bullMqConfig } from './config/bull-mq.config';
 import { QueuesModule } from './infrastructure/queues/queues.module';
+import { EventModule } from './features/event/event.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { QueuesModule } from './infrastructure/queues/queues.module';
     JobModule,
     TalentActivityModule,
     QueuesModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

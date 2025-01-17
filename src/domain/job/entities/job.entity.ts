@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base.entity';
+import { BaseEntity } from '../../base.entity';
 import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import {
   FullTextType,
@@ -6,12 +6,12 @@ import {
   Property,
   WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
-import { Company } from '../company/company.entity';
-import { Category } from '../common/entities/category.entity';
-import { EmploymentType } from '../common/entities/employment-type.entity';
-import { SeniorityLevel } from '../common/entities/seniority-level.entity';
-import { WorkLocationType } from '../common/entities/work-location-type.entity';
-import { LanguageLevel } from '../common/entities/language-level.entity';
+import { Company } from '../../company/entities/company.entity';
+import { Category } from './category.entity';
+import { EmploymentType } from '../../common/entities/employment-type.entity';
+import { SeniorityLevel } from './seniority-level.entity';
+import { WorkLocationType } from '../../common/entities/work-location-type.entity';
+import { LanguageLevel } from '../../common/entities/language-level.entity';
 
 const generateSearchVector = (job: Job): WeightedFullTextValue => ({
   A: [job.title].filter(Boolean).join(' '),

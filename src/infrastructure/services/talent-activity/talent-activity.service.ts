@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { Talent } from '../../../domain/talent/talent.entity';
+import { Talent } from '../../../domain/talent/entities/talent.entity';
 
 @Injectable()
 export class TalentActivityService {

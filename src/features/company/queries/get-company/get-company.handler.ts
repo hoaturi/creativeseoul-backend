@@ -3,14 +3,14 @@ import { EntityManager, Loaded, LoadedCollection } from '@mikro-orm/postgresql';
 import { GetCompanyQuery } from './get-company.query';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
-import { Company } from '../../../../domain/company/company.entity';
+import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../company.error';
 import {
   CompanyJobItemDto,
   CompanySocialLinksDto,
   GetCompanyResponseDto,
 } from '../../dtos/responses/get-company-response.dto';
-import { Job } from '../../../../domain/job/job.entity';
+import { Job } from '../../../../domain/job/entities/job.entity';
 
 const COMPANY_FIELDS = [
   'name',

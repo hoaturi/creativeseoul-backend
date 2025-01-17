@@ -10,8 +10,8 @@ import {
   Min,
 } from 'class-validator';
 import { Trim } from '../../../common/decorators/trim.decorator';
-import { CATEGORIES } from '../../../domain/common/constants/category.constant';
-import { SeniorityLevel } from '../../../domain/common/entities/seniority-level.entity';
+import { CATEGORIES } from '../../../domain/job/constants/category.constant';
+import { SeniorityLevel } from '../../../domain/job/entities/seniority-level.entity';
 import {
   EMPLOYMENT_TYPES,
   WORK_LOCATION_TYPES,

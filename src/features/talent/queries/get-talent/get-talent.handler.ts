@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetTalentQuery } from './get-talent.query';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
-import { Talent } from '../../../../domain/talent/talent.entity';
+import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { TalentError } from '../../talent.error';
 import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
 import { TalentLanguageProficiencyDto } from '../../dtos/responses/talent-language-proficiency.dto';

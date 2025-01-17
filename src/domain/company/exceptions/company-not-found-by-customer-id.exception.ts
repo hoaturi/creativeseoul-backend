@@ -1,5 +1,5 @@
-import { CustomException } from '../../common/exceptions/custom.exception';
-import { CompanyErrorCode } from './company-error-code.enum';
+import { CustomException } from '../../../common/exceptions/custom.exception';
+import { CompanyErrorCode } from '../company-error-code.enum';
 
 export class CompanyNotFoundByCustomerIdException extends CustomException {
   public constructor(customerId: string) {

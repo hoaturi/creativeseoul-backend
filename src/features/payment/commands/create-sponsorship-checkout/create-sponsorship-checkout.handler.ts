@@ -4,8 +4,8 @@ import { StripeService } from '../../../../infrastructure/services/stripe/stripe
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { CreateCheckoutResponseDto } from '../../dtos/create-checkout-response.dto';
-import { Company } from '../../../../domain/company/company.entity';
-import { CompanyNotFoundException } from '../../../../domain/company/company-not-found.exception';
+import { Company } from '../../../../domain/company/entities/company.entity';
+import { CompanyNotFoundException } from '../../../../domain/company/exceptions/company-not-found.exception';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { applicationConfig } from '../../../../config/application.config';
 import { Inject } from '@nestjs/common';

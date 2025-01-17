@@ -3,7 +3,7 @@ import { AcceptInvitationCommand } from './accept-invitation.command';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
-import { CompanyInvitation } from '../../../../domain/company/company-invitation.entity';
+import { CompanyInvitation } from '../../../../domain/company/entities/company-invitation.entity';
 import { CompanyError } from '../../company.error';
 import { User } from '../../../../domain/user/user.entity';
 import { AuthError } from '../../../auth/auth.error';

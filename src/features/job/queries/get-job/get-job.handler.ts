@@ -7,7 +7,7 @@ import {
   GetJobResponseDto,
   JobCompanyDto,
 } from '../../dtos/get-job-response.dto';
-import { Job } from '../../../../domain/job/job.entity';
+import { Job } from '../../../../domain/job/entities/job.entity';
 import { JobError } from '../../job.error';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 

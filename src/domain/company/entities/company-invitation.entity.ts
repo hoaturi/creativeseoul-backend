@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base.entity';
+import { BaseEntity } from '../../base.entity';
 import { Entity, Index, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { Property } from '@mikro-orm/postgresql';
 import { Company } from './company.entity';

@@ -1,8 +1,8 @@
-import { BaseEntity } from '../base.entity';
+import { BaseEntity } from '../../base.entity';
 import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { Company } from './company.entity';
 import { Enum, Property } from '@mikro-orm/postgresql';
-import { Job } from '../job/job.entity';
+import { Job } from '../../job/entities/job.entity';
 
 export enum CreditTransactionType {
   PURCHASE = 'purchase',

@@ -1,8 +1,8 @@
 import { Cascade, Entity } from '@mikro-orm/postgresql';
 import { ManyToOne } from '@mikro-orm/core';
-import { Language } from '../common/entities/language.entity';
+import { Language } from '../../common/entities/language.entity';
 import { Talent } from './talent.entity';
-import { LanguageLevel } from '../common/entities/language-level.entity';
+import { LanguageLevel } from '../../common/entities/language-level.entity';
 
 @Entity()
 export class TalentLanguage {

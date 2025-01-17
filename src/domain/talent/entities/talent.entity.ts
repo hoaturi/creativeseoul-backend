@@ -11,16 +11,16 @@ import {
   Property,
   WeightedFullTextValue,
 } from '@mikro-orm/postgresql';
-import { City } from '../common/entities/city.entity';
-import { Country } from '../common/entities/country.entity';
-import { BaseEntity } from '../base.entity';
-import { User } from '../user/user.entity';
+import { City } from '../../common/entities/city.entity';
+import { Country } from '../../common/entities/country.entity';
+import { BaseEntity } from '../../base.entity';
+import { User } from '../../user/user.entity';
 import { TalentLanguage } from './talent-language.entity';
-import { TalentSocialLinks } from './talent-social-links.interface';
-import { SalaryRange } from '../common/entities/salary-range.entity';
-import { HourlyRateRange } from '../common/entities/hourly-rate-range.entity';
-import { WorkLocationType } from '../common/entities/work-location-type.entity';
-import { EmploymentType } from '../common/entities/employment-type.entity';
+import { TalentSocialLinks } from '../talent-social-links.interface';
+import { SalaryRange } from './salary-range.entity';
+import { HourlyRateRange } from './hourly-rate-range.entity';
+import { WorkLocationType } from '../../common/entities/work-location-type.entity';
+import { EmploymentType } from '../../common/entities/employment-type.entity';
 
 const generateSearchVector = (talent: Talent): WeightedFullTextValue => ({
   A: [talent.title, talent.skills?.join(' ')].filter(Boolean).join(' '),

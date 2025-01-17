@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EntityManager, raw } from '@mikro-orm/postgresql';
-import { Job } from '../../../domain/job/job.entity';
+import { Job } from '../../../domain/job/entities/job.entity';
 
 @Injectable()
 export class JobMaintenanceService {

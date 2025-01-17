@@ -7,7 +7,7 @@ import {
   QueryOrder,
   raw,
 } from '@mikro-orm/postgresql';
-import { Talent } from '../../../../domain/talent/talent.entity';
+import { Talent } from '../../../../domain/talent/entities/talent.entity';
 
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';

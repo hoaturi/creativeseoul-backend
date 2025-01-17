@@ -7,7 +7,7 @@ import {
   GetMyJobListResponseDto,
 } from '../../dtos/get-my-job-list-response.dto';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Job } from '../../../../domain/job/job.entity';
+import { Job } from '../../../../domain/job/entities/job.entity';
 
 @QueryHandler(GetMyJobListQuery)
 export class GetMyJobListHandler implements IQueryHandler<GetMyJobListQuery> {

@@ -7,7 +7,7 @@ import {
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
-import { Company } from '../../../../domain/company/company.entity';
+import { Company } from '../../../../domain/company/entities/company.entity';
 
 const COMPANY_FIELDS = [
   'id',

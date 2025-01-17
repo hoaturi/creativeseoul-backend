@@ -3,10 +3,10 @@ import { UpdateCompanyCommand } from './update-company.command';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { CompanySize } from '../../../../domain/common/entities/company-size.entity';
-import { Company } from '../../../../domain/company/company.entity';
+import { CompanySize } from '../../../../domain/company/entities/company-size.entity';
+import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../company.error';
-import { CompanyNotFoundException } from '../../../../domain/company/company-not-found.exception';
+import { CompanyNotFoundException } from '../../../../domain/company/exceptions/company-not-found.exception';
 
 @CommandHandler(UpdateCompanyCommand)
 export class UpdateCompanyHandler

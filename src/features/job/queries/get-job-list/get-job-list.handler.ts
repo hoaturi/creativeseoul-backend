@@ -9,7 +9,7 @@ import {
   GetJobListResponseDto,
 } from '../../dtos/get-job-list-response.dto';
 import { GetJobListQueryDto } from '../../dtos/get-job-list-query.dto';
-import { Job } from '../../../../domain/job/job.entity';
+import { Job } from '../../../../domain/job/entities/job.entity';
 
 const JOB_FIELDS = [
   'slug',

@@ -3,15 +3,15 @@ import { CreateRegularJobCommand } from './create-regular-job.command';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
-import { Job } from '../../../../domain/job/job.entity';
-import { Category } from '../../../../domain/common/entities/category.entity';
+import { Job } from '../../../../domain/job/entities/job.entity';
+import { Category } from '../../../../domain/job/entities/category.entity';
 import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
-import { SeniorityLevel } from '../../../../domain/common/entities/seniority-level.entity';
+import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.entity';
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { CreateRegularJobRequestDto } from '../../dtos/create-regular-job-request.dto';
 import slugify from 'slugify';
-import { Company } from '../../../../domain/company/company.entity';
+import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../../company/company.error';
 
 interface JobReferences {

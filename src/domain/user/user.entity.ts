@@ -8,8 +8,8 @@ import {
 import { BaseEntity } from '../base.entity';
 import { Cascade, Index } from '@mikro-orm/core';
 import { UserRole } from './user-role.enum';
-import { Talent } from '../talent/talent.entity';
-import { Company } from '../company/company.entity';
+import { Talent } from '../talent/entities/talent.entity';
+import { Company } from '../company/entities/company.entity';
 
 @Entity()
 export class User extends BaseEntity {

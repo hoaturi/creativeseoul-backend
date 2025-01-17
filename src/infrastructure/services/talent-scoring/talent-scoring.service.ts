@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Collection } from '@mikro-orm/core';
-import { TalentLanguage } from '../../../domain/talent/talent-language.entity';
-import { Talent } from '../../../domain/talent/talent.entity';
+import { TalentLanguage } from '../../../domain/talent/entities/talent-language.entity';
+import { Talent } from '../../../domain/talent/entities/talent.entity';
 
 @Injectable()
 export class TalentScoringService {
