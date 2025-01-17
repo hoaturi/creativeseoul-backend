@@ -23,6 +23,8 @@ import { COUNTRIES } from '../../domain/common/constants/country.constant';
 import { SALARY_RANGE } from '../../domain/talent/constants/salary-range.constant';
 import { HOURLY_RATE_RANGE } from '../../domain/talent/constants/hourly-rate-range.constant';
 import { SENIORITY_LEVELS } from '../../domain/job/constants/seniority-level.constant';
+import { EventType } from '../../domain/event/event-type.entity';
+import { EVENT_TYPE } from '../../domain/event/event-type.constant';
 
 interface BaseEntity {
   id: number;
@@ -103,6 +105,7 @@ export class BaseSeeder extends Seeder {
       SeniorityLevel,
       'SeniorityLevel',
     );
+    await seedMissingEntities(EventType, EVENT_TYPE, EventType, 'EventType');
 
     await em.flush();
   }
