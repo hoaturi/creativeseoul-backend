@@ -34,46 +34,45 @@ export class JobMetricService {
   }
 
   public async syncJobApplicationClicks(): Promise<void> {
-    try {
+    this.logger.log(
+      'job-metric.sync-job-application-clicks.started: Starting to sync job application clicks',
+    );
+
+    const keys = await this.cacheManager.store.keys('job:*:click-count');
+
+    const updates = await Promise.all(
+      keys.map(async (key) => {
+        const jobId = key.split(':')[1];
+        const clickCount = await this.cacheManager.get<number>(key);
+        return { jobId, clickCount, key };
+      }),
+    );
+
+    if (updates.length === 0) {
       this.logger.log(
-        'job-metric.sync-job-application-clicks.started: Starting to sync job application clicks',
+        'job-metric.sync-job-application-clicks.success: No job application clicks to sync',
       );
+      return;
+    }
 
-      const keys = await this.cacheManager.store.keys('job:*:click-count');
+    const cases = updates
+      .map(
+        (u) =>
+          `WHEN id = '${u.jobId}' THEN application_click_count + ${u.clickCount}`,
+      )
+      .join(' ');
 
-      const updates = await Promise.all(
-        keys.map(async (key) => {
-          const jobId = key.split(':')[1];
-          const clickCount = await this.cacheManager.get<number>(key);
-          return { jobId, clickCount, key };
-        }),
-      );
+    await this.em
+      .createQueryBuilder(Job)
+      .update({
+        applicationClickCount: raw(
+          `CASE ${cases} ELSE application_click_count END`,
+        ),
+      })
+      .where({ id: { $in: updates.map((u) => u.jobId) } })
+      .execute();
 
-      if (updates.length === 0) {
-        this.logger.log(
-          'job-metric.sync-job-application-clicks.success: No job application clicks to sync',
-        );
-        return;
-      }
-
-      const cases = updates
-        .map(
-          (u) =>
-            `WHEN id = '${u.jobId}' THEN application_click_count + ${u.clickCount}`,
-        )
-        .join(' ');
-
-      await this.em
-        .createQueryBuilder(Job)
-        .update({
-          applicationClickCount: raw(
-            `CASE ${cases} ELSE application_click_count END`,
-          ),
-        })
-        .where({ id: { $in: updates.map((u) => u.jobId) } })
-        .execute();
-
-      await Promise.all(updates.map((u) => this.cacheManager.del(u.key)));
+    await Promise.all(updates.map((u) => this.cacheManager.del(u.key)));
 
       this.logger.log(
         {
