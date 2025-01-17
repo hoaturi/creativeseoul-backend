@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CronQueueService } from './cron-queue.service';
-import { JobMetricModule } from '../../services/job-metric/job-metric.module';
+import { JobMaintenanceModule } from '../../services/job-maintenance/job-maintenance.module';
 import { BullModule } from '@nestjs/bullmq';
 import { QueueType } from '../queue-type.enum';
 import { JobMaintenanceCronJobProcessor } from './processors/job-maintenance/job-maintenance-cron.processor';
@@ -10,7 +10,7 @@ import { JobMaintenanceCronJobProcessor } from './processors/job-maintenance/job
     BullModule.registerQueue({
       name: QueueType.JOB_MAINTENANCE,
     }),
-    JobMetricModule,
+    JobMaintenanceModule,
   ],
   providers: [CronQueueService, JobMaintenanceCronJobProcessor],
 })

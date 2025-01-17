@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JobMetricService } from './job-metric.service';
+import { JobMaintenanceService } from './job-maintenance.service';
 import { CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-ioredis-yet';
 
@@ -18,7 +18,7 @@ import { redisStore } from 'cache-manager-ioredis-yet';
       },
     }),
   ],
-  providers: [JobMetricService],
-  exports: [JobMetricService],
+  providers: [JobMaintenanceService],
+  exports: [JobMaintenanceService],
 })
-export class JobMetricModule {}
+export class JobMaintenanceModule {}

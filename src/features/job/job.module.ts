@@ -6,11 +6,11 @@ import { GetJobListHandler } from './queries/get-job-list/get-job-list.handler';
 import { GetJobHandler } from './queries/get-job/get-job.handler';
 import { UpdateJobHandler } from './commands/update-job/update-job.handler';
 import { TrackJobApplicationClickHandler } from './commands/track-job-application-click/track-job-application-click.handler';
-import { JobMetricModule } from '../../infrastructure/services/job-metric/job-metric.module';
+import { JobMaintenanceModule } from '../../infrastructure/services/job-maintenance/job-maintenance.module';
 import { GetMyJobListHandler } from './queries/get-my-job-list/get-my-job-list.handler';
 
 @Module({
-  imports: [JobMetricModule],
+  imports: [JobMaintenanceModule],
   providers: [
     CreateFeaturedJobHandler,
     CreateRegularJobHandler,

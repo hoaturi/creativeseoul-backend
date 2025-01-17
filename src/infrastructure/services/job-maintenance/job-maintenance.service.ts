@@ -5,8 +5,8 @@ import { EntityManager, raw } from '@mikro-orm/postgresql';
 import { Job } from '../../../domain/job/job.entity';
 
 @Injectable()
-export class JobMetricService {
-  private readonly logger = new Logger(JobMetricService.name);
+export class JobMaintenanceService {
+  private readonly logger = new Logger(JobMaintenanceService.name);
   private readonly CLICK_COOLDOWN = 60 * 60 * 6 * 1000; // 6 hours
   private readonly FEATURE_DURATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 
