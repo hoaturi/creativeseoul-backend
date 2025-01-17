@@ -9,6 +9,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
   Max,
   MaxLength,
   Min,
@@ -25,19 +26,20 @@ import { SENIORITY_LEVELS } from '../../../domain/job/constants/seniority-level.
 
 export class CreateRegularJobRequestDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsUUID()
   public readonly companyId!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
+  @Trim()
   public readonly title!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Trim()
   public readonly description!: string;
 
   @ApiProperty()
@@ -67,6 +69,8 @@ export class CreateRegularJobRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @MaxLength(64)
+  @Trim()
   public readonly location!: string;
 
   @ApiProperty()

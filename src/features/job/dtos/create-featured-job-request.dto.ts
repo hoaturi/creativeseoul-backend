@@ -28,11 +28,13 @@ export class CreateFeaturedJobRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
+  @Trim()
   public readonly title!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Trim()
   public readonly description!: string;
 
   @ApiProperty()
@@ -62,6 +64,8 @@ export class CreateFeaturedJobRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @MaxLength(64)
+  @Trim()
   public readonly location!: string;
 
   @ApiProperty()

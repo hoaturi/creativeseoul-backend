@@ -6,6 +6,7 @@ import {
   IsUrl,
   MaxLength,
 } from 'class-validator';
+import { Trim } from '../../../../common/decorators/trim.decorator';
 
 export class SendInvitationRequestDto {
   @ApiProperty()
@@ -16,6 +17,7 @@ export class SendInvitationRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
+  @Trim()
   public readonly companyName!: string;
 
   @ApiProperty()

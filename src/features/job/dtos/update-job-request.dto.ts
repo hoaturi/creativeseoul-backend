@@ -28,11 +28,13 @@ export class UpdateJobRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(64)
+  @Trim()
   public readonly title!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Trim()
   public readonly description!: string;
 
   @ApiProperty()
@@ -62,6 +64,8 @@ export class UpdateJobRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @MaxLength(64)
+  @Trim()
   public readonly location!: string;
 
   @ApiPropertyOptional()

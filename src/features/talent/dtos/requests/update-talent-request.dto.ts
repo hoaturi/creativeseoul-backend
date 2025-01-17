@@ -76,7 +76,7 @@ export class UpdateTalentRequestDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsArray()
-  @ArrayMaxSize(15)
+  @ArrayMaxSize(10)
   @IsString({ each: true })
   @Trim({ each: true })
   @RemoveDuplicates()
@@ -89,8 +89,9 @@ export class UpdateTalentRequestDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(32)
   @Trim()
   public readonly city?: string;
 
@@ -141,17 +142,18 @@ export class UpdateTalentRequestDto {
   public readonly requiresVisaSponsorship!: boolean;
 
   // Contact Information
-  @ApiPropertyOptional()
-  @ValidateIf((o) => o.isContactable === true)
-  @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Either email or phone is required if isContactable is true',
+  })
+  @ValidateIf((o: UpdateTalentRequestDto) => o.isContactable && !o.phone)
   @IsEmail()
   public readonly email?: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @ValidateIf((o) => o.isContactable === true)
+  @ValidateIf((o: UpdateTalentRequestDto) => o.isContactable && !o.email)
   @IsString()
   @IsNotEmpty()
+  @MaxLength(16)
   @Trim()
   public readonly phone?: string;
 
