@@ -42,6 +42,8 @@ import { GetJobQuery } from './queries/get-job/get-job.query';
 import { UpdateJobRequestDto } from './dtos/update-job-request.dto';
 import { UpdateJobCommand } from './commands/update-job/update-job.command';
 import { TrackJobApplicationClickCommand } from './commands/track-job-application-click/track-job-application-click.command';
+import { GetMyJobListResponseDto } from './dtos/get-my-job-list-response.dto';
+import { GetMyJobListQuery } from './queries/get-my-job-list/get-my-job-list.query';
 
 @Controller('jobs')
 export class JobController {
@@ -126,6 +128,32 @@ export class JobController {
     @Query() queryDto: GetJobListQueryDto,
   ): Promise<GetJobListResponseDto> {
     const query = new GetJobListQuery(queryDto);
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('my')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: [GetMyJobListResponseDto],
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  public async getMyJobList(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<GetMyJobListResponseDto> {
+    const query = new GetMyJobListQuery(user);
 
     const result = await this.queryBus.execute(query);
 
