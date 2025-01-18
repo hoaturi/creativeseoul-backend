@@ -3,11 +3,10 @@ import { Property } from '@mikro-orm/postgresql';
 import { BaseEntity } from '../base.entity';
 import { EventType } from './event-type.entity';
 
-// Check if either rsvpUrl or websiteUrl is not null and end date is greater than start date
+// Check if either registrationUrl or websiteUrl is not null and end date is greater than start date
 @Check({
-  name: 'check_url_and_dates',
   expression:
-    'COALESCE(rsvp_url, website_url) IS NOT NULL AND start_date < end_date',
+    'COALESCE(registration_url, website_url) IS NOT NULL AND start_date < end_date',
 })
 @Entity()
 export class Event extends BaseEntity {
@@ -33,7 +32,7 @@ export class Event extends BaseEntity {
   public coverImageUrl: string;
 
   @Property({ nullable: true })
-  public rsvpUrl?: string;
+  public registrationUrl?: string;
 
   @Property({ nullable: true })
   public websiteUrl?: string;
@@ -45,7 +44,7 @@ export class Event extends BaseEntity {
     startDate: Date;
     endDate: Date;
     coverImageUrl: string;
-    rsvpUrl?: string;
+    registrationUrl?: string;
     websiteUrl?: string;
   }) {
     super();
@@ -55,7 +54,7 @@ export class Event extends BaseEntity {
     this.startDate = data.startDate;
     this.endDate = data.endDate;
     this.coverImageUrl = data.coverImageUrl;
-    this.rsvpUrl = data.rsvpUrl;
+    this.registrationUrl = data.registrationUrl;
     this.websiteUrl = data.websiteUrl;
   }
 }
