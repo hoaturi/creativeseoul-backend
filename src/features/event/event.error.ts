@@ -8,4 +8,10 @@ export class EventError extends ResultError {
     HttpStatus.BAD_REQUEST,
     'Either registerUrl or websiteUrl is required',
   );
+
+  public static readonly EventNotFound = new EventError(
+    EventErrorCode.EventNotFound,
+    HttpStatus.NOT_FOUND,
+    'Event not found',
+  );
 }

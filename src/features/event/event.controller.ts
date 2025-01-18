@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { RolesGuard } from '../../infrastructure/security/guards/roles.guard';
 import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -19,12 +22,17 @@ import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { CreateEventRequestDto } from './dtos/create-event-request.dto';
 import { CreateEventCommand } from './commands/create-event.command';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { EventError } from './event.error';
+import { GetEventResponseDto } from './dtos/get-event-response.dto';
+import { GetEventQuery } from './queries/get-event/get-event.query';
 
 @Controller('events')
 export class EventController {
-  public constructor(private readonly commandBus: CommandBus) {}
+  public constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @Post()
   @Roles(UserRole.ADMIN)
@@ -56,5 +64,26 @@ export class EventController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+  }
+
+  @Get(':slug')
+  @ApiOkResponse({
+    type: GetEventResponseDto,
+  })
+  @ApiNotFoundResponse({
+    example: EventError.EventNotFound,
+  })
+  public async getEvent(
+    @Param('slug') slug: string,
+  ): Promise<GetEventResponseDto> {
+    const query = new GetEventQuery(slug);
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
   }
 }
