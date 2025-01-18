@@ -13,6 +13,9 @@ export class Event extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
+  @Property({ unique: true })
+  public readonly slug: string;
+
   @ManyToOne(() => EventType)
   public eventType: EventType;
 
@@ -39,6 +42,7 @@ export class Event extends BaseEntity {
 
   public constructor(data: {
     title: string;
+    slug: string;
     eventType: EventType;
     description: string;
     startDate: Date;
@@ -49,6 +53,7 @@ export class Event extends BaseEntity {
   }) {
     super();
     this.title = data.title;
+    this.slug = data.slug;
     this.eventType = data.eventType;
     this.description = data.description;
     this.startDate = data.startDate;

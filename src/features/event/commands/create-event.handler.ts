@@ -6,6 +6,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Event } from '../../../domain/event/event.entity';
 import { EventType } from '../../../domain/event/event-type.entity';
 import { EventError } from '../event.error';
+import slugify from 'slugify';
 
 @CommandHandler(CreateEventCommand)
 export class CreateEventHandler implements ICommandHandler<CreateEventCommand> {
@@ -22,10 +23,14 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand> {
 
     const eventTypeRef = this.em.getReference(EventType, dto.eventTypeId);
 
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const slug = `${slugify(dto.title)}-${randomStr}`.toLowerCase();
+
     this.em.create(
       Event,
       new Event({
         title: dto.title,
+        slug,
         eventType: eventTypeRef,
         description: dto.description,
         startDate: dto.startDate,
