@@ -26,6 +26,8 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { EventError } from './event.error';
 import { GetEventResponseDto } from './dtos/get-event-response.dto';
 import { GetEventQuery } from './queries/get-event/get-event.query';
+import { GetEventListResponseDto } from './dtos/get-event-list-response.dto';
+import { GetEventListQuery } from './queries/get-event-list/get-event-list.query';
 
 @Controller('events')
 export class EventController {
@@ -64,6 +66,22 @@ export class EventController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+  }
+
+  @Get()
+  @ApiOkResponse({
+    type: GetEventListResponseDto,
+  })
+  public async getEventList(): Promise<GetEventListResponseDto> {
+    const query = new GetEventListQuery();
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
   }
 
   @Get(':slug')
