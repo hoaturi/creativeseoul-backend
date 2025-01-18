@@ -1,4 +1,4 @@
-import { Check, Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
+import { Check, Entity, Index, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { Property } from '@mikro-orm/postgresql';
 import { BaseEntity } from '../base.entity';
 import { EventType } from './event-type.entity';
@@ -26,6 +26,7 @@ export class Event extends BaseEntity {
   public description: string;
 
   @Property()
+  @Index()
   public startDate: Date;
 
   @Property()
