@@ -12,7 +12,6 @@ import {
   Max,
   MaxLength,
   Min,
-  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import {
@@ -135,22 +134,22 @@ export class UpdateTalentRequestDto {
 
   @ApiProperty()
   @IsBoolean()
-  public readonly isContactable!: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
   public readonly requiresVisaSponsorship!: boolean;
 
-  // Contact Information
-  @ApiPropertyOptional({
-    description: 'Either email or phone is required if isContactable is true',
+  @ApiProperty({
+    description: 'If true, either email or phone must be provided.',
   })
-  @ValidateIf((o: UpdateTalentRequestDto) => o.isContactable && !o.phone)
+  @IsBoolean()
+  public readonly isContactable!: boolean;
+
+  // Contact Information
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsEmail()
   public readonly email?: string;
 
   @ApiPropertyOptional()
-  @ValidateIf((o: UpdateTalentRequestDto) => o.isContactable && !o.email)
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(16)

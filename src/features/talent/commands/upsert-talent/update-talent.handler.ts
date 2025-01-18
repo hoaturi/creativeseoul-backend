@@ -42,6 +42,10 @@ export class UpdateTalentHandler
   ): Promise<Result<void, ResultError>> {
     const { dto, user } = command;
 
+    if (dto.isContactable && !dto.email && !dto.phone) {
+      return Result.failure(TalentError.ContactInfoMissing);
+    }
+
     const talent = await this.em.findOne(Talent, user.profileId!, {
       populate: ['languages', 'city', 'country'],
     });

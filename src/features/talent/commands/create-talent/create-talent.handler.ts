@@ -47,6 +47,10 @@ export class CreateTalentHandler
   ): Promise<Result<string, ResultError>> {
     const { dto, user } = command;
 
+    if (dto.isContactable && !dto.email && !dto.phone) {
+      return Result.failure(TalentError.ContactInfoMissing);
+    }
+
     if (user.profileId) {
       return Result.failure(TalentError.ProfileAlreadyExists);
     }

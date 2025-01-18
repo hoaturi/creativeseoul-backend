@@ -15,6 +15,12 @@ export class TalentError extends ResultError {
     'Talent profile already exists',
   );
 
+  public static readonly ContactInfoMissing = new ResultError(
+    TalentErrorCode.CONTACT_INFO_MISSING,
+    HttpStatus.BAD_REQUEST,
+    'Contact information missing',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }
