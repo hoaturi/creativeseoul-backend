@@ -11,6 +11,7 @@ import { GetMyJobListHandler } from './queries/get-my-job-list/get-my-job-list.h
 import { DeleteJobHandler } from './commands/delete-job/delete-job.handler';
 import { UnpublishJobHandler } from './commands/unpublish-job/unpublish-job.handler';
 import { PublishJobHandler } from './commands/publish-job/publish-job.handler';
+import { RenewFeaturedJobHandler } from './commands/renew-featured-job/renew-featured-job.handler';
 
 @Module({
   imports: [JobMaintenanceModule],
@@ -25,6 +26,7 @@ import { PublishJobHandler } from './commands/publish-job/publish-job.handler';
     DeleteJobHandler,
     UnpublishJobHandler,
     PublishJobHandler,
+    RenewFeaturedJobHandler,
   ],
   controllers: [JobController],
 })

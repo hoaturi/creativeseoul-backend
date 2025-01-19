@@ -20,4 +20,10 @@ export class JobError extends ResultError {
     HttpStatus.BAD_REQUEST,
     'Job is already published',
   );
+
+  public static readonly AlreadyFeatured = new ResultError(
+    JobErrorCode.ALREADY_FEATURED,
+    HttpStatus.BAD_REQUEST,
+    'Job is already featured',
+  );
 }

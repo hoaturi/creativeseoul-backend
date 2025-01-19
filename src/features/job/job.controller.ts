@@ -50,6 +50,7 @@ import { GetMyJobListQuery } from './queries/get-my-job-list/get-my-job-list.que
 import { DeleteJobCommand } from './commands/delete-job/delete-job.command';
 import { UnpublishJobCommand } from './commands/unpublish-job/unpublish-job.command';
 import { PublishJobCommand } from './commands/publish-job/publish-job.command';
+import { RenewFeaturedJobCommand } from './commands/renew-featured-job/renew-featured-job.command';
 
 @Controller('jobs')
 export class JobController {
@@ -345,6 +346,41 @@ export class JobController {
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<void> {
     const command = new PublishJobCommand(user, id);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+  }
+
+  @Patch(':id/renew')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    examples: {
+      PermissionDenied: {
+        summary: 'Permission denied',
+        value: JobError.PermissionDenied,
+      },
+      Unauthorized: {
+        summary: 'Unauthorized',
+        value: AuthError.Unauthorized,
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    example: JobError.NotFound,
+  })
+  public async renewFeaturedJob(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
+    const command = new RenewFeaturedJobCommand(user, id);
 
     const result = await this.commandBus.execute(command);
 
