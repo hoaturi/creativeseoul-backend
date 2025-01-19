@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayMaxSize,
-  IsAlpha,
   IsArray,
   IsBoolean,
   IsNotEmpty,
@@ -23,6 +22,7 @@ import {
 import { Trim } from '../../../common/decorators/trim.decorator';
 import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
 import { SENIORITY_LEVELS } from '../../../domain/job/constants/seniority-level.constant';
+import { ToLowerCase } from '../../../common/decorators/to-lower-case.decorator';
 
 export class CreateRegularJobRequestDto {
   @ApiProperty()
@@ -92,6 +92,7 @@ export class CreateRegularJobRequestDto {
   @IsAlpha('en-US', { each: true })
   @RemoveDuplicates()
   @Trim({ each: true })
+  @ToLowerCase({ each: true })
   public readonly tags?: string[];
 
   @ApiProperty()
