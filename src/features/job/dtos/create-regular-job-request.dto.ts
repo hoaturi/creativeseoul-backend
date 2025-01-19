@@ -89,7 +89,6 @@ export class CreateRegularJobRequestDto {
   @IsString({ each: true })
   @ArrayMaxSize(5)
   @IsNotEmpty({ each: true })
-  @IsAlpha('en-US', { each: true })
   @RemoveDuplicates()
   @Trim({ each: true })
   @ToLowerCase({ each: true })
