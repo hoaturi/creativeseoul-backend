@@ -10,6 +10,7 @@ import { JobMaintenanceModule } from '../../infrastructure/services/job-maintena
 import { GetMyJobListHandler } from './queries/get-my-job-list/get-my-job-list.handler';
 import { DeleteJobHandler } from './commands/delete-job/delete-job.handler';
 import { UnpublishJobHandler } from './commands/unpublish-job/unpublish-job.handler';
+import { PublishJobHandler } from './commands/publish-job/publish-job.handler';
 
 @Module({
   imports: [JobMaintenanceModule],
@@ -23,6 +24,7 @@ import { UnpublishJobHandler } from './commands/unpublish-job/unpublish-job.hand
     GetMyJobListHandler,
     DeleteJobHandler,
     UnpublishJobHandler,
+    PublishJobHandler,
   ],
   controllers: [JobController],
 })

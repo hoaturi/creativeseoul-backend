@@ -14,4 +14,10 @@ export class JobError extends ResultError {
     HttpStatus.FORBIDDEN,
     'Permission denied',
   );
+
+  public static readonly AlreadyPublished = new ResultError(
+    JobErrorCode.ALREADY_PUBLISHED,
+    HttpStatus.BAD_REQUEST,
+    'Job is already published',
+  );
 }
