@@ -9,6 +9,7 @@ import {
   Ip,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -47,6 +48,7 @@ import { TrackJobApplicationClickCommand } from './commands/track-job-applicatio
 import { GetMyJobListResponseDto } from './dtos/responses/get-my-job-list-response.dto';
 import { GetMyJobListQuery } from './queries/get-my-job-list/get-my-job-list.query';
 import { DeleteJobCommand } from './commands/delete-job/delete-job.command';
+import { UnpublishJobCommand } from './commands/unpublish-job/unpublish-job.command';
 
 @Controller('jobs')
 export class JobController {
@@ -272,6 +274,41 @@ export class JobController {
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<void> {
     const command = new DeleteJobCommand(user, id);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+  }
+
+  @Patch(':id/unpublish')
+  @Roles(UserRole.COMPANY, UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    examples: {
+      PermissionDenied: {
+        summary: 'Permission denied',
+        value: JobError.PermissionDenied,
+      },
+      Unauthorized: {
+        summary: 'Unauthorized',
+        value: AuthError.Unauthorized,
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    example: JobError.NotFound,
+  })
+  public async unpublishJob(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
+    const command = new UnpublishJobCommand(user, id);
 
     const result = await this.commandBus.execute(command);
 
