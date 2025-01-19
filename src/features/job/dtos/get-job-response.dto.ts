@@ -36,6 +36,9 @@ export class GetJobResponseDto {
   public readonly company: JobCompanyDto;
 
   @ApiProperty()
+  public readonly id: string;
+
+  @ApiProperty()
   public readonly title: string;
 
   @ApiProperty()
@@ -79,6 +82,7 @@ export class GetJobResponseDto {
 
   public constructor(data: {
     company: JobCompanyDto;
+    id: string;
     title: string;
     description: string;
     category: string;
@@ -94,6 +98,7 @@ export class GetJobResponseDto {
     residentOnly: boolean;
     applicationUrl: string;
   }) {
+    this.id = data.id;
     this.company = data.company;
     this.title = data.title;
     this.description = data.description;

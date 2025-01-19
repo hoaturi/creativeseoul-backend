@@ -25,6 +25,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
       },
       {
         fields: [
+          'id',
           'title',
           'description',
           'category.label',
@@ -71,6 +72,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
 
     const responseDto = new GetJobResponseDto({
       company: companyDto,
+      id: job.id,
       title: job.title,
       description: job.description,
       category: job.category.label,
