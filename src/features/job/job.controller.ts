@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
   HttpStatus,
   Ip,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -44,6 +46,7 @@ import { UpdateJobCommand } from './commands/update-job/update-job.command';
 import { TrackJobApplicationClickCommand } from './commands/track-job-application-click/track-job-application-click.command';
 import { GetMyJobListResponseDto } from './dtos/get-my-job-list-response.dto';
 import { GetMyJobListQuery } from './queries/get-my-job-list/get-my-job-list.query';
+import { DeleteJobCommand } from './commands/delete-job/delete-job.command';
 
 @Controller('jobs')
 export class JobController {
@@ -234,6 +237,41 @@ export class JobController {
   ): Promise<void> {
     const ipv4 = ipAddress.split(':').pop() as string;
     const command = new TrackJobApplicationClickCommand(jobId, ipv4);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+  }
+
+  @Delete(':id')
+  @Roles(UserRole.COMPANY, UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    examples: {
+      PermissionDenied: {
+        summary: 'Permission denied',
+        value: JobError.PermissionDenied,
+      },
+      Unauthorized: {
+        summary: 'Unauthorized',
+        value: AuthError.Unauthorized,
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    example: JobError.NotFound,
+  })
+  public async deleteJob(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
+    const command = new DeleteJobCommand(user, id);
 
     const result = await this.commandBus.execute(command);
 

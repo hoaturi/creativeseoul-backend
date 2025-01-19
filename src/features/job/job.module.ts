@@ -8,6 +8,7 @@ import { UpdateJobHandler } from './commands/update-job/update-job.handler';
 import { TrackJobApplicationClickHandler } from './commands/track-job-application-click/track-job-application-click.handler';
 import { JobMaintenanceModule } from '../../infrastructure/services/job-maintenance/job-maintenance.module';
 import { GetMyJobListHandler } from './queries/get-my-job-list/get-my-job-list.handler';
+import { DeleteJobHandler } from './commands/delete-job/delete-job.handler';
 
 @Module({
   imports: [JobMaintenanceModule],
@@ -19,6 +20,7 @@ import { GetMyJobListHandler } from './queries/get-my-job-list/get-my-job-list.h
     UpdateJobHandler,
     TrackJobApplicationClickHandler,
     GetMyJobListHandler,
+    DeleteJobHandler,
   ],
   controllers: [JobController],
 })
