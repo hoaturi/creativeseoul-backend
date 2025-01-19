@@ -34,7 +34,11 @@ export class UnpublishJobHandler
     }
 
     // Bypass onUpdate lifecycle hook
-    await this.em.nativeUpdate(Job, { id }, { isPublished: false });
+    await this.em.nativeUpdate(
+      Job,
+      { id },
+      { isPublished: false, updatedAt: new Date() },
+    );
 
     return Result.success();
   }

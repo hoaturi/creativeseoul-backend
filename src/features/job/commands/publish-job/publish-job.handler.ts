@@ -40,7 +40,11 @@ export class PublishJobHandler implements ICommandHandler<PublishJobCommand> {
     }
 
     // Bypass onUpdate lifecycle hook
-    await this.em.nativeUpdate(Job, { id }, { isPublished: true });
+    await this.em.nativeUpdate(
+      Job,
+      { id },
+      { isPublished: true, updatedAt: new Date() },
+    );
 
     return Result.success();
   }
