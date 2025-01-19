@@ -9,7 +9,7 @@ import { EmploymentType } from '../../../../domain/common/entities/employment-ty
 import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.entity';
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
-import { CreateRegularJobRequestDto } from '../../dtos/create-regular-job-request.dto';
+import { CreateRegularJobRequestDto } from '../../dtos/requests/create-regular-job-request.dto';
 import slugify from 'slugify';
 import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../../company/company.error';

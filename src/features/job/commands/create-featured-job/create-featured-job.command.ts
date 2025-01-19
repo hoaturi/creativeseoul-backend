@@ -1,4 +1,4 @@
-import { CreateFeaturedJobRequestDto } from '../../dtos/create-featured-job-request.dto';
+import { CreateFeaturedJobRequestDto } from '../../dtos/requests/create-featured-job-request.dto';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 import { Command } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';

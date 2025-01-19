@@ -7,8 +7,8 @@ import {
   GetJobListItemCompanyDto,
   GetJobListItemDto,
   GetJobListResponseDto,
-} from '../../dtos/get-job-list-response.dto';
-import { GetJobListQueryDto } from '../../dtos/get-job-list-query.dto';
+} from '../../dtos/responses/get-job-list-response.dto';
+import { GetJobListQueryDto } from '../../dtos/requests/get-job-list-query.dto';
 import { Job } from '../../../../domain/job/entities/job.entity';
 
 const JOB_FIELDS = [

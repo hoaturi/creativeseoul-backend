@@ -9,15 +9,15 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { Trim } from '../../../common/decorators/trim.decorator';
-import { CATEGORIES } from '../../../domain/job/constants/category.constant';
-import { SeniorityLevel } from '../../../domain/job/entities/seniority-level.entity';
+import { Trim } from '../../../../common/decorators/trim.decorator';
+import { CATEGORIES } from '../../../../domain/job/constants/category.constant';
+import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.entity';
 import {
   EMPLOYMENT_TYPES,
   WORK_LOCATION_TYPES,
-} from '../../../domain/common/constants';
+} from '../../../../domain/common/constants';
 import { Transform } from 'class-transformer';
-import { LanguageLevel } from '../../../domain/common/entities/language-level.entity';
+import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 
 export class GetJobListQueryDto {
   @ApiPropertyOptional()

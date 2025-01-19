@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayMaxSize,
-  IsAlpha,
   IsArray,
   IsBoolean,
   IsNotEmpty,
@@ -9,21 +8,27 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
   Max,
   MaxLength,
   Min,
 } from 'class-validator';
-import { CATEGORIES } from '../../../domain/job/constants/category.constant';
+import { CATEGORIES } from '../../../../domain/job/constants/category.constant';
 import {
   EMPLOYMENT_TYPES,
   LANGUAGE_LEVELS,
   WORK_LOCATION_TYPES,
-} from '../../../domain/common/constants';
-import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
-import { Trim } from '../../../common/decorators/trim.decorator';
-import { SENIORITY_LEVELS } from '../../../domain/job/constants/seniority-level.constant';
+} from '../../../../domain/common/constants';
+import { Trim } from '../../../../common/decorators/trim.decorator';
+import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
+import { SENIORITY_LEVELS } from '../../../../domain/job/constants/seniority-level.constant';
+import { ToLowerCase } from '../../../../common/decorators/to-lower-case.decorator';
 
-export class UpdateJobRequestDto {
+export class CreateRegularJobRequestDto {
+  @ApiProperty()
+  @IsUUID()
+  public readonly companyId!: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -68,17 +73,15 @@ export class UpdateJobRequestDto {
   @Trim()
   public readonly location!: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @IsNumber()
   @Min(0)
-  public readonly minSalary?: number;
+  public readonly minSalary!: number;
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @IsNumber()
   @Min(0)
-  public readonly maxSalary?: number;
+  public readonly maxSalary!: number;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -86,9 +89,9 @@ export class UpdateJobRequestDto {
   @IsString({ each: true })
   @ArrayMaxSize(5)
   @IsNotEmpty({ each: true })
-  @IsAlpha('en-US', { each: true })
   @RemoveDuplicates()
   @Trim({ each: true })
+  @ToLowerCase({ each: true })
   public readonly tags?: string[];
 
   @ApiProperty()

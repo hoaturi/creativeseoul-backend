@@ -11,7 +11,7 @@ import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { Job } from '../../../../domain/job/entities/job.entity';
-import { CreateFeaturedJobRequestDto } from '../../dtos/create-featured-job-request.dto';
+import { CreateFeaturedJobRequestDto } from '../../dtos/requests/create-featured-job-request.dto';
 import {
   CreditTransaction,
   CreditTransactionType,

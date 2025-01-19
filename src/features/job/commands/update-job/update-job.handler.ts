@@ -12,7 +12,7 @@ import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { Logger } from '@nestjs/common';
-import { UpdateJobRequestDto } from '../../dtos/update-job-request.dto';
+import { UpdateJobRequestDto } from '../../dtos/requests/update-job-request.dto';
 
 interface JobReferences {
   category: Category;

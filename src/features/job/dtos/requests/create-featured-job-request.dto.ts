@@ -12,16 +12,16 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { CATEGORIES } from '../../../domain/job/constants/category.constant';
+import { CATEGORIES } from '../../../../domain/job/constants/category.constant';
 import {
   EMPLOYMENT_TYPES,
   LANGUAGE_LEVELS,
   WORK_LOCATION_TYPES,
-} from '../../../domain/common/constants';
-import { Trim } from '../../../common/decorators/trim.decorator';
-import { RemoveDuplicates } from '../../../common/decorators/remove-duplicates.decorator';
-import { SENIORITY_LEVELS } from '../../../domain/job/constants/seniority-level.constant';
-import { ToLowerCase } from '../../../common/decorators/to-lower-case.decorator';
+} from '../../../../domain/common/constants';
+import { Trim } from '../../../../common/decorators/trim.decorator';
+import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
+import { SENIORITY_LEVELS } from '../../../../domain/job/constants/seniority-level.constant';
+import { ToLowerCase } from '../../../../common/decorators/to-lower-case.decorator';
 
 export class CreateFeaturedJobRequestDto {
   @ApiProperty()

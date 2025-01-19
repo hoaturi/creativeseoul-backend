@@ -6,7 +6,7 @@ import { ResultError } from 'src/common/result/result-error';
 import {
   GetJobResponseDto,
   JobCompanyDto,
-} from '../../dtos/get-job-response.dto';
+} from '../../dtos/responses/get-job-response.dto';
 import { Job } from '../../../../domain/job/entities/job.entity';
 import { JobError } from '../../job.error';
 import { UserRole } from '../../../../domain/user/user-role.enum';

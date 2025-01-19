@@ -5,7 +5,7 @@ import { ResultError } from 'src/common/result/result-error';
 import {
   GetMyJobListItemDto,
   GetMyJobListResponseDto,
-} from '../../dtos/get-my-job-list-response.dto';
+} from '../../dtos/responses/get-my-job-list-response.dto';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Job } from '../../../../domain/job/entities/job.entity';
 

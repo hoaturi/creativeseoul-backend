@@ -1,6 +1,6 @@
 import { Query } from '@nestjs/cqrs';
 import { Result } from '../../../../common/result/result';
-import { GetJobResponseDto } from '../../dtos/get-job-response.dto';
+import { GetJobResponseDto } from '../../dtos/responses/get-job-response.dto';
 import { ResultError } from '../../../../common/result/result-error';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
