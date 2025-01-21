@@ -46,6 +46,8 @@ import { GetImageUploadUrlResponseDto } from '../common/dtos/get-image-upload-ur
 import { GetMyLogoUploadUrlCommand } from './commands/get-my-logo-upload-url/get-my-logo-upload-url.command';
 import { GetImageUploadUrlRequestDto } from '../common/dtos/get-image-upload-url-request.dto';
 import { GetLogoUploadUrlCommand } from './commands/get-logo-upload-url/get-logo-upload-url.command';
+import { GetSponsorCompanyListResponseDto } from './dtos/responses/get-sponsor-company-list-response.dto';
+import { GetSponsorCompanyListQuery } from './queries/get-sponsor-company-list/get-sponsor-company-list.query';
 
 @Controller('companies')
 export class CompanyController {
@@ -148,6 +150,22 @@ export class CompanyController {
     @Query() queryDto: GetCompanyListQueryDto,
   ): Promise<GetCompanyListResponseDto> {
     const command = new GetCompanyListQuery(queryDto);
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('sponsors')
+  @ApiOkResponse({
+    type: GetSponsorCompanyListResponseDto,
+  })
+  public async getSponsorCompanyList(): Promise<GetSponsorCompanyListResponseDto> {
+    const command = new GetSponsorCompanyListQuery();
 
     const result = await this.queryBus.execute(command);
 

@@ -12,6 +12,7 @@ import { DeleteJobHandler } from './commands/delete-job/delete-job.handler';
 import { UnpublishJobHandler } from './commands/unpublish-job/unpublish-job.handler';
 import { PublishJobHandler } from './commands/publish-job/publish-job.handler';
 import { RenewFeaturedJobHandler } from './commands/renew-featured-job/renew-featured-job.handler';
+import { GetSponsorCompanyListHandler } from '../company/queries/get-sponsor-company-list/get-sponsor-company-list.handler';
 
 @Module({
   imports: [JobMaintenanceModule],
@@ -27,6 +28,7 @@ import { RenewFeaturedJobHandler } from './commands/renew-featured-job/renew-fea
     UnpublishJobHandler,
     PublishJobHandler,
     RenewFeaturedJobHandler,
+    GetSponsorCompanyListHandler,
   ],
   controllers: [JobController],
 })
