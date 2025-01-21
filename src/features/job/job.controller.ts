@@ -51,6 +51,7 @@ import { DeleteJobCommand } from './commands/delete-job/delete-job.command';
 import { UnpublishJobCommand } from './commands/unpublish-job/unpublish-job.command';
 import { PublishJobCommand } from './commands/publish-job/publish-job.command';
 import { RenewFeaturedJobCommand } from './commands/renew-featured-job/renew-featured-job.command';
+import { GetFeaturedJobListQuery } from './queries/get-featured-job-list/get-featured-job-list.query';
 
 @Controller('jobs')
 export class JobController {
@@ -135,6 +136,22 @@ export class JobController {
     @Query() queryDto: GetJobListQueryDto,
   ): Promise<GetJobListResponseDto> {
     const query = new GetJobListQuery(queryDto);
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('featured')
+  @ApiOkResponse({
+    type: [GetJobListResponseDto],
+  })
+  public async getFeaturedJobList(): Promise<GetJobListResponseDto> {
+    const query = new GetFeaturedJobListQuery();
 
     const result = await this.queryBus.execute(query);
 

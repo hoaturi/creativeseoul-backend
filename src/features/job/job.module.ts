@@ -13,6 +13,7 @@ import { UnpublishJobHandler } from './commands/unpublish-job/unpublish-job.hand
 import { PublishJobHandler } from './commands/publish-job/publish-job.handler';
 import { RenewFeaturedJobHandler } from './commands/renew-featured-job/renew-featured-job.handler';
 import { GetSponsorCompanyListHandler } from '../company/queries/get-sponsor-company-list/get-sponsor-company-list.handler';
+import { GetFeaturedJobListHandler } from './queries/get-featured-job-list/get-featured-job-list.handler';
 
 @Module({
   imports: [JobMaintenanceModule],
@@ -29,6 +30,7 @@ import { GetSponsorCompanyListHandler } from '../company/queries/get-sponsor-com
     PublishJobHandler,
     RenewFeaturedJobHandler,
     GetSponsorCompanyListHandler,
+    GetFeaturedJobListHandler,
   ],
   controllers: [JobController],
 })
