@@ -29,6 +29,7 @@ export class GetSponsorCompanyListHandler
         fields: [
           'company.id',
           'company.name',
+          'company.summary',
           'company.logoUrl',
           'company.websiteUrl',
         ],
@@ -39,6 +40,7 @@ export class GetSponsorCompanyListHandler
       return new GetSponsorCompanyListItemDto({
         id: company.company.id,
         name: company.company.name,
+        summary: company.company.summary,
         logoUrl: company.company.logoUrl,
         websiteUrl: company.company.websiteUrl,
       });

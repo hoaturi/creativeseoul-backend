@@ -8,6 +8,9 @@ export class GetSponsorCompanyListItemDto {
   public readonly name: string;
 
   @ApiPropertyOptional()
+  public readonly summary?: string;
+
+  @ApiPropertyOptional()
   public readonly logoUrl?: string;
 
   @ApiProperty()
@@ -16,11 +19,13 @@ export class GetSponsorCompanyListItemDto {
   public constructor(data: {
     id: string;
     name: string;
+    summary?: string;
     logoUrl?: string;
     websiteUrl: string;
   }) {
     this.id = data.id;
     this.name = data.name;
+    this.summary = data.summary;
     this.logoUrl = data.logoUrl;
     this.websiteUrl = data.websiteUrl;
   }
