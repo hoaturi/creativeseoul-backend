@@ -5,6 +5,7 @@ import {
   HttpException,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { Roles } from '../../infrastructure/security/decorators/roles.decorator';
@@ -28,6 +29,7 @@ import { GetEventResponseDto } from './dtos/get-event-response.dto';
 import { GetEventQuery } from './queries/get-event/get-event.query';
 import { GetEventListResponseDto } from './dtos/get-event-list-response.dto';
 import { GetEventListQuery } from './queries/get-event-list/get-event-list.query';
+import { GetEventListQueryDto } from './dtos/get-event-list-query.dto';
 
 @Controller('events')
 export class EventController {
@@ -72,8 +74,10 @@ export class EventController {
   @ApiOkResponse({
     type: GetEventListResponseDto,
   })
-  public async getEventList(): Promise<GetEventListResponseDto> {
-    const query = new GetEventListQuery();
+  public async getEventList(
+    @Query() queryDto: GetEventListQueryDto,
+  ): Promise<GetEventListResponseDto> {
+    const query = new GetEventListQuery(queryDto);
 
     const result = await this.queryBus.execute(query);
 

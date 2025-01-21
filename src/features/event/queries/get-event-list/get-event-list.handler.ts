@@ -11,11 +11,16 @@ export class GetEventListHandler implements IQueryHandler<GetEventListQuery> {
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
-    _: GetEventListQuery,
+    query: GetEventListQuery,
   ): Promise<Result<GetEventListResponseDto, ResultError>> {
+    console.log(query.dto.limit);
     const events = await this.em.find(
       Event,
-      {},
+      {
+        endDate: {
+          $gte: new Date(),
+        },
+      },
       {
         fields: [
           'slug',
@@ -26,6 +31,7 @@ export class GetEventListHandler implements IQueryHandler<GetEventListQuery> {
           'coverImageUrl',
         ],
         orderBy: { startDate: 'ASC' },
+        limit: query.dto.limit,
       },
     );
 
