@@ -10,10 +10,14 @@ import { GlobalCustomExceptionFilter } from './common/exceptions/global-custom-e
 import { UserActivityInterceptor } from './infrastructure/interceptors/user-activity.interceptor';
 import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
     rawBody: true,
+  });
+
+  app.enableCors({
+    origin: process.env.CLIENT_BASE_URL,
   });
 
   app.use(cookieParser());
