@@ -104,14 +104,16 @@ export class ProcessWebhookHandler
       ['id'],
     );
 
+    const { start, end } = invoice.lines.data[0].period;
+
     this.em.create(
       Sponsorship,
       new Sponsorship({
         company: company as unknown as Company,
         subscriptionId: invoice.subscription as string,
         status: SponsorshipStatus.ACTIVE,
-        currentPeriodStart: new Date(invoice.period_start * 1000),
-        currentPeriodEnd: new Date(invoice.period_end * 1000),
+        currentPeriodStart: new Date(start * 1000),
+        currentPeriodEnd: new Date(end * 1000),
       }),
     );
 
