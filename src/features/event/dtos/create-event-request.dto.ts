@@ -22,6 +22,12 @@ export class CreateEventRequestDto {
   public readonly title!: string;
 
   @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @Trim()
+  public readonly summary!: string;
+
+  @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(EVENT_TYPE.length)

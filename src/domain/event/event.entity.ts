@@ -22,6 +22,9 @@ export class Event extends BaseEntity {
   @Property()
   public title: string;
 
+  @Property()
+  public summary: string;
+
   @Property({ type: 'text' })
   public description: string;
 
@@ -43,6 +46,7 @@ export class Event extends BaseEntity {
 
   public constructor(data: {
     title: string;
+    summary: string;
     slug: string;
     eventType: EventType;
     description: string;
@@ -54,6 +58,7 @@ export class Event extends BaseEntity {
   }) {
     super();
     this.title = data.title;
+    this.summary = data.summary;
     this.slug = data.slug;
     this.eventType = data.eventType;
     this.description = data.description;

@@ -23,6 +23,7 @@ export class GetEventHandler implements IQueryHandler<GetEventQuery> {
         fields: [
           'eventType.label',
           'title',
+          'summary',
           'description',
           'startDate',
           'endDate',
@@ -40,6 +41,7 @@ export class GetEventHandler implements IQueryHandler<GetEventQuery> {
     const responseDto = new GetEventResponseDto({
       eventType: event.eventType.label,
       title: event.title,
+      summary: event.summary,
       description: event.description,
       startDate: event.startDate,
       endDate: event.endDate,

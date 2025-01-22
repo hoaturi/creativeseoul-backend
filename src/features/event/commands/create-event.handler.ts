@@ -30,6 +30,7 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand> {
       Event,
       new Event({
         title: dto.title,
+        summary: dto.summary,
         slug,
         eventType: eventTypeRef,
         description: dto.description,

@@ -8,6 +8,9 @@ export class GetEventResponseDto {
   public readonly title: string;
 
   @ApiProperty()
+  public readonly summary: string;
+
+  @ApiProperty()
   public readonly description: string;
 
   @ApiProperty()
@@ -28,6 +31,7 @@ export class GetEventResponseDto {
   public constructor(data: {
     eventType: string;
     title: string;
+    summary: string;
     description: string;
     startDate: Date;
     endDate: Date;
@@ -37,6 +41,7 @@ export class GetEventResponseDto {
   }) {
     this.eventType = data.eventType;
     this.title = data.title;
+    this.summary = data.summary;
     this.description = data.description;
     this.startDate = data.startDate;
     this.endDate = data.endDate;
