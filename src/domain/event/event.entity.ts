@@ -22,7 +22,7 @@ export class Event extends BaseEntity {
   @Property()
   public title: string;
 
-  @Property()
+  @Property({ type: 'text' })
   public description: string;
 
   @Property()
