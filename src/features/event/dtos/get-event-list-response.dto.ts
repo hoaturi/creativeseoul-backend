@@ -11,6 +11,9 @@ export class EventListItemDto {
   public readonly title: string;
 
   @ApiProperty()
+  public readonly description: string;
+
+  @ApiProperty()
   public readonly startDate: Date;
 
   @ApiProperty()
@@ -23,6 +26,7 @@ export class EventListItemDto {
     slug: string;
     eventType: string;
     title: string;
+    description: string;
     startDate: Date;
     endDate: Date;
     coverImageUrl: string;
@@ -30,6 +34,7 @@ export class EventListItemDto {
     this.slug = data.slug;
     this.eventType = data.eventType;
     this.title = data.title;
+    this.description = data.description;
     this.startDate = data.startDate;
     this.endDate = data.endDate;
     this.coverImageUrl = data.coverImageUrl;
