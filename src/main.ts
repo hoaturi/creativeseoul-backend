@@ -18,6 +18,7 @@ async function bootstrap(): Promise<void> {
 
   app.enableCors({
     origin: process.env.CLIENT_BASE_URL,
+    credentials: true,
   });
 
   app.use(cookieParser());
