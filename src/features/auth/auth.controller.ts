@@ -42,6 +42,7 @@ import { AuthError } from './auth.error';
 import { UserError } from '../user/user.error';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { Request, Response } from 'express';
+import { LoginResponseDto } from './dtos/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -65,8 +66,6 @@ export class AuthController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
-
-    return result.value;
   }
 
   @Patch('verify-email')
@@ -93,7 +92,9 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse()
+  @ApiOkResponse({
+    type: LoginResponseDto,
+  })
   @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
   @ApiUnauthorizedResponse({
     example: AuthError.InvalidCredentials,
@@ -101,7 +102,7 @@ export class AuthController {
   public async login(
     @Body() dto: LoginRequestDto,
     @Session() session: Record<string, any>,
-  ): Promise<void> {
+  ): Promise<LoginResponseDto> {
     const result = await this.commandBus.execute(new LoginCommand(dto));
 
     if (!result.isSuccess) {
@@ -109,6 +110,7 @@ export class AuthController {
     }
 
     session.user = result.value.user;
+    return result.value;
   }
 
   @Post('logout')
