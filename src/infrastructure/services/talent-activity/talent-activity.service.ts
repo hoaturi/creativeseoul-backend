@@ -29,7 +29,6 @@ export class TalentActivityService {
       await this.em.nativeUpdate(Talent, talentId, {
         lastActiveAt: new Date(),
       });
-      await this.cacheManager.del(cacheKey);
     } catch (error) {
       this.logger.error(
         { talentId, error },

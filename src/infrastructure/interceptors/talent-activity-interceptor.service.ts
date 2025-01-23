@@ -11,8 +11,8 @@ import { UserRole } from '../../domain/user/user-role.enum';
 import { AuthenticatedUser } from '../security/authenticated-user.interface';
 
 @Injectable()
-export class UserActivityInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(UserActivityInterceptor.name);
+export class TalentActivityInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(TalentActivityInterceptor.name);
 
   public constructor(
     private readonly talentActivityService: TalentActivityService,
