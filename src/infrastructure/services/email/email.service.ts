@@ -33,7 +33,7 @@ export class EmailService {
     payload: VerifyEmailJobDto,
   ): Promise<void> {
     const templateData: VerificationTemplateData = {
-      verificationLink: `${this.appConfig.client.baseUrl}?token=${payload.verificationToken}`,
+      verificationLink: `${this.appConfig.client.baseUrl}/verify-email?token=${payload.verificationToken}`,
     };
 
     await this.sendEmail(payload.email, {
@@ -51,7 +51,6 @@ export class EmailService {
     payload: ForgotPasswordJobDto,
   ): Promise<void> {
     const templateData: ForgotPasswordTemplateData = {
-      email: payload.email,
       passwordResetLink: `${this.appConfig.client.baseUrl}/reset-password?token=${payload.token}`,
     };
 
