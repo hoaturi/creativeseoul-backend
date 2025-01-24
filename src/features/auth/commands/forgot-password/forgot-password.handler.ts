@@ -4,7 +4,6 @@ import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { User } from '../../../../domain/user/user.entity';
-import { UserError } from '../../../user/user.error';
 import { Queue } from 'bullmq';
 import { QueueType } from '../../../../infrastructure/queues/queue-type.enum';
 import { EmailJobType } from '../../../../infrastructure/queues/email-queue/email-queue.type.enum';
@@ -30,7 +29,7 @@ export class ForgotPasswordHandler
     const user = await this.em.findOne(User, { email: command.dto.email });
 
     if (!user) {
-      return Result.failure(UserError.NotFound);
+      return Result.success();
     }
 
     const token = crypto.randomBytes(32).toString('hex');
