@@ -5,7 +5,7 @@ import { SessionOptions } from 'express-session';
 
 dotenv.config();
 
-const TTL_DAYS = 14;
+const TTL_DAYS = 7;
 
 export const sessionConfig = (): SessionOptions => {
   const redisClient = new Redis({
