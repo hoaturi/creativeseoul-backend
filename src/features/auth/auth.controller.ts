@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -42,7 +43,9 @@ import { AuthError } from './auth.error';
 import { UserError } from '../user/user.error';
 import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { Request, Response } from 'express';
-import { LoginResponseDto } from './dtos/login-response.dto';
+import { SessionResponseDto } from './dtos/session-response.dto';
+import { CurrentUser } from '../../infrastructure/security/decorators/current-user.decorator';
+import { AuthenticatedUser } from '../../infrastructure/security/authenticated-user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -93,7 +96,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
-    type: LoginResponseDto,
+    type: SessionResponseDto,
   })
   @ApiBadRequestResponse({ example: CommonError.ValidationFailed })
   @ApiUnauthorizedResponse({
@@ -102,7 +105,7 @@ export class AuthController {
   public async login(
     @Body() dto: LoginRequestDto,
     @Session() session: Record<string, any>,
-  ): Promise<LoginResponseDto> {
+  ): Promise<SessionResponseDto> {
     const result = await this.commandBus.execute(new LoginCommand(dto));
 
     if (!result.isSuccess) {
@@ -174,5 +177,19 @@ export class AuthController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+  }
+
+  @Get('session')
+  @ApiOkResponse({
+    type: SessionResponseDto || undefined,
+  })
+  public getCurrentUser(
+    @CurrentUser() user: AuthenticatedUser,
+  ): SessionResponseDto | undefined {
+    if (!user) {
+      return undefined;
+    }
+
+    return new SessionResponseDto(user);
   }
 }
