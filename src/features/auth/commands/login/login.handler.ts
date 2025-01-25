@@ -7,7 +7,7 @@ import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import { User } from '../../../../domain/user/user.entity';
 import { AuthError } from '../../auth.error';
-import { LoginResponseDto } from '../../dtos/login-response.dto';
+import { SessionResponseDto } from '../../dtos/session-response.dto';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 
 @CommandHandler(LoginCommand)
@@ -18,7 +18,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
 
   public async execute(
     command: LoginCommand,
-  ): Promise<Result<LoginResponseDto, ResultError>> {
+  ): Promise<Result<SessionResponseDto, ResultError>> {
     const { email, password } = command.dto;
 
     const user = await this.em.findOne(
@@ -70,7 +70,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     );
 
     return Result.success(
-      new LoginResponseDto({
+      new SessionResponseDto({
         id: user.id,
         role: user.role,
         profileId,

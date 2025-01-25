@@ -2,7 +2,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { LoginCommand, LoginHandler } from '../../src/features/auth/commands';
-import { LoginResponseDto } from '../../src/features/auth/dtos/login-response.dto';
+import { SessionResponseDto } from '../../src/features/auth/dtos/session-response.dto';
 import { AuthError } from '../../src/features/auth/auth.error';
 import { UserRole } from '../../src/domain/user/user-role.enum';
 
@@ -55,7 +55,7 @@ describe('LoginHandler', () => {
     );
 
     expect(result.isSuccess).toBe(true);
-    expect(result.value).toBeInstanceOf(LoginResponseDto);
+    expect(result.value).toBeInstanceOf(SessionResponseDto);
     expect(result.value).toEqual({
       user: {
         id: mockUser.id,

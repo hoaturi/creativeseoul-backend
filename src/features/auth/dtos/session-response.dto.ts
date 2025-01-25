@@ -1,7 +1,7 @@
 import { AuthenticatedUser } from '../../../infrastructure/security/authenticated-user.interface';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LoginResponseDto {
+export class SessionResponseDto {
   @ApiProperty({
     type: 'object',
     properties: {
