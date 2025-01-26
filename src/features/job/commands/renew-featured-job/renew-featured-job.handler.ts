@@ -41,7 +41,7 @@ export class RenewFeaturedJobHandler
       return Result.failure(JobError.AlreadyFeatured);
     }
 
-    const isOwner = job.company.id === user.profileId;
+    const isOwner = job.company.id === user.profile.id;
     const isAdmin = user.role === UserRole.ADMIN;
 
     if (!isOwner && !isAdmin) {

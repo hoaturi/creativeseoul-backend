@@ -79,7 +79,7 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     user: AuthenticatedUser,
     talent: LoadedTalent,
   ): boolean {
-    const isUserOwner = user.profileId === talent.id;
+    const isUserOwner = user.profile.id === talent.id;
     const isUserAdmin = user.role === UserRole.ADMIN;
     const isUserCompany = user.role === UserRole.COMPANY;
 

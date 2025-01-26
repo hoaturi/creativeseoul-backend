@@ -124,7 +124,7 @@ export class TalentController {
       throw new HttpException(result.error, result.error.statusCode);
     }
 
-    session.user.profileId = result.value;
+    session.user.profile.id = result.value;
   }
 
   @Put('me')

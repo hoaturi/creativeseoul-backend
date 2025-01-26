@@ -44,7 +44,7 @@ export class CreateFeaturedJobHandler
     const company = await this.em.findOne(
       Company,
       {
-        id: user.profileId!,
+        id: user.profile.id!,
       },
       {
         fields: ['id', 'name', 'creditBalance'],

@@ -8,7 +8,6 @@ import { ResultError } from '../../../../common/result/result-error';
 import { User } from '../../../../domain/user/user.entity';
 import { AuthError } from '../../auth.error';
 import { SessionResponseDto } from '../../dtos/session-response.dto';
-import { UserRole } from '../../../../domain/user/user-role.enum';
 
 @CommandHandler(LoginCommand)
 export class LoginHandler implements ICommandHandler<LoginCommand> {
@@ -31,7 +30,11 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
           'role',
           'isVerified',
           'talent.id',
+          'talent.fullName',
+          'talent.avatarUrl',
           'company.id',
+          'company.name',
+          'company.logoUrl',
         ],
       },
     );
@@ -53,17 +56,6 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       return Result.failure(AuthError.EmailNotVerified);
     }
 
-    let profileId: string | undefined;
-
-    switch (user.role) {
-      case UserRole.TALENT:
-        profileId = user.talent?.id;
-        break;
-      case UserRole.COMPANY:
-        profileId = user.company?.id;
-        break;
-    }
-
     this.logger.log(
       { userId: user.id },
       'auth.login.success: User authenticated',
@@ -73,7 +65,11 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       new SessionResponseDto({
         id: user.id,
         role: user.role,
-        profileId,
+        profile: {
+          id: user.talent?.id ?? user.company?.id,
+          name: user.talent?.fullName ?? user.company?.name,
+          avatarUrl: user.talent?.avatarUrl ?? user.company?.logoUrl,
+        },
       }),
     );
   }

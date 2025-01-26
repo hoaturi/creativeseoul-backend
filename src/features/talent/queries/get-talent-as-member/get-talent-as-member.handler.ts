@@ -64,7 +64,7 @@ export class GetTalentAsMemberHandler
     talent: LoadedTalent,
     user?: AuthenticatedUser,
   ): boolean {
-    const isOwner = user?.profileId === talent.id;
+    const isOwner = user?.profile.id === talent.id;
     return talent.isPublic || isOwner || user?.role === UserRole.ADMIN;
   }
 

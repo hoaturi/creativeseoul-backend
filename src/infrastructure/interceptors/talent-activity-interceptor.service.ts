@@ -27,7 +27,7 @@ export class TalentActivityInterceptor implements NestInterceptor {
     const user = request.session?.user as AuthenticatedUser;
 
     response.on('finish', () => {
-      const profileId = user?.profileId;
+      const profileId = user?.profile.id;
 
       if (user?.role === UserRole.TALENT && profileId) {
         this.talentActivityService

@@ -46,9 +46,15 @@ export class UpdateTalentHandler
       return Result.failure(TalentError.ContactInfoMissing);
     }
 
-    const talent = await this.em.findOne(Talent, user.profileId!, {
-      populate: ['languages', 'city', 'country'],
-    });
+    const talent = await this.em.findOne(
+      Talent,
+      {
+        id: user.profile.id,
+      },
+      {
+        populate: ['languages', 'city', 'country'],
+      },
+    );
 
     if (!talent) {
       return Result.failure(TalentError.ProfileNotFound);

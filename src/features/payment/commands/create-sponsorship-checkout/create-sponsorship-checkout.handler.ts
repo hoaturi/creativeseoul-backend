@@ -29,14 +29,14 @@ export class CreateSponsorshipCheckoutHandler
 
     const company = await this.em.findOne(
       Company,
-      { id: user.profileId },
+      { id: user.profile.id },
       {
         fields: ['customerId'],
       },
     );
 
     if (!company) {
-      throw new CompanyNotFoundException(user.profileId!);
+      throw new CompanyNotFoundException(user.profile.id!);
     }
 
     const checkout = await this.stripeService.createSponsorshipCheckout(

@@ -18,13 +18,13 @@ export class GetMyJobListHandler implements IQueryHandler<GetMyJobListQuery> {
   ): Promise<Result<GetMyJobListResponseDto, ResultError>> {
     const { user } = query;
 
-    if (!user.profileId) {
+    if (!user.profile.id) {
       return Result.success(new GetMyJobListResponseDto([], 0));
     }
 
     const [jobs, total] = await this.em.findAndCount(
       Job,
-      { company: user.profileId },
+      { company: user.profile.id },
       {
         fields: [
           'slug',

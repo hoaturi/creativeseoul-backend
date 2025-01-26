@@ -19,16 +19,16 @@ export class UpdateCompanyHandler
   ): Promise<Result<void, ResultError>> {
     const { user, dto } = command;
 
-    if (!user.profileId) {
+    if (!user.profile.id) {
       return Result.failure(CompanyError.ProfileNotFound);
     }
 
     const company = await this.em.findOne(Company, {
-      id: user.profileId,
+      id: user.profile.id,
     });
 
     if (!company) {
-      throw new CompanyNotFoundException(user.profileId);
+      throw new CompanyNotFoundException(user.profile.id);
     }
 
     company.name = dto.name;

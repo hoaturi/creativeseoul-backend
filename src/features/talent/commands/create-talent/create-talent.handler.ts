@@ -51,7 +51,7 @@ export class CreateTalentHandler
       return Result.failure(TalentError.ContactInfoMissing);
     }
 
-    if (user.profileId) {
+    if (user.profile.id) {
       return Result.failure(TalentError.ProfileAlreadyExists);
     }
 

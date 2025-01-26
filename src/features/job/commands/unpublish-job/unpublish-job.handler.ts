@@ -26,7 +26,7 @@ export class UnpublishJobHandler
       return Result.failure(JobError.NotFound);
     }
 
-    const isOwner = job.company.id === user.profileId;
+    const isOwner = job.company.id === user.profile.id;
     const isAdmin = user.role === UserRole.ADMIN;
 
     if (!isOwner && !isAdmin) {

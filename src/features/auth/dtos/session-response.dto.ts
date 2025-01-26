@@ -7,7 +7,14 @@ export class SessionResponseDto {
     properties: {
       id: { type: 'string' },
       role: { type: 'string' },
-      profileId: { type: 'string', nullable: true },
+      profile: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          name: { type: 'string' },
+          avatarUrl: { type: 'string', nullable: true },
+        },
+      },
     },
   })
   public readonly user: AuthenticatedUser;

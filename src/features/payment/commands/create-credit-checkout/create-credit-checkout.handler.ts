@@ -7,9 +7,6 @@ import { StripeService } from '../../../../infrastructure/services/stripe/stripe
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyNotFoundException } from '../../../../domain/company/exceptions/company-not-found.exception';
-import { Inject } from '@nestjs/common';
-import { applicationConfig } from '../../../../config/application.config';
-import { ConfigType } from '@nestjs/config';
 
 @CommandHandler(CreateCreditCheckoutCommand)
 export class CreateCreditCheckoutHandler
@@ -18,8 +15,6 @@ export class CreateCreditCheckoutHandler
   public constructor(
     private readonly em: EntityManager,
     private readonly stripeService: StripeService,
-    @Inject(applicationConfig.KEY)
-    private readonly appConfig: ConfigType<typeof applicationConfig>,
   ) {}
 
   public async execute(
@@ -29,14 +24,14 @@ export class CreateCreditCheckoutHandler
 
     const company = await this.em.findOne(
       Company,
-      { id: user.profileId },
+      { id: user.profile.id },
       {
         fields: ['id', 'customerId'],
       },
     );
 
     if (!company) {
-      throw new CompanyNotFoundException(user.profileId!);
+      throw new CompanyNotFoundException(user.profile.id!);
     }
 
     const checkout = await this.stripeService.createCreditCheckout(

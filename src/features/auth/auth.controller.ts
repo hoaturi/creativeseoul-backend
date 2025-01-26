@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Inject,
   Patch,
   Post,
   Req,
@@ -36,8 +35,6 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { applicationConfig } from '../../config/application.config';
-import { ConfigType } from '@nestjs/config';
 import { CommonError } from '../common/common.error';
 import { AuthError } from './auth.error';
 import { UserError } from '../user/user.error';

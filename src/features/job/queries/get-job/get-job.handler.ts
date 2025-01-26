@@ -55,7 +55,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
       return Result.failure(JobError.NotFound);
     }
 
-    const isOwner = job.company.id === query.user?.profileId;
+    const isOwner = job.company.id === query.user?.profile.id;
     const isAdmin = query.user?.role === UserRole.ADMIN;
 
     if (!job.isPublished && !isOwner && !isAdmin) {

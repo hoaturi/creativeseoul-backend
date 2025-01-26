@@ -62,7 +62,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
       return Result.failure(JobError.NotFound);
     }
 
-    const isOwner = job.company.id === command.user.profileId;
+    const isOwner = job.company.id === command.user.profile.id;
     const isAdmin = user.role === UserRole.ADMIN;
 
     if (!isOwner && !isAdmin) {
@@ -98,7 +98,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
     if (isOwner) {
       this.logger.log(
         {
-          companyId: user.profileId,
+          companyId: user.profile.id,
           jobId: job.id,
         },
         'job.update-job.success: Job updated successfully',

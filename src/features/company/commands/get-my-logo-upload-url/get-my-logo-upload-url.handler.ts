@@ -17,11 +17,11 @@ export class GetMyLogoUploadUrlHandler
   ): Promise<Result<GetImageUploadUrlResponseDto, ResultError>> {
     const { currentUser, dto } = command;
 
-    if (!currentUser.profileId) {
+    if (!currentUser.profile.id) {
       return Result.failure(CompanyError.ProfileNotFound);
     }
 
-    const fileName = `logos/${currentUser.profileId}-${Date.now()}`;
+    const fileName = `logos/${currentUser.profile.id}-${Date.now()}`;
     const presignedUrl = await this.storageService.generatePresignedUrl(
       fileName,
       dto,
