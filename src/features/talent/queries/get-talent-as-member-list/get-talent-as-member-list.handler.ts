@@ -9,6 +9,7 @@ import {
 } from '../../dtos/responses/get-talent-as-member-list-response.dto';
 import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
+import { TalentSocialLinksDto } from '../../dtos/responses/talent-social-links.dto';
 
 @QueryHandler(GetTalentAsMemberListQuery)
 export class GetTalentAsMemberListHandler
@@ -40,6 +41,7 @@ export class GetTalentAsMemberListHandler
           'avatarUrl',
           'city.label',
           'country.label',
+          'socialLinks',
         ],
         orderBy: { [memberActivityScore]: 'DESC' },
         limit: 50,
@@ -53,12 +55,17 @@ export class GetTalentAsMemberListHandler
         talent.city?.label,
       );
 
+      const socialLinks = talent.socialLinks
+        ? new TalentSocialLinksDto(talent.socialLinks)
+        : undefined;
+
       return new GetTalentAsMemberItemDto({
         handle: talent.handle,
         fullName: talent.fullName,
         title: talent.title,
         avatarUrl: talent.avatarUrl,
         location,
+        socialLinks,
       });
     });
 
