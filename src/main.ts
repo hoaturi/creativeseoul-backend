@@ -17,7 +17,7 @@ async function bootstrap(): Promise<void> {
   });
 
   app.enableCors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: process.env.CLIENT_BASE_URL?.split(', '),
     credentials: true,
   });
 
@@ -49,7 +49,10 @@ async function bootstrap(): Promise<void> {
     new TalentActivityInterceptor(app.get(TalentActivityService)),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(
+    process.env.PORT ?? 3000,
+    process.env.HOST_IP ?? 'localhost',
+  );
 }
 
 bootstrap();
