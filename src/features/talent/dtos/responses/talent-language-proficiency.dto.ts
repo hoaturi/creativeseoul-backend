@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class TalentLanguageProficiencyDto {
   @ApiProperty()
-  public readonly name: string;
+  public readonly label: string;
 
   @ApiProperty()
   public readonly level: string;
 
-  public constructor(name: string, level: string) {
-    this.name = name;
+  public constructor(label: string, level: string) {
+    this.label = label;
     this.level = level;
   }
 }
