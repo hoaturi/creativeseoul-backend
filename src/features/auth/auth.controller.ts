@@ -46,11 +46,7 @@ import { AuthenticatedUser } from '../../infrastructure/security/authenticated-u
 
 @Controller('auth')
 export class AuthController {
-  public constructor(
-    private readonly commandBus: CommandBus,
-    @Inject(applicationConfig.KEY)
-    private readonly appConfig: ConfigType<typeof applicationConfig>,
-  ) {}
+  public constructor(private readonly commandBus: CommandBus) {}
 
   @Post('signup')
   @ApiCreatedResponse()
