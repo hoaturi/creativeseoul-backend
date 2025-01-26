@@ -9,9 +9,6 @@ export class TalentSocialLinksDto {
   public readonly facebook?: string;
 
   @ApiProperty({ required: false })
-  public readonly tiktok?: string;
-
-  @ApiProperty({ required: false })
   public readonly linkedin?: string;
 
   @ApiProperty({ required: false })
@@ -37,9 +34,6 @@ export class TalentSocialLinksDto {
 
   @ApiProperty({ required: false })
   public readonly medium?: string;
-
-  @ApiProperty({ required: false })
-  public readonly substack?: string;
 
   @ApiProperty({ required: false })
   public readonly website?: string;
