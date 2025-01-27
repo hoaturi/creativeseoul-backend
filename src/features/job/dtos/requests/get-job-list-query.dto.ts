@@ -1,7 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
-  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -84,7 +83,8 @@ export class GetJobListQueryDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsBoolean()
+  @IsString()
+  @IsNotEmpty()
   @Transform(({ value }) => value ?? value === 'true')
   public readonly residentOnly?: boolean;
 
