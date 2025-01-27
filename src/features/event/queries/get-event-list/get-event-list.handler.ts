@@ -13,7 +13,6 @@ export class GetEventListHandler implements IQueryHandler<GetEventListQuery> {
   public async execute(
     query: GetEventListQuery,
   ): Promise<Result<GetEventListResponseDto, ResultError>> {
-    console.log(query.dto.limit);
     const events = await this.em.find(
       Event,
       {
