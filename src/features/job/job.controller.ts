@@ -134,6 +134,7 @@ export class JobController {
     example: CommonError.ValidationFailed,
   })
   public async GetJobList(
+    @Query('workLocationTypeIds') workLocationTypeIds: string[],
     @Query() queryDto: GetJobListQueryDto,
   ): Promise<GetJobListResponseDto> {
     const query = new GetJobListQuery(queryDto);
