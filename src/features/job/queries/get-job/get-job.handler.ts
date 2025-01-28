@@ -88,8 +88,6 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
       applicationUrl: job.applicationUrl,
     });
 
-    console.log(responseDto.koreanLevel);
-
     return Result.success(responseDto);
   }
 }
