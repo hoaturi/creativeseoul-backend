@@ -31,7 +31,7 @@ export class Job extends BaseEntity {
   @Property({ length: 64 })
   public title: string;
 
-  @Property()
+  @Property({ type: 'text' })
   public description: string;
 
   @ManyToOne(() => Company)
