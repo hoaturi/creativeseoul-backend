@@ -36,9 +36,8 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
           'minSalary',
           'maxSalary',
           'tags',
-          'koreanLevel',
-          'englishLevel',
-          'residentOnly',
+          'koreanLevel.label',
+          'englishLevel.label',
           'residentOnly',
           'applicationUrl',
           'isPublished',
@@ -88,6 +87,8 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
       residentOnly: job.residentOnly,
       applicationUrl: job.applicationUrl,
     });
+
+    console.log(responseDto.koreanLevel);
 
     return Result.success(responseDto);
   }
