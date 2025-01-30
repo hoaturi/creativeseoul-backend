@@ -15,6 +15,9 @@ const COMPANY_FIELDS = [
   'summary',
   'logoUrl',
   'totalJobs',
+  'location',
+  'size.label',
+  'isSponsor',
 ] as const;
 
 @QueryHandler(GetCompanyListQuery)
@@ -24,17 +27,13 @@ export class GetCompanyListHandler
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
-    query: GetCompanyListQuery,
+    _: GetCompanyListQuery,
   ): Promise<Result<GetCompanyListResponseDto, ResultError>> {
-    const { page = 1 } = query.dto;
-
-    const [companies, count] = await this.em.findAndCount(
+    const companies = await this.em.find(
       Company,
       {},
       {
         fields: COMPANY_FIELDS,
-        limit: 20,
-        offset: (page - 1) * 20,
       },
     );
 
@@ -45,10 +44,13 @@ export class GetCompanyListHandler
           name: company.name,
           summary: company.summary!,
           logoUrl: company.logoUrl,
+          location: company.location,
+          size: company.size.label,
+          isSponsor: company.isSponsor,
           totalJobs: company.totalJobs,
         }),
     );
 
-    return Result.success(new GetCompanyListResponseDto(companyDtos, count));
+    return Result.success(new GetCompanyListResponseDto(companyDtos));
   }
 }

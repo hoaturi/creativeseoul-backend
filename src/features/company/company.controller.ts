@@ -9,7 +9,6 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -34,7 +33,6 @@ import { CommonError } from '../common/common.error';
 import { UpdateCompanyCommand } from './commands/update-company/update-company.command';
 import { GetCompanyListQuery } from './queries/get-company-list/get-company-list.query';
 import { GetCompanyListResponseDto } from './dtos/responses/get-company-list-response.dto';
-import { GetCompanyListQueryDto } from './dtos/requests/get-company-list-query.dto';
 import { SendInvitationRequestDto } from './dtos/requests/send-invitation-request.dto';
 import { SendInvitationCommand } from './commands/send-invitation/send-invitation.command';
 import { AcceptInvitationRequestDto } from './dtos/requests/accept-invitation-request.dto';
@@ -146,10 +144,8 @@ export class CompanyController {
   @ApiOkResponse({
     type: GetCompanyListResponseDto,
   })
-  public async getCompanyList(
-    @Query() queryDto: GetCompanyListQueryDto,
-  ): Promise<GetCompanyListResponseDto> {
-    const command = new GetCompanyListQuery(queryDto);
+  public async getCompanyList(): Promise<GetCompanyListResponseDto> {
+    const command = new GetCompanyListQuery();
 
     const result = await this.queryBus.execute(command);
 
