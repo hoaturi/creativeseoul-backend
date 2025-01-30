@@ -14,6 +14,7 @@ import { emailJobOption } from '../../../../infrastructure/queues/email-queue/pr
 import { CompanyInvitationJobDto } from '../../../../infrastructure/queues/email-queue/dtos/company-invitation-job.dto';
 import { Logger } from '@nestjs/common';
 import { CompanyError } from '../../company.error';
+import { CompanySize } from '../../../../domain/company/entities/company-size.entity';
 
 @CommandHandler(SendInvitationCommand)
 export class SendInvitationHandler
@@ -44,11 +45,16 @@ export class SendInvitationHandler
 
     let isNewCompany = false;
     if (!company) {
+      const size = this.em.getReference(CompanySize, dto.sizeId);
+
       company = this.em.create(
         Company,
         new Company({
           isClaimed: false,
-          name: dto.companyName,
+          name: dto.name,
+          size,
+          location: dto.location,
+          summary: dto.summary,
           websiteUrl: dto.websiteUrl,
           creditBalance: 0,
         }),

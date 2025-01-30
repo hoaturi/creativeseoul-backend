@@ -37,9 +37,7 @@ export class UpdateCompanyHandler
     company.logoUrl = dto.logoUrl;
     company.websiteUrl = dto.websiteUrl;
     company.location = dto.location;
-    company.size = dto.sizeId
-      ? this.em.getReference(CompanySize, dto.sizeId)
-      : undefined;
+    company.size = this.em.getReference(CompanySize, dto.sizeId);
     company.socialLinks = dto.socialLinks;
 
     await this.em.flush();

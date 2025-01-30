@@ -30,8 +30,8 @@ export class Company extends BaseEntity {
   @Property({ length: 64 })
   public name: string;
 
-  @Property({ length: 128, nullable: true })
-  public summary?: string;
+  @Property({ length: 128 })
+  public summary: string;
 
   @Property({ nullable: true })
   public description?: string;
@@ -42,11 +42,11 @@ export class Company extends BaseEntity {
   @Property({ unique: true })
   public websiteUrl: string;
 
-  @Property({ length: 64, nullable: true })
-  public location?: string;
+  @Property({ length: 64 })
+  public location: string;
 
-  @ManyToOne(() => CompanySize, { nullable: true })
-  public size?: CompanySize;
+  @ManyToOne(() => CompanySize)
+  public size: CompanySize;
 
   @Property({ type: 'jsonb', nullable: true })
   public socialLinks?: CompanySocialLinks;
@@ -54,6 +54,12 @@ export class Company extends BaseEntity {
   @Property({ nullable: true })
   @Index()
   public customerId?: string;
+
+  @Formula(
+    (alias) =>
+      `EXISTS (SELECT 1 FROM sponsorship s WHERE s.company_id = ${alias}.id AND s.current_period_end >= CURRENT_TIMESTAMP)`,
+  )
+  public readonly isSponsor!: boolean;
 
   @OneToMany(() => Job, (job) => job.company, {
     cascade: [Cascade.REMOVE],
@@ -88,11 +94,11 @@ export class Company extends BaseEntity {
     isClaimed: boolean;
     name: string;
     websiteUrl: string;
-    summary?: string;
+    summary: string;
     description?: string;
-    location?: string;
+    location: string;
     logoUrl?: string;
-    size?: CompanySize;
+    size: CompanySize;
     socialLinks?: CompanySocialLinks;
     user?: User;
     creditBalance: number;

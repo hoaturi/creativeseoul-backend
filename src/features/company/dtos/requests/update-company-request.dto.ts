@@ -52,12 +52,11 @@ export class UpdateCompanyRequestDto {
   @Trim()
   public readonly location!: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(COMPANY_SIZES.length)
-  public readonly sizeId?: number;
+  public readonly sizeId!: number;
 
   @ApiPropertyOptional()
   @IsOptional()
