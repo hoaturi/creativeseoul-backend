@@ -31,7 +31,6 @@ export class GetSponsorCompanyListHandler
           'company.name',
           'company.summary',
           'company.logoUrl',
-          'company.websiteUrl',
         ],
       },
     );
@@ -42,7 +41,6 @@ export class GetSponsorCompanyListHandler
         name: company.company.name,
         summary: company.company.summary,
         logoUrl: company.company.logoUrl,
-        websiteUrl: company.company.websiteUrl,
       });
     });
 
