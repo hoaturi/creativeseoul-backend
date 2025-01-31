@@ -102,21 +102,24 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
   }
 
   private mapJobs(jobs: LoadedJobs): CompanyJobItemDto[] {
-    return jobs.getItems().map((job) => {
-      return new CompanyJobItemDto({
-        slug: job.slug,
-        title: job.title,
-        location: job.location,
-        category: job.category.label,
-        employmentType: job.employmentType.label,
-        workLocationType: job.workLocationType.label,
-        experienceLevel: job.experienceLevel.label,
-        minSalary: job.minSalary,
-        maxSalary: job.maxSalary,
-        koreanLevel: job.koreanLevel.label,
-        residentOnly: job.residentOnly,
-        isFeatured: job.isFeatured,
+    return jobs
+      .getItems()
+      .sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0))
+      .map((job) => {
+        return new CompanyJobItemDto({
+          slug: job.slug,
+          title: job.title,
+          location: job.location,
+          category: job.category.label,
+          employmentType: job.employmentType.label,
+          workLocationType: job.workLocationType.label,
+          experienceLevel: job.experienceLevel.label,
+          minSalary: job.minSalary,
+          maxSalary: job.maxSalary,
+          koreanLevel: job.koreanLevel.label,
+          residentOnly: job.residentOnly,
+          isFeatured: job.isFeatured,
+        });
       });
-    });
   }
 }
