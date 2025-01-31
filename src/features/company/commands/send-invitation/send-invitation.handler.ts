@@ -15,6 +15,7 @@ import { CompanyInvitationJobDto } from '../../../../infrastructure/queues/email
 import { Logger } from '@nestjs/common';
 import { CompanyError } from '../../company.error';
 import { CompanySize } from '../../../../domain/company/entities/company-size.entity';
+import slugify from 'slugify';
 
 @CommandHandler(SendInvitationCommand)
 export class SendInvitationHandler
@@ -46,12 +47,14 @@ export class SendInvitationHandler
     let isNewCompany = false;
     if (!company) {
       const size = this.em.getReference(CompanySize, dto.sizeId);
+      const slug = slugify(dto.name, { lower: true });
 
       company = this.em.create(
         Company,
         new Company({
           isClaimed: false,
           name: dto.name,
+          slug,
           size,
           location: dto.location,
           summary: dto.summary,

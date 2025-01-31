@@ -1,4 +1,4 @@
-export const SENIORITY_LEVELS = [
+export const EXPERIENCE_LEVELS = [
   { id: 1, label: 'Intern' },
   { id: 2, label: 'Junior' },
   { id: 3, label: 'Mid' },

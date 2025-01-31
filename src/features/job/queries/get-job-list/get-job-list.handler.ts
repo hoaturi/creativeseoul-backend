@@ -17,7 +17,7 @@ const JOB_FIELDS = [
   'description',
   'category.label',
   'employmentType.label',
-  'seniorityLevel.label',
+  'experienceLevel.label',
   'workLocationType.label',
   'location',
   'minSalary',
@@ -26,7 +26,7 @@ const JOB_FIELDS = [
   'koreanLevel.label',
   'residentOnly',
   'isFeatured',
-  'company.id',
+  'company.slug',
   'company.name',
   'company.logoUrl',
 ] as const;
@@ -71,7 +71,7 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
   private mpaToJobDtos(jobs: LoadedJob[]): GetJobListItemDto[] {
     return jobs.map((job) => {
       const company = new GetJobListItemCompanyDto({
-        id: job.company.id,
+        slug: job.company.slug,
         name: job.company.name,
         logoUrl: job.company.logoUrl,
       });
@@ -81,7 +81,7 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
         title: job.title,
         category: job.category.label,
         employmentType: job.employmentType.label,
-        seniorityLevel: job.seniorityLevel.label,
+        experienceLevel: job.experienceLevel.label,
         workLocationType: job.workLocationType.label,
         location: job.location,
         minSalary: job.minSalary,
@@ -102,7 +102,7 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
     const {
       search,
       categoryIds,
-      seniorityLevelIds,
+      experienceLevelIds,
       employmentTypeIds,
       workLocationTypeIds,
       koreanLevelIds,
@@ -121,8 +121,8 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
       where.category = { id: { $in: categoryIds } };
     }
 
-    if (seniorityLevelIds?.length) {
-      where.seniorityLevel = { id: { $in: seniorityLevelIds } };
+    if (experienceLevelIds?.length) {
+      where.experienceLevel = { id: { $in: experienceLevelIds } };
     }
 
     if (employmentTypeIds?.length) {

@@ -21,7 +21,7 @@ import {
 } from '../../../../domain/common/constants';
 import { Trim } from '../../../../common/decorators/trim.decorator';
 import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
-import { SENIORITY_LEVELS } from '../../../../domain/job/constants/seniority-level.constant';
+import { EXPERIENCE_LEVELS } from '../../../../domain/job/constants/experience-level.constant';
 import { ToLowerCase } from '../../../../common/decorators/to-lower-case.decorator';
 
 export class CreateRegularJobRequestDto {
@@ -57,8 +57,8 @@ export class CreateRegularJobRequestDto {
   @ApiProperty()
   @IsNumber()
   @Min(1)
-  @Max(SENIORITY_LEVELS.length)
-  public readonly seniorityLevelId!: number;
+  @Max(EXPERIENCE_LEVELS.length)
+  public readonly experienceLevelId!: number;
 
   @ApiProperty()
   @IsNumber()

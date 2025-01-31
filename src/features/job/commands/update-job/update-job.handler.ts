@@ -8,7 +8,7 @@ import { Job } from '../../../../domain/job/entities/job.entity';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Category } from '../../../../domain/job/entities/category.entity';
 import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
-import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.entity';
+import { ExperienceLevel } from '../../../../domain/job/entities/experience-level.entity';
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { Logger } from '@nestjs/common';
@@ -17,7 +17,7 @@ import { UpdateJobRequestDto } from '../../dtos/requests/update-job-request.dto'
 interface JobReferences {
   category: Category;
   employmentType: EmploymentType;
-  seniorityLevel: SeniorityLevel;
+  experienceLevel: ExperienceLevel;
   workLocationType: WorkLocationType;
   koreanLevel: LanguageLevel;
   englishLevel: LanguageLevel;
@@ -43,7 +43,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
           'description',
           'category.id',
           'employmentType.id',
-          'seniorityLevel.id',
+          'experienceLevel.id',
           'workLocationType.id',
           'location',
           'minSalary',
@@ -72,7 +72,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
     const {
       category,
       employmentType,
-      seniorityLevel,
+      experienceLevel,
       workLocationType,
       koreanLevel,
       englishLevel,
@@ -82,7 +82,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
     job.description = dto.description;
     job.category = category;
     job.employmentType = employmentType;
-    job.seniorityLevel = seniorityLevel;
+    job.experienceLevel = experienceLevel;
     job.workLocationType = workLocationType;
     job.location = dto.location;
     job.minSalary = dto.minSalary;
@@ -121,9 +121,9 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
       EmploymentType,
       dto.employmentTypeId,
     );
-    const seniorityLevel = this.em.getReference(
-      SeniorityLevel,
-      dto.seniorityLevelId,
+    const experienceLevel = this.em.getReference(
+      ExperienceLevel,
+      dto.experienceLevelId,
     );
     const workLocationType = this.em.getReference(
       WorkLocationType,
@@ -138,7 +138,7 @@ export class UpdateJobHandler implements ICommandHandler<UpdateJobCommand> {
     return {
       category,
       employmentType,
-      seniorityLevel,
+      experienceLevel,
       workLocationType,
       koreanLevel,
       englishLevel,

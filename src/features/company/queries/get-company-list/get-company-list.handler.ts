@@ -10,7 +10,7 @@ import { ResultError } from '../../../../common/result/result-error';
 import { Company } from '../../../../domain/company/entities/company.entity';
 
 const COMPANY_FIELDS = [
-  'id',
+  'slug',
   'name',
   'summary',
   'logoUrl',
@@ -40,7 +40,7 @@ export class GetCompanyListHandler
     const companyDtos = companies.map(
       (company) =>
         new CompanyListItemDto({
-          id: company.id,
+          slug: company.slug,
           name: company.name,
           summary: company.summary!,
           logoUrl: company.logoUrl,

@@ -18,13 +18,13 @@ import { EmploymentType } from '../../domain/common/entities/employment-type.ent
 import { LanguageLevel } from '../../domain/common/entities/language-level.entity';
 import { CompanySize } from '../../domain/company/entities/company-size.entity';
 import { COMPANY_SIZES } from '../../domain/company/company-size.constant';
-import { SeniorityLevel } from '../../domain/job/entities/seniority-level.entity';
 import { COUNTRIES } from '../../domain/common/constants/country.constant';
 import { SALARY_RANGE } from '../../domain/talent/constants/salary-range.constant';
 import { HOURLY_RATE_RANGE } from '../../domain/talent/constants/hourly-rate-range.constant';
-import { SENIORITY_LEVELS } from '../../domain/job/constants/seniority-level.constant';
+import { EXPERIENCE_LEVELS } from '../../domain/job/constants/experience-level.constant';
 import { EventType } from '../../domain/event/event-type.entity';
 import { EVENT_TYPE } from '../../domain/event/event-type.constant';
+import { ExperienceLevel } from '../../domain/job/entities/experience-level.entity';
 
 interface BaseEntity {
   id: number;
@@ -100,10 +100,10 @@ export class BaseSeeder extends Seeder {
       'CompanySize',
     );
     await seedMissingEntities(
-      SeniorityLevel,
-      SENIORITY_LEVELS,
-      SeniorityLevel,
-      'SeniorityLevel',
+      ExperienceLevel,
+      EXPERIENCE_LEVELS,
+      ExperienceLevel,
+      'experienceLevel',
     );
     await seedMissingEntities(EventType, EVENT_TYPE, EventType, 'EventType');
 

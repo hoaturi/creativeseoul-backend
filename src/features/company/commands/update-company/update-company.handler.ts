@@ -7,6 +7,7 @@ import { CompanySize } from '../../../../domain/company/entities/company-size.en
 import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../company.error';
 import { CompanyNotFoundException } from '../../../../domain/company/exceptions/company-not-found.exception';
+import slugify from 'slugify';
 
 @CommandHandler(UpdateCompanyCommand)
 export class UpdateCompanyHandler
@@ -32,6 +33,7 @@ export class UpdateCompanyHandler
     }
 
     company.name = dto.name;
+    company.slug = slugify(dto.name, { lower: true });
     company.summary = dto.summary;
     company.description = dto.description;
     company.logoUrl = dto.logoUrl;

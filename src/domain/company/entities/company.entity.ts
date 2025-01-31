@@ -27,13 +27,16 @@ export class Company extends BaseEntity {
   @OneToOne(() => User, { nullable: true })
   public user?: User;
 
-  @Property({ length: 64 })
+  @Property({ length: 64, unique: true })
   public name: string;
+
+  @Property({ length: 64 })
+  public slug: string;
 
   @Property({ length: 128 })
   public summary: string;
 
-  @Property({ nullable: true })
+  @Property({ type: 'text', nullable: true })
   public description?: string;
 
   @Property({ nullable: true })
@@ -93,6 +96,7 @@ export class Company extends BaseEntity {
   public constructor(data: {
     isClaimed: boolean;
     name: string;
+    slug: string;
     websiteUrl: string;
     summary: string;
     description?: string;
@@ -106,6 +110,7 @@ export class Company extends BaseEntity {
     super();
     this.isClaimed = data.isClaimed;
     this.name = data.name;
+    this.slug = data.slug;
     this.summary = data.summary;
     this.description = data.description;
     this.location = data.location;

@@ -2,7 +2,7 @@ import { Entity, PrimaryKey } from '@mikro-orm/core';
 import { Property } from '@mikro-orm/postgresql';
 
 @Entity()
-export class SeniorityLevel {
+export class ExperienceLevel {
   @PrimaryKey()
   public readonly id!: number;
 

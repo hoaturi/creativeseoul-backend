@@ -30,7 +30,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
           'description',
           'category.label',
           'employmentType.label',
-          'seniorityLevel.label',
+          'experienceLevel.label',
           'workLocationType.label',
           'location',
           'minSalary',
@@ -41,7 +41,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
           'residentOnly',
           'applicationUrl',
           'isPublished',
-          'company.id',
+          'company.slug',
           'company.name',
           'company.description',
           'company.logoUrl',
@@ -62,7 +62,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
     }
 
     const companyDto = new JobCompanyDto({
-      id: job.company.id,
+      slug: job.company.slug,
       name: job.company.name,
       description: job.company.description!,
       logoUrl: job.company.logoUrl,
@@ -76,7 +76,7 @@ export class GetJobHandler implements IQueryHandler<GetJobQuery> {
       description: job.description,
       category: job.category.label,
       employmentType: job.employmentType.label,
-      seniorityLevel: job.seniorityLevel.label,
+      experienceLevel: job.experienceLevel.label,
       workLocationType: job.workLocationType.label,
       location: job.location,
       minSalary: job.minSalary,

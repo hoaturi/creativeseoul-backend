@@ -16,7 +16,7 @@ import {
   WORK_LOCATION_TYPES,
 } from '../../../../domain/common/constants';
 import { Transform } from 'class-transformer';
-import { SENIORITY_LEVELS } from '../../../../domain/job/constants/seniority-level.constant';
+import { EXPERIENCE_LEVELS } from '../../../../domain/job/constants/experience-level.constant';
 
 export class GetJobListQueryDto {
   @ApiPropertyOptional()
@@ -43,12 +43,12 @@ export class GetJobListQueryDto {
   @IsArray()
   @IsNumber({}, { each: true })
   @Min(1, { each: true })
-  @Max(SENIORITY_LEVELS.length, { each: true })
+  @Max(EXPERIENCE_LEVELS.length, { each: true })
   @Transform(({ value }) => {
     const values = Array.isArray(value) ? value : value.split(',');
     return values.map((v: string) => parseInt(v));
   })
-  public readonly seniorityLevelIds?: number[];
+  public readonly experienceLevelIds?: number[];
 
   @ApiPropertyOptional()
   @IsOptional()

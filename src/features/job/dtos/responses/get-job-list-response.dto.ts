@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class GetJobListItemCompanyDto {
   @ApiProperty()
-  public readonly id: string;
+  public readonly slug: string;
 
   @ApiProperty()
   public readonly name: string;
@@ -10,8 +10,8 @@ export class GetJobListItemCompanyDto {
   @ApiPropertyOptional()
   public readonly logoUrl?: string;
 
-  public constructor(data: { id: string; name: string; logoUrl?: string }) {
-    this.id = data.id;
+  public constructor(data: { slug: string; name: string; logoUrl?: string }) {
+    this.slug = data.slug;
     this.name = data.name;
     this.logoUrl = data.logoUrl;
   }
@@ -36,7 +36,7 @@ export class GetJobListItemDto {
   public readonly employmentType: string;
 
   @ApiProperty()
-  public readonly seniorityLevel: string;
+  public readonly experienceLevel: string;
 
   @ApiProperty()
   public readonly workLocationType: string;
@@ -68,7 +68,7 @@ export class GetJobListItemDto {
     title: string;
     category: string;
     employmentType: string;
-    seniorityLevel: string;
+    experienceLevel: string;
     workLocationType: string;
     location: string;
     minSalary?: number;
@@ -83,7 +83,7 @@ export class GetJobListItemDto {
     this.title = data.title;
     this.category = data.category;
     this.employmentType = data.employmentType;
-    this.seniorityLevel = data.seniorityLevel;
+    this.experienceLevel = data.experienceLevel;
     this.workLocationType = data.workLocationType;
     this.location = data.location;
     this.minSalary = data.minSalary;

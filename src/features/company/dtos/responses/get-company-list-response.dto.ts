@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CompanyListItemDto {
   @ApiProperty()
-  public readonly id: string;
+  public readonly slug: string;
 
   @ApiProperty()
   public readonly name: string;
@@ -26,7 +26,7 @@ export class CompanyListItemDto {
   public readonly isSponsor: boolean;
 
   public constructor(data: {
-    id: string;
+    slug: string;
     name: string;
     summary: string;
     size: string;
@@ -35,7 +35,7 @@ export class CompanyListItemDto {
     totalJobs: number;
     isSponsor: boolean;
   }) {
-    this.id = data.id;
+    this.slug = data.slug;
     this.name = data.name;
     this.summary = data.summary;
     this.size = data.size;

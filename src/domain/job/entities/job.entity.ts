@@ -9,7 +9,7 @@ import {
 import { Company } from '../../company/entities/company.entity';
 import { Category } from './category.entity';
 import { EmploymentType } from '../../common/entities/employment-type.entity';
-import { SeniorityLevel } from './seniority-level.entity';
+import { ExperienceLevel } from './experience-level.entity';
 import { WorkLocationType } from '../../common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../common/entities/language-level.entity';
 
@@ -44,8 +44,8 @@ export class Job extends BaseEntity {
   @ManyToOne(() => EmploymentType)
   public employmentType: EmploymentType;
 
-  @ManyToOne(() => SeniorityLevel)
-  public seniorityLevel: SeniorityLevel;
+  @ManyToOne(() => ExperienceLevel)
+  public experienceLevel: ExperienceLevel;
 
   @ManyToOne(() => WorkLocationType)
   public workLocationType: WorkLocationType;
@@ -106,7 +106,7 @@ export class Job extends BaseEntity {
     description: string;
     category: Category;
     employmentType: EmploymentType;
-    seniorityLevel: SeniorityLevel;
+    experienceLevel: ExperienceLevel;
     workLocationType: WorkLocationType;
     location: string;
     minSalary?: number;
@@ -127,7 +127,7 @@ export class Job extends BaseEntity {
     this.description = data.description;
     this.category = data.category;
     this.employmentType = data.employmentType;
-    this.seniorityLevel = data.seniorityLevel;
+    this.experienceLevel = data.experienceLevel;
     this.workLocationType = data.workLocationType;
     this.location = data.location;
     this.minSalary = data.minSalary;

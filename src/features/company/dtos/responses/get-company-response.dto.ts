@@ -22,34 +22,50 @@ export class CompanySocialLinksDto {
 }
 
 export class CompanyJobItemDto {
-  public readonly id!: string;
+  @ApiProperty()
+  public readonly slug!: string;
 
+  @ApiProperty()
   public readonly title!: string;
 
+  @ApiProperty()
   public readonly location!: string;
 
+  @ApiProperty()
   public readonly category!: string;
 
+  @ApiProperty()
   public readonly employmentType!: string;
 
+  @ApiProperty()
+  public readonly workLocationType!: string;
+
+  @ApiProperty()
+  public readonly experienceLevel!: string;
+
+  @ApiProperty()
   public readonly minSalary?: number;
 
+  @ApiProperty()
   public readonly maxSalary?: number;
 
+  @ApiProperty()
   public readonly koreanLevel!: string;
 
+  @ApiProperty()
   public readonly residentOnly!: boolean;
 
-  public readonly tags?: string[];
-
+  @ApiProperty()
   public readonly isFeatured!: boolean;
 
   public constructor(data: {
-    id: string;
+    slug: string;
     title: string;
     location: string;
     category: string;
     employmentType: string;
+    workLocationType: string;
+    experienceLevel: string;
     minSalary?: number;
     maxSalary?: number;
     koreanLevel: string;
@@ -57,16 +73,17 @@ export class CompanyJobItemDto {
     tags?: string[];
     isFeatured: boolean;
   }) {
-    this.id = data.id;
+    this.slug = data.slug;
     this.title = data.title;
     this.location = data.location;
     this.category = data.category;
     this.employmentType = data.employmentType;
+    this.workLocationType = data.workLocationType;
+    this.experienceLevel = data.experienceLevel;
     this.minSalary = data.minSalary;
     this.maxSalary = data.maxSalary;
     this.koreanLevel = data.koreanLevel;
     this.residentOnly = data.residentOnly;
-    this.tags = data.tags;
     this.isFeatured = data.isFeatured;
   }
 }

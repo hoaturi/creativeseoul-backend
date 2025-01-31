@@ -6,7 +6,7 @@ import { ResultError } from 'src/common/result/result-error';
 import { Job } from '../../../../domain/job/entities/job.entity';
 import { Category } from '../../../../domain/job/entities/category.entity';
 import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
-import { SeniorityLevel } from '../../../../domain/job/entities/seniority-level.entity';
+import { ExperienceLevel } from '../../../../domain/job/entities/experience-level.entity';
 import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { CreateRegularJobRequestDto } from '../../dtos/requests/create-regular-job-request.dto';
@@ -17,7 +17,7 @@ import { CompanyError } from '../../../company/company.error';
 interface JobReferences {
   category: Category;
   employmentType: EmploymentType;
-  seniorityLevel: SeniorityLevel;
+  experienceLevel: ExperienceLevel;
   workLocationType: WorkLocationType;
   koreanLevel: LanguageLevel;
   englishLevel: LanguageLevel;
@@ -37,7 +37,7 @@ export class CreateRegularJobHandler
     const {
       category,
       employmentType,
-      seniorityLevel,
+      experienceLevel,
       workLocationType,
       koreanLevel,
       englishLevel,
@@ -66,7 +66,7 @@ export class CreateRegularJobHandler
       description: dto.description,
       category,
       employmentType,
-      seniorityLevel,
+      experienceLevel,
       workLocationType,
       location: dto.location,
       minSalary: dto.minSalary,
@@ -94,9 +94,9 @@ export class CreateRegularJobHandler
       EmploymentType,
       dto.employmentTypeId,
     );
-    const seniorityLevel = this.em.getReference(
-      SeniorityLevel,
-      dto.seniorityLevelId,
+    const experienceLevel = this.em.getReference(
+      ExperienceLevel,
+      dto.experienceLevelId,
     );
     const workLocationType = this.em.getReference(
       WorkLocationType,
@@ -111,7 +111,7 @@ export class CreateRegularJobHandler
     return {
       category,
       employmentType,
-      seniorityLevel,
+      experienceLevel,
       workLocationType,
       koreanLevel,
       englishLevel,

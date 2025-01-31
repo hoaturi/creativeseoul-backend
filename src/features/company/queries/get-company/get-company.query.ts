@@ -6,7 +6,7 @@ import { ResultError } from '../../../../common/result/result-error';
 export class GetCompanyQuery extends Query<
   Result<GetCompanyResponseDto, ResultError>
 > {
-  public constructor(public readonly id: string) {
+  public constructor(public readonly slug: string) {
     super();
   }
 }

@@ -27,7 +27,7 @@ export class GetSponsorCompanyListHandler
       },
       {
         fields: [
-          'company.id',
+          'company.slug',
           'company.name',
           'company.summary',
           'company.logoUrl',
@@ -37,7 +37,7 @@ export class GetSponsorCompanyListHandler
 
     const companyListItemDtos = companies.map((company) => {
       return new GetSponsorCompanyListItemDto({
-        id: company.company.id,
+        slug: company.company.slug,
         name: company.company.name,
         summary: company.company.summary,
         logoUrl: company.company.logoUrl,

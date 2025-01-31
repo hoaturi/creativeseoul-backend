@@ -21,7 +21,7 @@ import {
 } from '../../../../domain/common/constants';
 import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
 import { Trim } from '../../../../common/decorators/trim.decorator';
-import { SENIORITY_LEVELS } from '../../../../domain/job/constants/seniority-level.constant';
+import { EXPERIENCE_LEVELS } from '../../../../domain/job/constants/experience-level.constant';
 
 export class UpdateJobRequestDto {
   @ApiProperty()
@@ -52,8 +52,8 @@ export class UpdateJobRequestDto {
   @ApiProperty()
   @IsNumber()
   @Min(1)
-  @Max(SENIORITY_LEVELS.length)
-  public readonly seniorityLevelId!: number;
+  @Max(EXPERIENCE_LEVELS.length)
+  public readonly experienceLevelId!: number;
 
   @ApiProperty()
   @IsNumber()

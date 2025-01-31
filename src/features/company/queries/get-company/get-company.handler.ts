@@ -14,6 +14,7 @@ import { Job } from '../../../../domain/job/entities/job.entity';
 
 const COMPANY_FIELDS = [
   'name',
+  'slug',
   'summary',
   'description',
   'logoUrl',
@@ -21,16 +22,17 @@ const COMPANY_FIELDS = [
   'location',
   'size.label',
   'socialLinks',
-  'jobs.id',
+  'jobs.slug',
   'jobs.title',
   'jobs.location',
-  'jobs.category',
+  'jobs.category.label',
   'jobs.employmentType.label',
+  'jobs.workLocationType.label',
+  'jobs.experienceLevel.label',
   'jobs.minSalary',
   'jobs.maxSalary',
   'jobs.koreanLevel.label',
   'jobs.residentOnly',
-  'jobs.tags',
   'jobs.isFeatured',
 ] as const;
 
@@ -63,7 +65,7 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
   ): Promise<Result<GetCompanyResponseDto, ResultError>> {
     const company = await this.em.findOne(
       Company,
-      { id: query.id },
+      { slug: query.slug },
       {
         fields: COMPANY_FIELDS,
       },
@@ -102,16 +104,17 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
   private mapJobs(jobs: LoadedJobs): CompanyJobItemDto[] {
     return jobs.getItems().map((job) => {
       return new CompanyJobItemDto({
-        id: job.id,
+        slug: job.slug,
         title: job.title,
         location: job.location,
         category: job.category.label,
         employmentType: job.employmentType.label,
+        workLocationType: job.workLocationType.label,
+        experienceLevel: job.experienceLevel.label,
         minSalary: job.minSalary,
         maxSalary: job.maxSalary,
         koreanLevel: job.koreanLevel.label,
         residentOnly: job.residentOnly,
-        tags: job.tags,
         isFeatured: job.isFeatured,
       });
     });

@@ -172,7 +172,7 @@ export class CompanyController {
     return result.value;
   }
 
-  @Get(':id')
+  @Get(':slug')
   @ApiOkResponse({
     type: GetCompanyResponseDto,
   })
@@ -180,9 +180,9 @@ export class CompanyController {
     example: CompanyError.ProfileNotFound,
   })
   public async getCompany(
-    @Param('id') id: string,
+    @Param('slug') slug: string,
   ): Promise<GetCompanyResponseDto> {
-    const command = new GetCompanyQuery(id);
+    const command = new GetCompanyQuery(slug);
 
     const result = await this.queryBus.execute(command);
 
