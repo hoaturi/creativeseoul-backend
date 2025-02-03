@@ -126,10 +126,6 @@ export class UpdateTalentRequestDto {
   // Profile Status and Visibility
   @ApiProperty()
   @IsBoolean()
-  public readonly isPublic!: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
   public readonly isAvailable!: boolean;
 
   @ApiProperty()

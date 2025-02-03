@@ -116,9 +116,6 @@ export class Talent extends BaseEntity {
   public socialLinks?: TalentSocialLinks;
 
   // Visibility and status
-  @Property()
-  public isPublic: boolean;
-
   @Property({ nullable: true })
   @Index()
   public qualityScore?: number;
@@ -145,7 +142,6 @@ export class Talent extends BaseEntity {
     data: {
       handle: string;
       requiresVisaSponsorship: boolean;
-      isPublic: boolean;
       isAvailable: boolean;
       isContactable: boolean;
       fullName: string;
@@ -165,7 +161,6 @@ export class Talent extends BaseEntity {
     super();
     this.user = user;
     this.requiresVisaSponsorship = data.requiresVisaSponsorship;
-    this.isPublic = data.isPublic;
     this.isAvailable = data.isAvailable;
     this.isContactable = data.isContactable;
     this.handle = data.handle;

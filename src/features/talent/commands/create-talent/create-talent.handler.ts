@@ -79,7 +79,6 @@ export class CreateTalentHandler
         ...talentData,
         city,
         country,
-        isPublic: true,
         isAvailable: false,
         isContactable: false,
         requiresVisaSponsorship: false,

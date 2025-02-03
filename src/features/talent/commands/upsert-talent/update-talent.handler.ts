@@ -98,7 +98,6 @@ export class UpdateTalentHandler
     };
 
     const flagProperties: Partial<Talent> = {
-      isPublic: dto.isPublic,
       isAvailable: dto.isAvailable,
       isContactable: dto.isContactable,
       requiresVisaSponsorship: dto.requiresVisaSponsorship,

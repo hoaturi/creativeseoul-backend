@@ -4,8 +4,6 @@ import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
 import { GetTalentAsMemberResponseDto } from '../dtos/responses/get-talent-as-member-response.dto';
 import { TalentError } from '../talent.error';
 import { GetTalentAsMemberQuery } from '../queries/get-talent-as-member/get-talent-as-member.query';
-import { CurrentUser } from '../../../infrastructure/security/decorators/current-user.decorator';
-import { AuthenticatedUser } from '../../../infrastructure/security/authenticated-user.interface';
 import { GetTalentAsMemberListResponseDto } from '../dtos/responses/get-talent-as-member-list-response.dto';
 import { GetTalentAsMemberListQuery } from '../queries/get-talent-as-member-list/get-talent-as-member-list.query';
 
@@ -39,10 +37,9 @@ export class MemberController {
     example: TalentError.ProfileNotFound,
   })
   public async GetTalentAsMember(
-    @CurrentUser() user: AuthenticatedUser,
     @Param('handle') handle: string,
   ): Promise<GetTalentAsMemberResponseDto> {
-    const command = new GetTalentAsMemberQuery(user, handle);
+    const command = new GetTalentAsMemberQuery(handle);
 
     const result = await this.queryBus.execute(command);
 

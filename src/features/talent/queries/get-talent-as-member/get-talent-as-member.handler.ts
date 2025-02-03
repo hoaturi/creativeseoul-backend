@@ -9,8 +9,6 @@ import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
 import { TalentSocialLinksDto } from '../../dtos/responses/talent-social-links.dto';
 import { TalentLanguageProficiencyDto } from '../../dtos/responses/talent-language-proficiency.dto';
 import { CompanyError } from '../../../company/company.error';
-import { UserRole } from '../../../../domain/user/user-role.enum';
-import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
 
 const TALENT_FIELDS = [
   'handle',
@@ -23,7 +21,6 @@ const TALENT_FIELDS = [
   'languages.level.label',
   'avatarUrl',
   'socialLinks',
-  'isPublic',
 ] as const;
 
 type TalentFields = (typeof TALENT_FIELDS)[number];
@@ -38,7 +35,7 @@ export class GetTalentAsMemberHandler
   public async execute(
     query: GetTalentAsMemberQuery,
   ): Promise<Result<GetTalentAsMemberResponseDto, ResultError>> {
-    const { user, handle } = query;
+    const { handle } = query;
 
     const talent = await this.em.findOne(
       Talent,
@@ -52,20 +49,8 @@ export class GetTalentAsMemberHandler
       return Result.failure(CompanyError.ProfileNotFound);
     }
 
-    if (!this.hasPermission(talent, user)) {
-      return Result.failure(CompanyError.ProfileNotFound);
-    }
-
     const response = this.mapToResponseDto(talent);
     return Result.success(response);
-  }
-
-  private hasPermission(
-    talent: LoadedTalent,
-    user?: AuthenticatedUser,
-  ): boolean {
-    const isOwner = user?.profile.id === talent.id;
-    return talent.isPublic || isOwner || user?.role === UserRole.ADMIN;
   }
 
   private mapToResponseDto(talent: LoadedTalent): GetTalentAsMemberResponseDto {

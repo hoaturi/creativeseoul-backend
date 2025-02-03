@@ -25,7 +25,6 @@ const TALENT_FIELDS = [
   'hourlyRateRange',
   'workLocationTypes',
   'employmentTypes',
-  'isPublic',
   'email',
   'phone',
   'socialLinks',
@@ -82,10 +81,6 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     const isUserOwner = user.profile.id === talent.id;
     const isUserAdmin = user.role === UserRole.ADMIN;
     const isUserCompany = user.role === UserRole.COMPANY;
-
-    if (!talent.isPublic) {
-      return isUserOwner || isUserAdmin;
-    }
 
     return isUserCompany || isUserAdmin || isUserOwner;
   }
