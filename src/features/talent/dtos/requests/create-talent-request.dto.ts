@@ -16,8 +16,14 @@ import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicate
 import { HasUniqueLanguages } from '../../../../common/decorators/has-unique-languages.decorator';
 import { TalentLanguageDto } from './talent-language.dto';
 import { Type } from 'class-transformer';
+import { TalentSocialLinksDto } from './talent-social-links.dto';
 
 export class CreateTalentRequestDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUrl()
+  public readonly avatarUrl?: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -47,11 +53,6 @@ export class CreateTalentRequestDto {
   @Trim()
   public readonly bio!: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsUrl()
-  public readonly avatarUrl?: string;
-
   @ApiProperty({ type: [TalentLanguageDto] })
   @IsArray()
   @HasUniqueLanguages()
@@ -64,6 +65,7 @@ export class CreateTalentRequestDto {
   @IsArray()
   @ArrayMaxSize(10)
   @IsString({ each: true })
+  @MaxLength(16, { each: true })
   @Trim({ each: true })
   @RemoveDuplicates()
   public readonly skills?: string[];
@@ -72,11 +74,19 @@ export class CreateTalentRequestDto {
   @IsNumber()
   public readonly countryId!: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    type: TalentSocialLinksDto,
+  })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(32)
   @Trim()
   public readonly city?: string;
+
+  @ApiPropertyOptional({
+    type: TalentSocialLinksDto,
+  })
+  @IsOptional()
+  public readonly socialLinks?: TalentSocialLinksDto;
 }
