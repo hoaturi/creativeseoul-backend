@@ -21,6 +21,12 @@ export class TalentError extends ResultError {
     'Contact information missing',
   );
 
+  public static readonly HandleAlreadyExists = new TalentError(
+    TalentErrorCode.HANDLE_ALREADY_EXISTS,
+    HttpStatus.CONFLICT,
+    'Handle already exists',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

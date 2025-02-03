@@ -1,5 +1,4 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateTalentCommand } from './create-talent.command';
 import { Result } from '../../../../common/result/result';
 import { ResultError } from '../../../../common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
@@ -10,25 +9,17 @@ import { Country } from '../../../../domain/common/entities/country.entity';
 import { City } from '../../../../domain/common/entities/city.entity';
 import { Language } from '../../../../domain/common/entities/language.entity';
 import { TalentLanguage } from '../../../../domain/talent/entities/talent-language.entity';
-import { SalaryRange } from '../../../../domain/talent/entities/salary-range.entity';
-import { HourlyRateRange } from '../../../../domain/talent/entities/hourly-rate-range.entity';
-import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
-import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
 import slugify from 'slugify';
 import { TalentScoringService } from '../../../../infrastructure/services/talent-scoring/talent-scoring.service';
 import { TalentError } from '../../talent.error';
 import { TalentLanguageDto } from '../../dtos/requests/talent-language.dto';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
+import { CreateTalentCommand } from './create-talent.command';
 import { CreateTalentRequestDto } from '../../dtos/requests/create-talent-request.dto';
 
 interface LocationRefs {
   city?: City;
   country: Country;
-}
-
-interface CompensationRefs {
-  salaryRange?: SalaryRange;
-  hourlyRateRange?: HourlyRateRange;
 }
 
 @CommandHandler(CreateTalentCommand)
@@ -47,21 +38,18 @@ export class CreateTalentHandler
   ): Promise<Result<string, ResultError>> {
     const { dto, user } = command;
 
-    if (dto.isContactable && !dto.email && !dto.phone) {
-      return Result.failure(TalentError.ContactInfoMissing);
-    }
-
     if (user.profile.id) {
       return Result.failure(TalentError.ProfileAlreadyExists);
     }
 
-    const talent = await this.createTalent(dto, user.id);
+    const existingHandle = await this.em.findOne(Talent, {
+      handle: dto.handle,
+    });
+    if (existingHandle) {
+      return Result.failure(TalentError.HandleAlreadyExists);
+    }
 
-    this.updateWorkPreferences(
-      talent,
-      dto.locationTypeIds,
-      dto.employmentTypeIds,
-    );
+    const talent = await this.createTalent(dto, user.id);
     this.updateLanguages(talent, dto.languages);
 
     talent.qualityScore = this.scoringService.calculateProfileScore(talent);
@@ -80,20 +68,10 @@ export class CreateTalentHandler
     dto: CreateTalentRequestDto,
     userId: string,
   ): Promise<Talent> {
-    const {
-      salaryRangeId,
-      hourlyRateRangeId,
-      countryId,
-      city: cityName,
-      ...talentData
-    } = dto;
+    const { countryId, city: cityName, ...talentData } = dto;
 
     const userRef = this.em.getReference(User, userId);
     const { city, country } = await this.getLocation(countryId, cityName);
-    const { salaryRange, hourlyRateRange } = this.getCompensationRefs(
-      salaryRangeId,
-      hourlyRateRangeId,
-    );
 
     return this.em.create(
       Talent,
@@ -101,8 +79,10 @@ export class CreateTalentHandler
         ...talentData,
         city,
         country,
-        salaryRange,
-        hourlyRateRange,
+        isPublic: true,
+        isAvailable: false,
+        isContactable: false,
+        requiresVisaSponsorship: false,
       }),
     );
   }
@@ -125,37 +105,6 @@ export class CreateTalentHandler
     }
 
     return { city, country };
-  }
-
-  private getCompensationRefs(
-    salaryId?: number,
-    hourlyId?: number,
-  ): CompensationRefs {
-    const salaryRange = salaryId
-      ? this.em.getReference(SalaryRange, salaryId)
-      : undefined;
-    const hourlyRateRange = hourlyId
-      ? this.em.getReference(HourlyRateRange, hourlyId)
-      : undefined;
-
-    return { salaryRange, hourlyRateRange };
-  }
-
-  private updateWorkPreferences(
-    talent: Talent,
-    locationTypeIds: number[],
-    employmentTypeIds: number[],
-  ): void {
-    const workLocationTypes = locationTypeIds.map((id) =>
-      this.em.getReference(WorkLocationType, id),
-    );
-
-    const employmentTypes = employmentTypeIds.map((id) =>
-      this.em.getReference(EmploymentType, id),
-    );
-
-    talent.workLocationTypes.set(workLocationTypes);
-    talent.employmentTypes.set(employmentTypes);
   }
 
   private updateLanguages(

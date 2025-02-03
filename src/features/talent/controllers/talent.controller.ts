@@ -109,7 +109,16 @@ export class TalentController {
     example: CommonError.ValidationFailed,
   })
   @ApiConflictResponse({
-    example: TalentError.ProfileAlreadyExists,
+    examples: {
+      ProfileAlreadyExists: {
+        summary: 'Profile already exists',
+        value: TalentError.ProfileAlreadyExists,
+      },
+      HandleAlreadyExists: {
+        summary: 'Handle already exists',
+        value: TalentError.HandleAlreadyExists,
+      },
+    },
   })
   public async createTalent(
     @Session() session: Record<string, any>,
