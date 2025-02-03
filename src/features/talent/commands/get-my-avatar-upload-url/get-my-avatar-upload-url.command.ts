@@ -9,7 +9,7 @@ export class GetMyAvatarUploadUrlCommand extends Command<
   Result<GetImageUploadUrlResponseDto, ResultError>
 > {
   public constructor(
-    public readonly currentUser: AuthenticatedUser,
+    public readonly user: AuthenticatedUser,
     public readonly dto: GetImageUploadUrlRequestDto,
   ) {
     super();

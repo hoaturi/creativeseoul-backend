@@ -4,7 +4,6 @@ import { Result } from '../../../../common/result/result';
 import { StorageService } from '../../../../infrastructure/services/storage/storage.service';
 import { GetImageUploadUrlResponseDto } from '../../../common/dtos/get-image-upload-url-response.dto';
 import { ResultError } from '../../../../common/result/result-error';
-import { TalentError } from '../../talent.error';
 
 @CommandHandler(GetMyAvatarUploadUrlCommand)
 export class GetMyAvatarUploadUrlHandler
@@ -15,13 +14,9 @@ export class GetMyAvatarUploadUrlHandler
   public async execute(
     command: GetMyAvatarUploadUrlCommand,
   ): Promise<Result<GetImageUploadUrlResponseDto, ResultError>> {
-    const { currentUser, dto } = command;
+    const { user, dto } = command;
 
-    if (!currentUser.profile.id) {
-      return Result.failure(TalentError.ProfileNotFound);
-    }
-
-    const fileName = `avatars/${currentUser.profile.id}-${Date.now()}`;
+    const fileName = `avatars/${user.id}-${Date.now()}`;
     const presignedUrl = await this.storageService.generatePresignedUrl(
       fileName,
       dto,
