@@ -13,10 +13,10 @@ export class City {
   @PrimaryKey()
   public readonly id!: number;
 
-  @Property({ length: 32, unique: true })
+  @Property({ length: 32 })
   public readonly label: string;
 
-  @Property({ length: 32, unique: true })
+  @Property({ length: 32 })
   public readonly slug: string;
 
   @ManyToOne(() => Country)
