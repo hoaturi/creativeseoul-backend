@@ -7,13 +7,13 @@ import { TalentEmploymentTypeDto } from './talent-employment-type.dto';
 
 export class GetTalentResponseDto {
   @ApiProperty()
-  public readonly fullName!: string;
+  public readonly fullName: string;
 
   @ApiProperty()
-  public readonly title!: string;
+  public readonly title: string;
 
   @ApiProperty()
-  public readonly bio!: string;
+  public readonly bio: string;
 
   @ApiPropertyOptional()
   public readonly avatarUrl?: string;
@@ -21,12 +21,12 @@ export class GetTalentResponseDto {
   @ApiProperty({
     type: TalentLocationDto,
   })
-  public readonly location!: TalentLocationDto;
+  public readonly location: TalentLocationDto;
 
   @ApiProperty({
     type: [TalentLanguageProficiencyDto],
   })
-  public readonly languages!: TalentLanguageProficiencyDto[];
+  public readonly languages: TalentLanguageProficiencyDto[];
 
   @ApiPropertyOptional({
     type: TalentSocialLinksDto,
@@ -34,7 +34,7 @@ export class GetTalentResponseDto {
   public readonly socialLinks?: TalentSocialLinksDto;
 
   @ApiProperty()
-  public readonly isAvailable!: boolean;
+  public readonly isAvailable: boolean;
 
   @ApiPropertyOptional()
   public readonly salaryRange?: string;
@@ -45,12 +45,12 @@ export class GetTalentResponseDto {
   @ApiProperty({
     type: [TalentWorkLocationTypeDto],
   })
-  public readonly workLocationTypes!: TalentWorkLocationTypeDto[];
+  public readonly workLocationTypes: TalentWorkLocationTypeDto[];
 
   @ApiProperty({
     type: [TalentEmploymentTypeDto],
   })
-  public readonly employmentTypes!: TalentEmploymentTypeDto[];
+  public readonly employmentTypes: TalentEmploymentTypeDto[];
 
   @ApiPropertyOptional()
   public readonly skills?: string[];
