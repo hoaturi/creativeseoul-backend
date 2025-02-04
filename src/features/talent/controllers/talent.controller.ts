@@ -28,7 +28,7 @@ import { CurrentUser } from '../../../infrastructure/security/decorators/current
 import { AuthenticatedUser } from '../../../infrastructure/security/authenticated-user.interface';
 import { Roles } from '../../../infrastructure/security/decorators/roles.decorator';
 import { RolesGuard } from '../../../infrastructure/security/guards/roles.guard';
-import { UpdateTalentCommand } from '../commands/upsert-talent/update-talent.command';
+import { UpdateTalentCommand } from '../commands/update-talent/update-talent.command';
 import { UserRole } from '../../../domain/user/user-role.enum';
 import { GetTalentQuery } from '../queries/get-talent/get-talent.query';
 import { TalentError } from '../talent.error';
@@ -176,7 +176,9 @@ export class TalentController {
   @Put('me')
   @Roles(UserRole.TALENT)
   @UseGuards(AuthGuard, RolesGuard)
-  @ApiOkResponse()
+  @ApiOkResponse({
+    type: SessionResponseDto,
+  })
   @ApiUnauthorizedResponse({
     example: AuthError.Unauthenticated,
   })
@@ -187,9 +189,10 @@ export class TalentController {
     example: CommonError.ValidationFailed,
   })
   public async updateTalent(
+    @Session() session: Record<string, any>,
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: UpdateTalentRequestDto,
-  ): Promise<void> {
+  ): Promise<SessionResponseDto> {
     const command = new UpdateTalentCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
@@ -197,6 +200,10 @@ export class TalentController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+
+    session.user = result.value.user;
+
+    return result.value;
   }
 
   @Put('me/avatar')

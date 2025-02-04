@@ -47,7 +47,7 @@ export class Talent extends BaseEntity {
   public readonly user: User;
 
   // Basic profile information
-  @Property({ length: 16 })
+  @Property({ length: 16, unique: true })
   @Index()
   public handle: string;
 

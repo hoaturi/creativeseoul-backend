@@ -12,13 +12,10 @@ import { Language } from '../../../../domain/common/entities/language.entity';
 import { TalentLanguage } from '../../../../domain/talent/entities/talent-language.entity';
 import { TalentScoringService } from '../../../../infrastructure/services/talent-scoring/talent-scoring.service';
 import { TalentLanguageDto } from '../../dtos/requests/talent-language.dto';
-import { SalaryRange } from '../../../../domain/talent/entities/salary-range.entity';
 import slugify from 'slugify';
-import { HourlyRateRange } from '../../../../domain/talent/entities/hourly-rate-range.entity';
-import { WorkLocationType } from '../../../../domain/common/entities/work-location-type.entity';
-import { EmploymentType } from '../../../../domain/common/entities/employment-type.entity';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { TalentError } from '../../talent.error';
+import { SessionResponseDto } from '../../../auth/dtos/session-response.dto';
 
 interface LocationRefs {
   city?: City;
@@ -30,7 +27,7 @@ export class UpdateTalentHandler
   implements ICommandHandler<UpdateTalentCommand>
 {
   private readonly logger = new Logger(UpdateTalentHandler.name);
-  private readonly COOLDOWN_PERIOD = 14 * 24 * 60 * 60 * 1000;
+  private readonly COOLDOWN_PERIOD = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
 
   public constructor(
     private readonly em: EntityManager,
@@ -39,12 +36,8 @@ export class UpdateTalentHandler
 
   public async execute(
     command: UpdateTalentCommand,
-  ): Promise<Result<void, ResultError>> {
+  ): Promise<Result<SessionResponseDto, ResultError>> {
     const { dto, user } = command;
-
-    if (dto.isContactable && !dto.email && !dto.phone) {
-      return Result.failure(TalentError.ContactInfoMissing);
-    }
 
     const talent = await this.em.findOne(
       Talent,
@@ -60,6 +53,21 @@ export class UpdateTalentHandler
       return Result.failure(TalentError.ProfileNotFound);
     }
 
+    const existingTalent = await this.em.findOne(
+      Talent,
+      {
+        handle: dto.handle,
+        id: { $ne: user.profile.id },
+      },
+      {
+        fields: ['id'],
+      },
+    );
+
+    if (existingTalent) {
+      return Result.failure(TalentError.HandleAlreadyExists);
+    }
+
     await this.updateTalent(talent, dto);
 
     talent.qualityScore = this.scoringService.calculateProfileScore(talent);
@@ -72,7 +80,15 @@ export class UpdateTalentHandler
       'talent.update-talent.success: Talent profile updated successfully',
     );
 
-    return Result.success();
+    const response = new SessionResponseDto({
+      ...user,
+      profile: {
+        id: talent.id,
+        name: talent.fullName,
+        avatarUrl: talent.avatarUrl,
+      },
+    });
+    return Result.success(response);
   }
 
   private async updateTalent(
@@ -80,10 +96,6 @@ export class UpdateTalentHandler
     dto: UpdateTalentRequestDto,
   ): Promise<void> {
     const { city, country } = await this.getLocation(dto.countryId, dto.city);
-    const { salaryRange, hourlyRateRange } = this.getCompensationRefs(
-      dto.salaryRangeId,
-      dto.hourlyRateRangeId,
-    );
 
     const basicProperties: Partial<Talent> = {
       handle: dto.handle,
@@ -92,66 +104,16 @@ export class UpdateTalentHandler
       bio: dto.bio,
       avatarUrl: dto.avatarUrl,
       skills: dto.skills,
-      email: dto.email,
-      phone: dto.phone,
       socialLinks: dto.socialLinks,
-    };
-
-    const flagProperties: Partial<Talent> = {
-      isAvailable: dto.isAvailable,
-      isContactable: dto.isContactable,
-      requiresVisaSponsorship: dto.requiresVisaSponsorship,
     };
 
     const referenceProperties: Partial<Talent> = {
       city,
       country,
-      salaryRange,
-      hourlyRateRange,
     };
 
-    Object.assign(talent, basicProperties, flagProperties, referenceProperties);
-
-    this.updateWorkPreferences(
-      talent,
-      dto.locationTypeIds,
-      dto.employmentTypeIds,
-    );
+    Object.assign(talent, basicProperties, referenceProperties);
     this.updateLanguages(talent, dto.languages);
-  }
-
-  private getCompensationRefs(
-    salaryId?: number,
-    hourlyId?: number,
-  ): {
-    salaryRange?: SalaryRange;
-    hourlyRateRange?: HourlyRateRange;
-  } {
-    return {
-      salaryRange: salaryId
-        ? this.em.getReference(SalaryRange, salaryId)
-        : undefined,
-      hourlyRateRange: hourlyId
-        ? this.em.getReference(HourlyRateRange, hourlyId)
-        : undefined,
-    };
-  }
-
-  private updateWorkPreferences(
-    talent: Talent,
-    workLocationTypeIds: number[],
-    employmentTypeIds: number[],
-  ): void {
-    const workLocationTypes = workLocationTypeIds.map((id) =>
-      this.em.getReference(WorkLocationType, id),
-    );
-
-    const employmentTypes = employmentTypeIds.map((id) =>
-      this.em.getReference(EmploymentType, id),
-    );
-
-    talent.workLocationTypes.set(workLocationTypes);
-    talent.employmentTypes.set(employmentTypes);
   }
 
   private updateLanguages(
