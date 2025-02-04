@@ -16,6 +16,7 @@ import { TalentLanguageDto } from '../../dtos/requests/talent-language.dto';
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { CreateTalentCommand } from './create-talent.command';
 import { CreateTalentRequestDto } from '../../dtos/requests/create-talent-request.dto';
+import { SessionResponseDto } from '../../../auth/dtos/session-response.dto';
 
 interface LocationRefs {
   city?: City;
@@ -35,7 +36,7 @@ export class CreateTalentHandler
 
   public async execute(
     command: CreateTalentCommand,
-  ): Promise<Result<string, ResultError>> {
+  ): Promise<Result<SessionResponseDto, ResultError>> {
     const { dto, user } = command;
 
     if (user.profile.id) {
@@ -61,7 +62,15 @@ export class CreateTalentHandler
       'talent.create-talent.success: Talent profile created successfully',
     );
 
-    return Result.success(talent.id);
+    const response = new SessionResponseDto({
+      ...user,
+      profile: {
+        id: talent.id,
+        name: talent.fullName,
+        avatarUrl: talent.avatarUrl,
+      },
+    });
+    return Result.success(response);
   }
 
   private async createTalent(

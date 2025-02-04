@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -41,6 +43,7 @@ import { GetImageUploadUrlResponseDto } from '../../common/dtos/get-image-upload
 import { CompanyError } from '../../company/company.error';
 import { GetImageUploadUrlRequestDto } from '../../common/dtos/get-image-upload-url-request.dto';
 import { GetMyAvatarUploadUrlCommand } from '../commands/get-my-avatar-upload-url/get-my-avatar-upload-url.command';
+import { SessionResponseDto } from '../../auth/dtos/session-response.dto';
 
 @Controller('talents')
 export class TalentController {
@@ -96,9 +99,12 @@ export class TalentController {
   }
 
   @Post('me')
+  @HttpCode(HttpStatus.OK)
   @Roles(UserRole.TALENT)
   @UseGuards(AuthGuard, RolesGuard)
-  @ApiOkResponse()
+  @ApiOkResponse({
+    type: SessionResponseDto,
+  })
   @ApiUnauthorizedResponse({
     example: AuthError.Unauthenticated,
   })
@@ -124,7 +130,7 @@ export class TalentController {
     @Session() session: Record<string, any>,
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateTalentRequestDto,
-  ): Promise<void> {
+  ): Promise<SessionResponseDto> {
     const command = new CreateTalentCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
@@ -133,7 +139,9 @@ export class TalentController {
       throw new HttpException(result.error, result.error.statusCode);
     }
 
-    session.user.profile.id = result.value;
+    session.user = result.value.user;
+
+    return result.value;
   }
 
   @Put('me')
