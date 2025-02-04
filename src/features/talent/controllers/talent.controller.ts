@@ -44,6 +44,8 @@ import { CompanyError } from '../../company/company.error';
 import { GetImageUploadUrlRequestDto } from '../../common/dtos/get-image-upload-url-request.dto';
 import { GetMyAvatarUploadUrlCommand } from '../commands/get-my-avatar-upload-url/get-my-avatar-upload-url.command';
 import { SessionResponseDto } from '../../auth/dtos/session-response.dto';
+import { GetMyTalentQuery } from '../queries/get-my-talent/get-my-talent.query';
+import { GetMyTalentResponseDto } from '../dtos/responses/get-my-talent-response.dto';
 
 @Controller('talents')
 export class TalentController {
@@ -67,6 +69,33 @@ export class TalentController {
     @Query() queryDto: GetTalentListQueryDto,
   ): Promise<GetTalentListResponseDto> {
     const command = new GetTalentListQuery(queryDto);
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('me')
+  @Roles(UserRole.TALENT)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({ type: GetMyTalentResponseDto })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiNotFoundResponse({
+    example: TalentError.ProfileNotFound,
+  })
+  public async getMyTalent(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<GetMyTalentResponseDto> {
+    const command = new GetMyTalentQuery(user);
 
     const result = await this.queryBus.execute(command);
 

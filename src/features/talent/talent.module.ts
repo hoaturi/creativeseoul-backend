@@ -10,6 +10,7 @@ import { MemberController } from './controllers/member.controller';
 import { GetTalentAsMemberListHandler } from './queries/get-talent-as-member-list/get-talent-as-member-list.handler';
 import { GetMyAvatarUploadUrlHandler } from './commands/get-my-avatar-upload-url/get-my-avatar-upload-url.handler';
 import { StorageModule } from '../../infrastructure/services/storage/storage.module';
+import { GetMyTalentHandler } from './queries/get-my-talent/get-my-talent.handler';
 
 const providers: Provider[] = [
   GetTalentHandler,
@@ -19,6 +20,7 @@ const providers: Provider[] = [
   GetTalentAsMemberHandler,
   GetTalentAsMemberListHandler,
   GetMyAvatarUploadUrlHandler,
+  GetMyTalentHandler,
 ];
 
 @Module({
