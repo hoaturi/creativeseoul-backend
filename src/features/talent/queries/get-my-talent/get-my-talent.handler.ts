@@ -6,8 +6,6 @@ import { EntityManager } from '@mikro-orm/core';
 import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { TalentError } from '../../talent.error';
 import { MyTalentLanguageDto } from '../../dtos/responses/my-talent-language.dto';
-import { MyTalentWorkLocationTypeDto } from '../../dtos/responses/my-talent-work-location-type.dto';
-import { MyTalentEmploymentTypeDto } from '../../dtos/responses/my-talent-employment-type.dto';
 import { GetMyTalentResponseDto } from '../../dtos/responses/get-my-talent-response.dto';
 
 const TALENT_FIELDS = [
@@ -26,6 +24,7 @@ const TALENT_FIELDS = [
   'email',
   'phone',
   'socialLinks',
+  'experienceLevel.id',
   'country.id',
   'city.label',
   'languages.language.id',
@@ -66,13 +65,13 @@ export class GetMyTalentHandler implements IQueryHandler<GetMyTalentQuery> {
         new MyTalentLanguageDto(language.language.id, language.level.id),
     );
 
-    const workLocationTypes = talent.workLocationTypes.map(
-      (type) => new MyTalentWorkLocationTypeDto(type.id),
-    );
+    const workLocationTypes = talent.workLocationTypes
+      .getItems()
+      .map((type) => type.id);
 
-    const employmentTypes = talent.employmentTypes.map(
-      (type) => new MyTalentEmploymentTypeDto(type.id),
-    );
+    const employmentTypes = talent.employmentTypes
+      .getItems()
+      .map((type) => type.id);
 
     const response = new GetMyTalentResponseDto({
       handle: talent.handle,
@@ -85,10 +84,11 @@ export class GetMyTalentHandler implements IQueryHandler<GetMyTalentQuery> {
       languages,
       socialLinks: talent.socialLinks,
       isAvailable: talent.isAvailable,
+      experienceLevelId: talent.experienceLevel?.id,
       salaryRangeId: talent.salaryRange?.id,
       hourlyRateRangeId: talent.hourlyRateRange?.id,
-      workLocationTypes,
-      employmentTypes,
+      workLocationTypeIds: workLocationTypes ?? undefined,
+      employmentTypeIds: employmentTypes ?? undefined,
       skills: talent.skills,
       email: talent.email,
       phone: talent.phone,

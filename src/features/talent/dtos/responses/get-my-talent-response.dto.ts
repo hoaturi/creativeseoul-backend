@@ -1,8 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TalentSocialLinksDto } from './talent-social-links.dto';
 import { MyTalentLanguageDto } from './my-talent-language.dto';
-import { MyTalentWorkLocationTypeDto } from './my-talent-work-location-type.dto';
-import { MyTalentEmploymentTypeDto } from './my-talent-employment-type.dto';
 
 export class GetMyTalentResponseDto {
   @ApiProperty()
@@ -40,20 +38,19 @@ export class GetMyTalentResponseDto {
   public readonly isAvailable: boolean;
 
   @ApiPropertyOptional()
+  public readonly experienceLevelId?: number;
+
+  @ApiPropertyOptional()
   public readonly salaryRangeId?: number;
 
   @ApiPropertyOptional()
   public readonly hourlyRateRangeId?: number;
 
-  @ApiProperty({
-    type: [MyTalentWorkLocationTypeDto],
-  })
-  public readonly workLocationTypes: MyTalentWorkLocationTypeDto[];
+  @ApiPropertyOptional()
+  public readonly workLocationTypeIds?: number[];
 
-  @ApiProperty({
-    type: [MyTalentEmploymentTypeDto],
-  })
-  public readonly employmentTypes: MyTalentEmploymentTypeDto[];
+  @ApiPropertyOptional()
+  public readonly employmentTypeIds?: number[];
 
   @ApiPropertyOptional()
   public readonly skills?: string[];
@@ -75,10 +72,11 @@ export class GetMyTalentResponseDto {
     languages: MyTalentLanguageDto[];
     socialLinks?: TalentSocialLinksDto;
     isAvailable: boolean;
+    experienceLevelId?: number;
     salaryRangeId?: number;
     hourlyRateRangeId?: number;
-    workLocationTypes: MyTalentWorkLocationTypeDto[];
-    employmentTypes: MyTalentEmploymentTypeDto[];
+    workLocationTypeIds: number[];
+    employmentTypeIds: number[];
     skills?: string[];
     email?: string;
     phone?: string;
@@ -93,10 +91,11 @@ export class GetMyTalentResponseDto {
     this.languages = data.languages;
     this.socialLinks = data.socialLinks;
     this.isAvailable = data.isAvailable;
+    this.experienceLevelId = data.experienceLevelId;
     this.salaryRangeId = data.salaryRangeId;
     this.hourlyRateRangeId = data.hourlyRateRangeId;
-    this.workLocationTypes = data.workLocationTypes;
-    this.employmentTypes = data.employmentTypes;
+    this.workLocationTypeIds = data.workLocationTypeIds;
+    this.employmentTypeIds = data.employmentTypeIds;
     this.skills = data.skills;
     this.email = data.email;
     this.phone = data.phone;
