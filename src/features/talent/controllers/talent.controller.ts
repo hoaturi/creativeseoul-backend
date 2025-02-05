@@ -46,6 +46,8 @@ import { GetMyAvatarUploadUrlCommand } from '../commands/get-my-avatar-upload-ur
 import { SessionResponseDto } from '../../auth/dtos/session-response.dto';
 import { GetMyTalentQuery } from '../queries/get-my-talent/get-my-talent.query';
 import { GetMyTalentResponseDto } from '../dtos/responses/get-my-talent-response.dto';
+import { UpdateJobPreferencesRequestDto } from '../dtos/requests/update-job-preferences-request.dto';
+import { UpdateJobPreferencesCommand } from '../commands/update-job-preferences/update-job-preferences.command';
 
 @Controller('talents')
 export class TalentController {
@@ -204,6 +206,35 @@ export class TalentController {
     session.user = result.value.user;
 
     return result.value;
+  }
+
+  @Put('me/job-preferences')
+  @Roles(UserRole.TALENT)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  @ApiNotFoundResponse({
+    example: TalentError.ProfileNotFound,
+  })
+  public async updateJobPreferences(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: UpdateJobPreferencesRequestDto,
+  ): Promise<void> {
+    const command = new UpdateJobPreferencesCommand(user, dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
   }
 
   @Put('me/avatar')

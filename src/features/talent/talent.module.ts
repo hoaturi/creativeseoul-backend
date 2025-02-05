@@ -11,6 +11,7 @@ import { GetTalentAsMemberListHandler } from './queries/get-talent-as-member-lis
 import { GetMyAvatarUploadUrlHandler } from './commands/get-my-avatar-upload-url/get-my-avatar-upload-url.handler';
 import { StorageModule } from '../../infrastructure/services/storage/storage.module';
 import { GetMyTalentHandler } from './queries/get-my-talent/get-my-talent.handler';
+import { UpdateJobPreferencesHandler } from './commands/update-job-preferences/update-job-preferences.handler';
 
 const providers: Provider[] = [
   GetTalentHandler,
@@ -21,6 +22,7 @@ const providers: Provider[] = [
   GetTalentAsMemberListHandler,
   GetMyAvatarUploadUrlHandler,
   GetMyTalentHandler,
+  UpdateJobPreferencesHandler,
 ];
 
 @Module({
