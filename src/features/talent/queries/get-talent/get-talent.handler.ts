@@ -4,7 +4,7 @@ import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { TalentError } from '../../talent.error';
 import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
-import { TalentLanguageProficiencyDto } from '../../dtos/responses/talent-language-proficiency.dto';
+import { TalentLanguageDto } from '../../dtos/responses/talent-language.dto';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { ResultError } from '../../../../common/result/result-error';
 import { Result } from '../../../../common/result/result';
@@ -93,10 +93,7 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
 
     const languages = talent.languages.map(
       (language) =>
-        new TalentLanguageProficiencyDto(
-          language.language.label,
-          language.level.label,
-        ),
+        new TalentLanguageDto(language.language.label, language.level.label),
     );
 
     const salaryRange = talent.salaryRange?.label;

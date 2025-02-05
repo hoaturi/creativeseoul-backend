@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TalentLocationDto } from './talent-location.dto';
-import { TalentLanguageProficiencyDto } from './talent-language-proficiency.dto';
+import { TalentLanguageDto } from './talent-language.dto';
 import { TalentSocialLinksDto } from './talent-social-links.dto';
 
 export class GetTalentAsMemberResponseDto {
@@ -22,8 +22,8 @@ export class GetTalentAsMemberResponseDto {
   @ApiProperty({ type: TalentLocationDto })
   public readonly location: TalentLocationDto;
 
-  @ApiProperty({ type: TalentLanguageProficiencyDto })
-  public readonly languages: TalentLanguageProficiencyDto[];
+  @ApiProperty({ type: TalentLanguageDto })
+  public readonly languages: TalentLanguageDto[];
 
   @ApiPropertyOptional({ type: TalentSocialLinksDto })
   public readonly socialLinks?: TalentSocialLinksDto;
@@ -34,7 +34,7 @@ export class GetTalentAsMemberResponseDto {
     title: string,
     bio: string,
     location: TalentLocationDto,
-    languages: TalentLanguageProficiencyDto[],
+    languages: TalentLanguageDto[],
     avatarUrl?: string,
     socialLinks?: TalentSocialLinksDto,
   ) {

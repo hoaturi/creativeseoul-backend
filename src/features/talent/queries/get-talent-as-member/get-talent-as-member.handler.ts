@@ -7,7 +7,7 @@ import { Talent } from '../../../../domain/talent/entities/talent.entity';
 import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { TalentLocationDto } from '../../dtos/responses/talent-location.dto';
 import { TalentSocialLinksDto } from '../../dtos/responses/talent-social-links.dto';
-import { TalentLanguageProficiencyDto } from '../../dtos/responses/talent-language-proficiency.dto';
+import { TalentLanguageDto } from '../../dtos/responses/talent-language.dto';
 import { CompanyError } from '../../../company/company.error';
 
 const TALENT_FIELDS = [
@@ -62,7 +62,7 @@ export class GetTalentAsMemberHandler
     const socialLinks = new TalentSocialLinksDto(talent.socialLinks);
 
     const languages = talent.languages.getItems().map((language) => {
-      return new TalentLanguageProficiencyDto(
+      return new TalentLanguageDto(
         language.language.label,
         language.level.label,
       );
