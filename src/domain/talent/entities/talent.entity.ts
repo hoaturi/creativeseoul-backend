@@ -22,6 +22,7 @@ import { HourlyRateRange } from './hourly-rate-range.entity';
 import { WorkLocationType } from '../../common/entities/work-location-type.entity';
 import { EmploymentType } from '../../common/entities/employment-type.entity';
 import { Check } from '@mikro-orm/core';
+import { ExperienceLevel } from '../../job/entities/experience-level.entity';
 
 const generateSearchVector = (talent: Talent): WeightedFullTextValue => ({
   A: [talent.title, talent.skills?.join(' ')].filter(Boolean).join(' '),
@@ -87,6 +88,9 @@ export class Talent extends BaseEntity {
   @Property()
   @Index()
   public requiresVisaSponsorship: boolean;
+
+  @ManyToOne(() => ExperienceLevel, { nullable: true })
+  public experienceLevel?: ExperienceLevel;
 
   @ManyToOne(() => SalaryRange, { nullable: true })
   public salaryRange?: SalaryRange;
