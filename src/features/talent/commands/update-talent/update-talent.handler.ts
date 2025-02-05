@@ -97,22 +97,16 @@ export class UpdateTalentHandler
   ): Promise<void> {
     const { city, country } = await this.getLocation(dto.countryId, dto.city);
 
-    const basicProperties: Partial<Talent> = {
-      handle: dto.handle,
-      fullName: dto.fullName,
-      title: dto.title,
-      bio: dto.bio,
-      avatarUrl: dto.avatarUrl,
-      skills: dto.skills,
-      socialLinks: dto.socialLinks,
-    };
+    talent.handle = dto.handle;
+    talent.fullName = dto.fullName;
+    talent.title = dto.title;
+    talent.bio = dto.bio;
+    talent.avatarUrl = dto.avatarUrl;
+    talent.skills = dto.skills;
+    talent.socialLinks = dto.socialLinks;
+    talent.city = city;
+    talent.country = country;
 
-    const referenceProperties: Partial<Talent> = {
-      city,
-      country,
-    };
-
-    Object.assign(talent, basicProperties, referenceProperties);
     this.updateLanguages(talent, dto.languages);
   }
 
