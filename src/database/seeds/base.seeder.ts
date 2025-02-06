@@ -25,6 +25,8 @@ import { EXPERIENCE_LEVELS } from '../../domain/job/constants/experience-level.c
 import { EventType } from '../../domain/event/event-type.entity';
 import { EVENT_TYPE } from '../../domain/event/event-type.constant';
 import { ExperienceLevel } from '../../domain/job/entities/experience-level.entity';
+import { AvailabilityStatus } from '../../domain/talent/entities/availability-status.entity';
+import { AVAILABILITY_STATUS } from '../../domain/talent/constants/availability-status.constant';
 
 interface BaseEntity {
   id: number;
@@ -106,6 +108,13 @@ export class BaseSeeder extends Seeder {
       'experienceLevel',
     );
     await seedMissingEntities(EventType, EVENT_TYPE, EventType, 'EventType');
+
+    await seedMissingEntities(
+      AvailabilityStatus,
+      AVAILABILITY_STATUS,
+      AvailabilityStatus,
+      'AvailabilityStatus',
+    );
 
     await em.flush();
   }
