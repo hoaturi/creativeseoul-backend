@@ -22,4 +22,5 @@ export default defineConfig({
     path: 'dist/database/migrations',
     pathTs: 'src/database/migrations',
   },
+  forceUndefined: true,
 });
