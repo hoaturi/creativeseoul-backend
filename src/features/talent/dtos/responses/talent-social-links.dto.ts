@@ -1,41 +1,41 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { TalentSocialLinks } from '../../../../domain/talent/talent-social-links.interface';
 
 export class TalentSocialLinksDto {
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly instagram?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly facebook?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly linkedin?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly github?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly behance?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly twitter?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly dribbble?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly youtube?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly vimeo?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly artstation?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly medium?: string;
 
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   public readonly website?: string;
 
   public constructor(socialLinks?: TalentSocialLinks) {
