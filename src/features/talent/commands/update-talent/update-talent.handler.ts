@@ -103,7 +103,7 @@ export class UpdateTalentHandler
     talent.bio = dto.bio;
     talent.avatarUrl = dto.avatarUrl;
     talent.skills = dto.skills;
-    talent.socialLinks = dto.socialLinks;
+    talent.socialLinks = dto.socialLinks || {};
     talent.city = city;
     talent.country = country;
 

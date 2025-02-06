@@ -116,8 +116,8 @@ export class Talent extends BaseEntity {
   @Property({ nullable: true })
   public phone?: string;
 
-  @Property({ type: 'jsonb', nullable: true })
-  public socialLinks?: TalentSocialLinks;
+  @Property({ type: 'jsonb' })
+  public socialLinks: TalentSocialLinks;
 
   // Visibility and status
   @Property({ nullable: true })
@@ -174,7 +174,7 @@ export class Talent extends BaseEntity {
     this.country = data.country;
     this.avatarUrl = data.avatarUrl;
     this.city = data.city;
-    this.socialLinks = data.socialLinks;
+    this.socialLinks = data.socialLinks || {};
     this.salaryRange = data.salaryRange;
     this.hourlyRateRange = data.hourlyRateRange;
     this.skills = data.skills;
