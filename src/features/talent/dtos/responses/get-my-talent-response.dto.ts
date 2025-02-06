@@ -35,7 +35,7 @@ export class GetMyTalentResponseDto {
   public readonly socialLinks: TalentSocialLinksDto;
 
   @ApiProperty()
-  public readonly isAvailable: boolean;
+  public readonly availabilityStatusId: number;
 
   @ApiProperty()
   public readonly isContactable: boolean;
@@ -77,7 +77,7 @@ export class GetMyTalentResponseDto {
     city?: string;
     languages: MyTalentLanguageDto[];
     socialLinks: TalentSocialLinksDto;
-    isAvailable: boolean;
+    availabilityStatusId: number;
     isContactable: boolean;
     requiresVisaSponsorship: boolean;
     experienceLevelId?: number;
@@ -98,7 +98,7 @@ export class GetMyTalentResponseDto {
     this.city = data.city;
     this.languages = data.languages;
     this.socialLinks = data.socialLinks;
-    this.isAvailable = data.isAvailable;
+    this.availabilityStatusId = data.availabilityStatusId;
     this.isContactable = data.isContactable;
     this.requiresVisaSponsorship = data.requiresVisaSponsorship;
     this.experienceLevelId = data.experienceLevelId;

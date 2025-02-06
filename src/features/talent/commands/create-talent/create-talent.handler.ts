@@ -17,6 +17,8 @@ import { LanguageLevel } from '../../../../domain/common/entities/language-level
 import { CreateTalentCommand } from './create-talent.command';
 import { CreateTalentRequestDto } from '../../dtos/requests/create-talent-request.dto';
 import { SessionResponseDto } from '../../../auth/dtos/session-response.dto';
+import { AvailabilityStatus } from '../../../../domain/talent/entities/availability-status.entity';
+import { AvailabilityStatusId } from '../../../../domain/talent/constants/availability-status.constant';
 
 interface LocationRefs {
   city?: City;
@@ -80,6 +82,10 @@ export class CreateTalentHandler
     const { countryId, city: cityName, ...talentData } = dto;
 
     const userRef = this.em.getReference(User, userId);
+    const availabilityStatus = this.em.getReference(
+      AvailabilityStatus,
+      AvailabilityStatusId.NOT_LOOKING,
+    );
     const { city, country } = await this.getLocation(countryId, cityName);
 
     return this.em.create(
@@ -88,7 +94,7 @@ export class CreateTalentHandler
         ...talentData,
         city,
         country,
-        isAvailable: false,
+        availabilityStatus,
         isContactable: false,
         requiresVisaSponsorship: false,
       }),

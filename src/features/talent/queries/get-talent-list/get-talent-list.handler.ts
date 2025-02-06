@@ -16,6 +16,7 @@ import {
   GetTalentListResponseDto,
 } from '../../dtos/responses/get-talent-list-response.dto';
 import { GetTalentListQueryDto } from '../../dtos/requests/get-talent-list-query.dto';
+import { AvailabilityStatusId } from '../../../../domain/talent/constants/availability-status.constant';
 
 const TALENT_FIELDS = [
   'id',
@@ -23,7 +24,7 @@ const TALENT_FIELDS = [
   'title',
   'bio',
   'avatarUrl',
-  'isAvailable',
+  'availabilityStatus.label',
   'requiresVisaSponsorship',
   'skills',
   'qualityScore',
@@ -48,8 +49,8 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     const { page = 1 } = query.dto;
 
     const where: QBFilterQuery<Talent> = {
-      isPublic: true,
       qualityScore: { $gte: 40 },
+      availabilityStatus: { $ne: AvailabilityStatusId.NOT_LOOKING },
     };
 
     this.applyFilters(where, query.dto);
@@ -85,8 +86,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     where: QBFilterQuery<Talent>,
     filters: GetTalentListQueryDto,
   ): void {
-    const { search, employmentTypeIds, workLocationTypeIds, isAvailable } =
-      filters;
+    const { search, employmentTypeIds, workLocationTypeIds } = filters;
 
     if (search) {
       const formattedSearch = search
@@ -103,10 +103,6 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     if (workLocationTypeIds?.length) {
       where.workLocationTypes = { $some: { id: { $in: workLocationTypeIds } } };
     }
-
-    if (isAvailable) {
-      where.isAvailable = true;
-    }
   }
 
   private mapToTalentDtos(talents: LoadedTalent[]): GetTalentListItemDto[] {
@@ -122,7 +118,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
             country: talent.country.label,
             city: talent.city?.label,
           },
-          isAvailable: talent.isAvailable,
+          availabilityStatus: talent.availabilityStatus.label,
           requiresVisaSponsorship: talent.requiresVisaSponsorship,
           skills: talent.skills,
         }),

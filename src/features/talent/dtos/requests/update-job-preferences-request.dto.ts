@@ -19,11 +19,14 @@ import {
   EMPLOYMENT_TYPES,
   WORK_LOCATION_TYPES,
 } from '../../../../domain/common/constants';
+import { AVAILABILITY_STATUS } from '../../../../domain/talent/constants/availability-status.constant';
 
 export class UpdateJobPreferencesRequestDto {
   @ApiProperty()
-  @IsBoolean()
-  public readonly isAvailable!: boolean;
+  @IsNumber()
+  @Min(1)
+  @Max(AVAILABILITY_STATUS.length)
+  public readonly availabilityStatusId!: number;
 
   @ApiProperty()
   @IsBoolean()

@@ -34,7 +34,7 @@ export class GetTalentResponseDto {
   public readonly socialLinks?: TalentSocialLinksDto;
 
   @ApiProperty()
-  public readonly isAvailable: boolean;
+  public readonly availabilityStatus: string;
 
   @ApiPropertyOptional()
   public readonly salaryRange?: string;
@@ -69,7 +69,7 @@ export class GetTalentResponseDto {
     location: TalentLocationDto;
     languages: TalentLanguageDto[];
     socialLinks?: TalentSocialLinksDto;
-    isAvailable: boolean;
+    availabilityStatus: string;
     salaryRange?: string;
     hourlyRateRange?: string;
     workLocationTypes: TalentWorkLocationTypeDto[];
@@ -85,7 +85,7 @@ export class GetTalentResponseDto {
     this.location = data.location;
     this.languages = data.languages;
     this.socialLinks = data.socialLinks;
-    this.isAvailable = data.isAvailable;
+    this.availabilityStatus = data.availabilityStatus;
     this.salaryRange = data.salaryRange;
     this.hourlyRateRange = data.hourlyRateRange;
     this.workLocationTypes = data.workLocationTypes;

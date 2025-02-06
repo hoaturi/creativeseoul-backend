@@ -40,7 +40,7 @@ export class UpdateJobPreferencesHandler
         Talent,
         { id: user.profile.id },
         {
-          isAvailable: dto.isAvailable,
+          availabilityStatus: dto.availabilityStatusId,
           isContactable: dto.isContactable,
           requiresVisaSponsorship: dto.requiresVisaSponsorship,
           email: dto.email,

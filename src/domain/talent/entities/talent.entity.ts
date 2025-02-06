@@ -23,6 +23,7 @@ import { WorkLocationType } from '../../common/entities/work-location-type.entit
 import { EmploymentType } from '../../common/entities/employment-type.entity';
 import { Check } from '@mikro-orm/core';
 import { ExperienceLevel } from '../../job/entities/experience-level.entity';
+import { AvailabilityStatus } from './availability-status.entity';
 
 const generateSearchVector = (talent: Talent): WeightedFullTextValue => ({
   A: [talent.title, talent.skills?.join(' ')].filter(Boolean).join(' '),
@@ -81,9 +82,8 @@ export class Talent extends BaseEntity {
   public readonly languages = new Collection<TalentLanguage>(this);
 
   // Employment preferences
-  @Property()
-  @Index()
-  public isAvailable: boolean;
+  @ManyToOne(() => AvailabilityStatus)
+  public availabilityStatus: AvailabilityStatus;
 
   @Property()
   @Index()
@@ -146,7 +146,7 @@ export class Talent extends BaseEntity {
     data: {
       handle: string;
       requiresVisaSponsorship: boolean;
-      isAvailable: boolean;
+      availabilityStatus: AvailabilityStatus;
       isContactable: boolean;
       fullName: string;
       title: string;
@@ -165,7 +165,7 @@ export class Talent extends BaseEntity {
     super();
     this.user = user;
     this.requiresVisaSponsorship = data.requiresVisaSponsorship;
-    this.isAvailable = data.isAvailable;
+    this.availabilityStatus = data.availabilityStatus;
     this.isContactable = data.isContactable;
     this.handle = data.handle;
     this.fullName = data.fullName;
