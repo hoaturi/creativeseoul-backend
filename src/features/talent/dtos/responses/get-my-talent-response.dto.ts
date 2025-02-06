@@ -29,13 +29,19 @@ export class GetMyTalentResponseDto {
   })
   public readonly languages: MyTalentLanguageDto[];
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: TalentSocialLinksDto,
   })
-  public readonly socialLinks?: TalentSocialLinksDto;
+  public readonly socialLinks: TalentSocialLinksDto;
 
   @ApiProperty()
   public readonly isAvailable: boolean;
+
+  @ApiProperty()
+  public readonly isContactable: boolean;
+
+  @ApiProperty()
+  public readonly requiresVisaSponsorship: boolean;
 
   @ApiPropertyOptional()
   public readonly experienceLevelId?: number;
@@ -46,11 +52,11 @@ export class GetMyTalentResponseDto {
   @ApiPropertyOptional()
   public readonly hourlyRateRangeId?: number;
 
-  @ApiPropertyOptional()
-  public readonly workLocationTypeIds?: number[];
+  @ApiProperty({ type: [Number] })
+  public readonly workLocationTypeIds: number[];
 
-  @ApiPropertyOptional()
-  public readonly employmentTypeIds?: number[];
+  @ApiProperty({ type: [Number] })
+  public readonly employmentTypeIds: number[];
 
   @ApiPropertyOptional()
   public readonly skills?: string[];
@@ -70,8 +76,10 @@ export class GetMyTalentResponseDto {
     countryId: number;
     city?: string;
     languages: MyTalentLanguageDto[];
-    socialLinks?: TalentSocialLinksDto;
+    socialLinks: TalentSocialLinksDto;
     isAvailable: boolean;
+    isContactable: boolean;
+    requiresVisaSponsorship: boolean;
     experienceLevelId?: number;
     salaryRangeId?: number;
     hourlyRateRangeId?: number;
@@ -91,6 +99,8 @@ export class GetMyTalentResponseDto {
     this.languages = data.languages;
     this.socialLinks = data.socialLinks;
     this.isAvailable = data.isAvailable;
+    this.isContactable = data.isContactable;
+    this.requiresVisaSponsorship = data.requiresVisaSponsorship;
     this.experienceLevelId = data.experienceLevelId;
     this.salaryRangeId = data.salaryRangeId;
     this.hourlyRateRangeId = data.hourlyRateRangeId;
