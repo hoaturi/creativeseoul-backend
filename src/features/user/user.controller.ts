@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpException,
   Patch,
   Req,
@@ -22,6 +23,7 @@ import { AuthGuard } from '../../infrastructure/security/guards/auth.guard';
 import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { Request, Response } from 'express';
+import { DeleteAccountCommand } from './commands/delete-account/delete-account.command';
 
 @UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
@@ -29,7 +31,7 @@ import { Request, Response } from 'express';
 export class UserController {
   public constructor(private readonly commandBus: CommandBus) {}
 
-  @Patch('password')
+  @Patch('/me/password')
   @UseGuards(AuthGuard)
   @ApiOkResponse()
   @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
@@ -59,6 +61,34 @@ export class UserController {
         currentPassword: dto.currentPassword,
         newPassword: dto.newPassword,
       }),
+    );
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    await new Promise<void>((resolve): void => {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        resolve();
+      });
+    });
+  }
+
+  @Delete('/me')
+  @UseGuards(AuthGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({ example: AuthError.Unauthenticated })
+  public async deleteAccount(
+    @CurrentUser() user: AuthenticatedUser,
+    @Req() req: Request,
+    @Res({
+      passthrough: true,
+    })
+    res: Response,
+  ): Promise<void> {
+    const result = await this.commandBus.execute(
+      new DeleteAccountCommand(user),
     );
 
     if (!result.isSuccess) {
