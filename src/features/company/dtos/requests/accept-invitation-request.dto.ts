@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
-import { IsPassword } from '../../../../common/decorators/is-password.decorator';
+import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class AcceptInvitationRequestDto {
   @ApiProperty()
@@ -8,7 +7,8 @@ export class AcceptInvitationRequestDto {
   public readonly email!: string;
 
   @ApiProperty()
-  @IsPassword()
+  @IsString()
+  @MinLength(8)
   public readonly password!: string;
 
   @ApiProperty()

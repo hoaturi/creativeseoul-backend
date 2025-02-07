@@ -1,5 +1,4 @@
-import { IsString } from 'class-validator';
-import { IsPassword } from '../../../common/decorators/is-password.decorator';
+import { IsString, MinLength } from 'class-validator';
 import { MatchesProperty } from '../../../common/decorators/matches-property.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -9,7 +8,8 @@ export class ChangePasswordRequestDto {
   public readonly currentPassword!: string;
 
   @ApiProperty()
-  @IsPassword()
+  @IsString()
+  @MinLength(8)
   public readonly newPassword!: string;
 
   @ApiProperty()
