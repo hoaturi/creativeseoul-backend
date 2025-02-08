@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Session,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -48,6 +49,7 @@ import { GetSponsorCompanyListResponseDto } from './dtos/responses/get-sponsor-c
 import { GetSponsorCompanyListQuery } from './queries/get-sponsor-company-list/get-sponsor-company-list.query';
 import { GetMyCompanyResponseDto } from './dtos/responses/get-my-company-response.dto';
 import { GetMyCompanyQuery } from './queries/get-my-company/get-my-company.query';
+import { SessionResponseDto } from '../auth/dtos/session-response.dto';
 
 @Controller('companies')
 export class CompanyController {
@@ -130,9 +132,10 @@ export class CompanyController {
     example: CommonError.ValidationFailed,
   })
   public async updateCompany(
+    @Session() session: Record<string, any>,
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: UpdateCompanyRequestDto,
-  ): Promise<void> {
+  ): Promise<SessionResponseDto> {
     const command = new UpdateCompanyCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
@@ -140,6 +143,10 @@ export class CompanyController {
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
     }
+
+    session.user = result.value.user;
+
+    return result.value;
   }
 
   @Get()

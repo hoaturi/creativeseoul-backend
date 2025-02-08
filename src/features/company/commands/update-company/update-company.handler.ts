@@ -8,6 +8,7 @@ import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../company.error';
 import { CompanyNotFoundException } from '../../../../domain/company/exceptions/company-not-found.exception';
 import slugify from 'slugify';
+import { SessionResponseDto } from '../../../auth/dtos/session-response.dto';
 
 @CommandHandler(UpdateCompanyCommand)
 export class UpdateCompanyHandler
@@ -17,7 +18,7 @@ export class UpdateCompanyHandler
 
   public async execute(
     command: UpdateCompanyCommand,
-  ): Promise<Result<void, ResultError>> {
+  ): Promise<Result<SessionResponseDto, ResultError>> {
     const { user, dto } = command;
 
     if (!user.profile.id) {
@@ -44,6 +45,14 @@ export class UpdateCompanyHandler
 
     await this.em.flush();
 
-    return Result.success();
+    const response = new SessionResponseDto({
+      ...user,
+      profile: {
+        id: company.id,
+        name: company.name,
+        avatarUrl: company.logoUrl,
+      },
+    });
+    return Result.success(response);
   }
 }
