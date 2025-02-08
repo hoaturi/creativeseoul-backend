@@ -36,8 +36,8 @@ export class Company extends BaseEntity {
   @Property({ length: 128 })
   public summary: string;
 
-  @Property({ type: 'text', nullable: true })
-  public description?: string;
+  @Property({ type: 'text' })
+  public description: string;
 
   @Property({ nullable: true })
   public logoUrl?: string;
@@ -51,8 +51,8 @@ export class Company extends BaseEntity {
   @ManyToOne(() => CompanySize)
   public size: CompanySize;
 
-  @Property({ type: 'jsonb', nullable: true })
-  public socialLinks?: CompanySocialLinks;
+  @Property({ type: 'jsonb' })
+  public socialLinks: CompanySocialLinks;
 
   @Property({ nullable: true })
   @Index()
@@ -99,11 +99,11 @@ export class Company extends BaseEntity {
     slug: string;
     websiteUrl: string;
     summary: string;
-    description?: string;
+    description: string;
     location: string;
     logoUrl?: string;
     size: CompanySize;
-    socialLinks?: CompanySocialLinks;
+    socialLinks: CompanySocialLinks;
     user?: User;
     creditBalance: number;
   }) {

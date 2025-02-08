@@ -7,7 +7,6 @@ import { Company } from '../../../../domain/company/entities/company.entity';
 import { CompanyError } from '../../company.error';
 import {
   CompanyJobItemDto,
-  CompanySocialLinksDto,
   GetCompanyResponseDto,
 } from '../../dtos/responses/get-company-response.dto';
 import { Job } from '../../../../domain/job/entities/job.entity';
@@ -42,19 +41,7 @@ type JobFields =
     ? Field
     : never;
 
-type LoadedCompany = Loaded<Company, never, CompanyFields>;
 type LoadedJobs = LoadedCollection<Loaded<Job, never, JobFields>>;
-
-interface CompanyBasicInfo {
-  name: string;
-  summary: string;
-  description: string;
-  logoUrl?: string;
-  websiteUrl: string;
-  location: string;
-  size?: string;
-  socialLinks?: CompanySocialLinksDto;
-}
 
 @QueryHandler(GetCompanyQuery)
 export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
@@ -76,29 +63,18 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
     }
 
     const responseDto = new GetCompanyResponseDto({
-      ...this.mapBasicInfo(company),
-      jobs: this.mapJobs(company.jobs),
-    });
-
-    return Result.success(responseDto);
-  }
-
-  private mapBasicInfo(company: LoadedCompany): CompanyBasicInfo {
-    const size = company.size?.label;
-    const socialLinks = company.socialLinks
-      ? new CompanySocialLinksDto(company.socialLinks)
-      : undefined;
-
-    return {
       name: company.name,
       summary: company.summary!,
       description: company.description!,
       logoUrl: company.logoUrl,
       websiteUrl: company.websiteUrl,
       location: company.location!,
-      size,
-      socialLinks,
-    };
+      size: company.size.label,
+      socialLinks: company.socialLinks,
+      jobs: this.mapJobs(company.jobs),
+    });
+
+    return Result.success(responseDto);
   }
 
   private mapJobs(jobs: LoadedJobs): CompanyJobItemDto[] {

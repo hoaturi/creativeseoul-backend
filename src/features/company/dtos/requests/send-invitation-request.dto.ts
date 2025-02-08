@@ -1,16 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   IsUrl,
   Max,
   MaxLength,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import { Trim } from '../../../../common/decorators/trim.decorator';
 import { COMPANY_SIZES } from '../../../../domain/company/company-size.constant';
+import { CompanySocialLinksDto } from './company-social-links.dto';
+import { Type } from 'class-transformer';
 
 export class SendInvitationRequestDto {
   @ApiProperty()
@@ -40,6 +44,13 @@ export class SendInvitationRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @Trim()
+  public readonly description!: string;
+
+  @ApiProperty()
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   @MaxLength(64)
   @Trim()
   public readonly location!: string;
@@ -47,4 +58,20 @@ export class SendInvitationRequestDto {
   @ApiProperty()
   @IsUrl()
   public readonly websiteUrl!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(32)
+  @Trim()
+  public readonly city?: string;
+
+  @ApiPropertyOptional({
+    type: CompanySocialLinksDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CompanySocialLinksDto)
+  public readonly socialLinks?: CompanySocialLinksDto;
 }

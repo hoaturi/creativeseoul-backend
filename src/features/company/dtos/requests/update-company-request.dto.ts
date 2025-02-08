@@ -13,7 +13,7 @@ import {
 import { Type } from 'class-transformer';
 import { Trim } from '../../../../common/decorators/trim.decorator';
 import { COMPANY_SIZES } from '../../../../domain/company/company-size.constant';
-import { CompanySocialLinksRequestDto } from './company-social-links-request.dto';
+import { CompanySocialLinksDto } from './company-social-links.dto';
 
 export class UpdateCompanyRequestDto {
   @ApiProperty()
@@ -61,6 +61,6 @@ export class UpdateCompanyRequestDto {
   @ApiPropertyOptional()
   @IsOptional()
   @ValidateNested()
-  @Type(() => CompanySocialLinksRequestDto)
-  public readonly socialLinks?: CompanySocialLinksRequestDto;
+  @Type(() => CompanySocialLinksDto)
+  public readonly socialLinks?: CompanySocialLinksDto;
 }

@@ -58,7 +58,9 @@ export class SendInvitationHandler
           size,
           location: dto.location,
           summary: dto.summary,
+          description: dto.description,
           websiteUrl: dto.websiteUrl,
+          socialLinks: dto.socialLinks || {},
           creditBalance: 0,
         }),
       );

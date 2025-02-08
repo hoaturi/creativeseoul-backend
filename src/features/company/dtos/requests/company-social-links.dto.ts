@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsUrl } from 'class-validator';
 
-export class CompanySocialLinksRequestDto {
+export class CompanySocialLinksDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsUrl()

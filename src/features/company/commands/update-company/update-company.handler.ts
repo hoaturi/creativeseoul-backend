@@ -40,7 +40,7 @@ export class UpdateCompanyHandler
     company.websiteUrl = dto.websiteUrl;
     company.location = dto.location;
     company.size = this.em.getReference(CompanySize, dto.sizeId);
-    company.socialLinks = dto.socialLinks;
+    company.socialLinks = dto.socialLinks || {};
 
     await this.em.flush();
 

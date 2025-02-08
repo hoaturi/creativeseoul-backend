@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CompanySocialLinksDto } from './get-company-response.dto';
+import { CompanySocialLinksDto } from './company-social-links.dto';
 
 export class GetMyCompanyResponseDto {
   @ApiProperty()

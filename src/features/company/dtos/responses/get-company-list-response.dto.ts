@@ -16,8 +16,8 @@ export class CompanyListItemDto {
   @ApiPropertyOptional()
   public readonly logoUrl?: string;
 
-  @ApiPropertyOptional()
-  public readonly location?: string;
+  @ApiProperty()
+  public readonly location: string;
 
   @ApiProperty()
   public readonly totalJobs: number;
@@ -31,7 +31,7 @@ export class CompanyListItemDto {
     summary: string;
     size: string;
     logoUrl?: string;
-    location?: string;
+    location: string;
     totalJobs: number;
     isSponsor: boolean;
   }) {

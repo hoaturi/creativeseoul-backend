@@ -1,25 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-
-export class CompanySocialLinksDto {
-  @ApiPropertyOptional()
-  public linkedin?: string;
-
-  @ApiPropertyOptional()
-  public twitter?: string;
-
-  @ApiPropertyOptional()
-  public instagram?: string;
-
-  @ApiPropertyOptional()
-  public youtube?: string;
-
-  public constructor(data: CompanySocialLinksDto) {
-    this.linkedin = data.linkedin;
-    this.twitter = data.twitter;
-    this.instagram = data.instagram;
-    this.youtube = data.youtube;
-  }
-}
+import { CompanySocialLinksDto } from './company-social-links.dto';
 
 export class CompanyJobItemDto {
   @ApiProperty()
@@ -104,16 +84,16 @@ export class GetCompanyResponseDto {
   @ApiProperty()
   public websiteUrl: string;
 
-  @ApiPropertyOptional()
-  public location?: string;
+  @ApiProperty()
+  public location: string;
 
-  @ApiPropertyOptional()
-  public size?: string;
+  @ApiProperty()
+  public size: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: CompanySocialLinksDto,
   })
-  public socialLinks?: CompanySocialLinksDto;
+  public socialLinks: CompanySocialLinksDto;
 
   @ApiProperty({
     type: [CompanyJobItemDto],
@@ -126,9 +106,9 @@ export class GetCompanyResponseDto {
     description: string;
     logoUrl?: string;
     websiteUrl: string;
-    location?: string;
-    size?: string;
-    socialLinks?: CompanySocialLinksDto;
+    location: string;
+    size: string;
+    socialLinks: CompanySocialLinksDto;
     jobs: CompanyJobItemDto[];
   }) {
     this.name = data.name;
