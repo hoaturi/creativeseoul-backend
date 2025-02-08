@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class GetMyJobListItemDto {
   @ApiProperty()
+  public readonly id: string;
+
+  @ApiProperty()
   public readonly slug: string;
 
   @ApiProperty()
@@ -20,6 +23,7 @@ export class GetMyJobListItemDto {
   public readonly createdAt: Date;
 
   public constructor(data: {
+    id: string;
     slug: string;
     title: string;
     applicationClickCount: number;
@@ -27,6 +31,7 @@ export class GetMyJobListItemDto {
     isFeatured: boolean;
     createdAt: Date;
   }) {
+    this.id = data.id;
     this.slug = data.slug;
     this.title = data.title;
     this.applicationClickCount = data.applicationClickCount;

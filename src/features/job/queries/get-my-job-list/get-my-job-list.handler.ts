@@ -27,6 +27,7 @@ export class GetMyJobListHandler implements IQueryHandler<GetMyJobListQuery> {
       { company: user.profile.id },
       {
         fields: [
+          'id',
           'slug',
           'title',
           'applicationClickCount',
@@ -34,12 +35,16 @@ export class GetMyJobListHandler implements IQueryHandler<GetMyJobListQuery> {
           'isFeatured',
           'createdAt',
         ],
+        orderBy: {
+          createdAt: 'DESC',
+        },
       },
     );
 
     const jobsDto = jobs.map(
       (job) =>
         new GetMyJobListItemDto({
+          id: job.id,
           slug: job.slug,
           title: job.title,
           applicationClickCount: job.applicationClickCount,
