@@ -74,9 +74,7 @@ export class UpdateTalentRequestDto {
   @IsNumber()
   public readonly countryId!: number;
 
-  @ApiPropertyOptional({
-    type: TalentSocialLinksDto,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @IsNotEmpty()

@@ -74,9 +74,7 @@ export class CreateTalentRequestDto {
   @IsNumber()
   public readonly countryId!: number;
 
-  @ApiPropertyOptional({
-    type: TalentSocialLinksDto,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @IsNotEmpty()
@@ -88,5 +86,7 @@ export class CreateTalentRequestDto {
     type: TalentSocialLinksDto,
   })
   @IsOptional()
+  @ValidateNested()
+  @Type(() => TalentSocialLinksDto)
   public readonly socialLinks?: TalentSocialLinksDto;
 }
