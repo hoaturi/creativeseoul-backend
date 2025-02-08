@@ -46,6 +46,8 @@ import { GetImageUploadUrlRequestDto } from '../common/dtos/get-image-upload-url
 import { GetLogoUploadUrlCommand } from './commands/get-logo-upload-url/get-logo-upload-url.command';
 import { GetSponsorCompanyListResponseDto } from './dtos/responses/get-sponsor-company-list-response.dto';
 import { GetSponsorCompanyListQuery } from './queries/get-sponsor-company-list/get-sponsor-company-list.query';
+import { GetMyCompanyResponseDto } from './dtos/responses/get-my-company-response.dto';
+import { GetMyCompanyQuery } from './queries/get-my-company/get-my-company.query';
 
 @Controller('companies')
 export class CompanyController {
@@ -146,6 +148,35 @@ export class CompanyController {
   })
   public async getCompanyList(): Promise<GetCompanyListResponseDto> {
     const command = new GetCompanyListQuery();
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('me')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetMyCompanyResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiNotFoundResponse({
+    example: CompanyError.ProfileNotFound,
+  })
+  public async getMyCompany(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<GetMyCompanyResponseDto> {
+    const command = new GetMyCompanyQuery(user);
 
     const result = await this.queryBus.execute(command);
 

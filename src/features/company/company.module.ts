@@ -12,6 +12,7 @@ import { GetMyLogoUploadUrlHandler } from './commands/get-my-logo-upload-url/get
 import { StorageModule } from '../../infrastructure/services/storage/storage.module';
 import { GetLogoUploadUrlHandler } from './commands/get-logo-upload-url/get-logo-upload-url.handler';
 import { GetSponsorCompanyListHandler } from './queries/get-sponsor-company-list/get-sponsor-company-list.handler';
+import { GetMyCompanyHandler } from './queries/get-my-company/get-my-company.handler';
 
 const handlers: Provider[] = [
   UpdateCompanyHandler,
@@ -22,6 +23,7 @@ const handlers: Provider[] = [
   GetMyLogoUploadUrlHandler,
   GetLogoUploadUrlHandler,
   GetSponsorCompanyListHandler,
+  GetMyCompanyHandler,
 ];
 
 @Module({
