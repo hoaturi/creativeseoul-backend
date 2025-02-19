@@ -22,6 +22,7 @@ import { Trim } from '../../../../common/decorators/trim.decorator';
 import { RemoveDuplicates } from '../../../../common/decorators/remove-duplicates.decorator';
 import { EXPERIENCE_LEVELS } from '../../../../domain/job/constants/experience-level.constant';
 import { ToLowerCase } from '../../../../common/decorators/to-lower-case.decorator';
+import { IsLessThan } from '../../../../common/decorators/is-less-than.decorator';
 
 export class CreateFeaturedJobRequestDto {
   @ApiProperty()
@@ -68,15 +69,18 @@ export class CreateFeaturedJobRequestDto {
   @Trim()
   public readonly location!: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
   @Min(0)
-  public readonly minSalary!: number;
+  @IsLessThan('maxSalary')
+  public readonly minSalary?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
   @Min(0)
-  public readonly maxSalary!: number;
+  public readonly maxSalary?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
