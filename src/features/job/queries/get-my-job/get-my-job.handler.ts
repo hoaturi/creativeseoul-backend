@@ -1,25 +1,26 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetJobQuery } from './get-job.query';
-import { EntityManager } from '@mikro-orm/core';
+import { GetMyJobQuery } from './get-my-job.query';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import {
   GetJobResponseDto,
   JobCompanyDto,
 } from '../../dtos/responses/get-job-response.dto';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { Job } from '../../../../domain/job/entities/job.entity';
 import { JobError } from '../../job.error';
 
-@QueryHandler(GetJobQuery)
-export class GetJobHandler implements IQueryHandler<GetJobQuery> {
-  public constructor(private readonly em: EntityManager) {}
+@QueryHandler(GetMyJobQuery)
+export class GetMyJobHandler implements IQueryHandler<GetMyJobQuery> {
+  public constructor(private em: EntityManager) {}
 
   public async execute(
-    query: GetJobQuery,
+    query: GetMyJobQuery,
   ): Promise<Result<GetJobResponseDto, ResultError>> {
     const job = await this.em.findOne(
       Job,
       {
+        company: query.user.profile.id,
         slug: query.slug,
       },
       {

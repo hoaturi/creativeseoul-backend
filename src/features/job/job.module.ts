@@ -14,6 +14,7 @@ import { PublishJobHandler } from './commands/publish-job/publish-job.handler';
 import { RenewFeaturedJobHandler } from './commands/renew-featured-job/renew-featured-job.handler';
 import { GetFeaturedJobListHandler } from './queries/get-featured-job-list/get-featured-job-list.handler';
 import { GetRegularJobListHandler } from './queries/get-regular-job-list/get-regular-job-list.handler';
+import { GetMyJobHandler } from './queries/get-my-job/get-my-job.handler';
 
 @Module({
   imports: [JobMaintenanceModule],
@@ -31,6 +32,7 @@ import { GetRegularJobListHandler } from './queries/get-regular-job-list/get-reg
     RenewFeaturedJobHandler,
     GetFeaturedJobListHandler,
     GetRegularJobListHandler,
+    GetMyJobHandler,
   ],
   controllers: [JobController],
 })

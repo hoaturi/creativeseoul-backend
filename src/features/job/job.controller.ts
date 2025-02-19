@@ -53,6 +53,7 @@ import { PublishJobCommand } from './commands/publish-job/publish-job.command';
 import { RenewFeaturedJobCommand } from './commands/renew-featured-job/renew-featured-job.command';
 import { GetFeaturedJobListQuery } from './queries/get-featured-job-list/get-featured-job-list.query';
 import { GetRegularJobListQuery } from './queries/get-regular-job-list/get-regular-job-list.query';
+import { GetMyJobQuery } from './queries/get-my-job/get-my-job.query';
 
 @Controller('jobs')
 export class JobController {
@@ -196,6 +197,36 @@ export class JobController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<GetMyJobListResponseDto> {
     const query = new GetMyJobListQuery(user);
+
+    const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('my/:slug')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetJobResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiNotFoundResponse({
+    example: JobError.NotFound,
+  })
+  public async getMyJob(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('slug') slug: string,
+  ): Promise<GetJobResponseDto> {
+    const query = new GetMyJobQuery(user, slug);
 
     const result = await this.queryBus.execute(query);
 
