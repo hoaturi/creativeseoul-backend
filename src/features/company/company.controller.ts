@@ -50,6 +50,8 @@ import { GetSponsorCompanyListQuery } from './queries/get-sponsor-company-list/g
 import { GetMyCompanyResponseDto } from './dtos/responses/get-my-company-response.dto';
 import { GetMyCompanyQuery } from './queries/get-my-company/get-my-company.query';
 import { SessionResponseDto } from '../auth/dtos/session-response.dto';
+import { GetCustomerPortalResponseDto } from './dtos/responses/get-customer-portal-response.dto';
+import { GetCustomerPortalQuery } from './queries/get-customer-portal/get-customer-portal.query';
 
 @Controller('companies')
 export class CompanyController {
@@ -200,6 +202,32 @@ export class CompanyController {
   })
   public async getSponsorCompanyList(): Promise<GetSponsorCompanyListResponseDto> {
     const command = new GetSponsorCompanyListQuery();
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('me/billing')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetCustomerPortalResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  public async getCustomerPortal(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<GetCustomerPortalResponseDto> {
+    const command = new GetCustomerPortalQuery(user);
 
     const result = await this.queryBus.execute(command);
 

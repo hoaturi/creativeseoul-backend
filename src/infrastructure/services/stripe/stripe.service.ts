@@ -15,7 +15,10 @@ export class StripeService {
     this.stripe = new Stripe(appConfig.stripe.secretKey);
   }
 
-  public verifyWebhook(rawBody: Buffer<ArrayBufferLike>, signature: string) {
+  public verifyWebhook(
+    rawBody: Buffer<ArrayBufferLike>,
+    signature: string,
+  ): Stripe.Event {
     return this.stripe.webhooks.constructEvent(
       rawBody,
       signature,
@@ -66,6 +69,15 @@ export class StripeService {
       metadata: {
         type: ProductType.SPONSORSHIP,
       },
+    });
+  }
+
+  public async getCustomerPortal(
+    customerId: string,
+  ): Promise<Stripe.Response<Stripe.BillingPortal.Session>> {
+    return await this.stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: `${this.appConfig.client.baseUrl}/me/billing`,
     });
   }
 }
