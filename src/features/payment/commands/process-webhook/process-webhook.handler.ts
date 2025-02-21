@@ -72,9 +72,11 @@ export class ProcessWebhookHandler
     const parsedCreditAmount = parseInt(creditAmount);
     company.creditBalance += parsedCreditAmount;
 
+    const randomStr = Math.random().toString(36).substring(2, 8);
     const transaction = this.em.create(
       CreditTransaction,
       new CreditTransaction({
+        displayId: randomStr,
         company: company as Company,
         amount: parsedCreditAmount,
         type: CreditTransactionType.PURCHASE,

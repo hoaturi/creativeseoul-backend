@@ -97,7 +97,9 @@ export class CreateFeaturedJobHandler
 
     company.creditBalance -= 1;
 
+    const displayId = Math.random().toString(36).substring(2, 8);
     const transaction = new CreditTransaction({
+      displayId,
       company: company as Company,
       amount: -1,
       type: CreditTransactionType.USAGE,

@@ -61,7 +61,9 @@ export class RenewFeaturedJobHandler
       { isFeatured: true, updatedAt: new Date() },
     );
 
+    const displayId = Math.random().toString(36).substring(2, 8);
     const transaction = new CreditTransaction({
+      displayId,
       job: job as Job,
       company: job.company as Company,
       amount: -1,

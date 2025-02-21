@@ -16,14 +16,17 @@ export class CreditTransaction extends BaseEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
   public readonly id!: string;
 
+  @Property({ unique: true })
+  public readonly displayId: string;
+
   @ManyToOne(() => Company)
-  public readonly company!: Company;
+  public readonly company: Company;
 
   @Property()
-  public readonly amount!: number;
+  public readonly amount: number;
 
   @Enum(() => CreditTransactionType)
-  public readonly type!: CreditTransactionType;
+  public readonly type: CreditTransactionType;
 
   @Property({ nullable: true })
   public readonly checkoutId?: string;
@@ -32,6 +35,7 @@ export class CreditTransaction extends BaseEntity {
   public readonly job?: Job;
 
   public constructor(data: {
+    displayId: string;
     company: Company;
     amount: number;
     type: CreditTransactionType;
@@ -39,6 +43,7 @@ export class CreditTransaction extends BaseEntity {
     job?: Job;
   }) {
     super();
+    this.displayId = data.displayId;
     this.company = data.company;
     this.amount = data.amount;
     this.type = data.type;
