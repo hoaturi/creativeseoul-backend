@@ -12,12 +12,10 @@ import { WorkLocationType } from '../../../../domain/common/entities/work-locati
 import { LanguageLevel } from '../../../../domain/common/entities/language-level.entity';
 import { Job } from '../../../../domain/job/entities/job.entity';
 import { CreateFeaturedJobRequestDto } from '../../dtos/requests/create-featured-job-request.dto';
-import {
-  CreditTransaction,
-  CreditTransactionType,
-} from '../../../../domain/company/entities/credit-transaction.entity';
+import { CreditTransaction } from '../../../../domain/company/entities/credit-transaction.entity';
 import { Logger } from '@nestjs/common';
 import slugify from 'slugify';
+import { CreditTransactionType } from '../../../../domain/company/credit-transaction-type.enum';
 
 interface JobReferences {
   category: Category;

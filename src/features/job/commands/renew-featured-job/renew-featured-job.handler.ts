@@ -7,11 +7,9 @@ import { Job } from '../../../../domain/job/entities/job.entity';
 import { JobError } from '../../job.error';
 import { UserRole } from '../../../../domain/user/user-role.enum';
 import { CompanyError } from '../../../company/company.error';
-import {
-  CreditTransaction,
-  CreditTransactionType,
-} from '../../../../domain/company/entities/credit-transaction.entity';
+import { CreditTransaction } from '../../../../domain/company/entities/credit-transaction.entity';
 import { Company } from '../../../../domain/company/entities/company.entity';
+import { CreditTransactionType } from '../../../../domain/company/credit-transaction-type.enum';
 
 @CommandHandler(RenewFeaturedJobCommand)
 export class RenewFeaturedJobHandler

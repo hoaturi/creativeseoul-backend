@@ -3,13 +3,7 @@ import { Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 import { Company } from './company.entity';
 import { Enum, Property } from '@mikro-orm/postgresql';
 import { Job } from '../../job/entities/job.entity';
-
-export enum CreditTransactionType {
-  PURCHASE = 'purchase',
-  USAGE = 'usage',
-  REFUND = 'refund',
-  ADMIN_ADJUSTMENT = 'admin_adjustment',
-}
+import { CreditTransactionType } from '../credit-transaction-type.enum';
 
 @Entity()
 export class CreditTransaction extends BaseEntity {

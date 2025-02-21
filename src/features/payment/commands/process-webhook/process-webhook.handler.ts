@@ -4,10 +4,7 @@ import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Company } from '../../../../domain/company/entities/company.entity';
-import {
-  CreditTransaction,
-  CreditTransactionType,
-} from '../../../../domain/company/entities/credit-transaction.entity';
+import { CreditTransaction } from '../../../../domain/company/entities/credit-transaction.entity';
 import { ProductType } from '../../../../domain/payment/product-type.enum';
 import { CompanyNotFoundByCustomerIdException } from '../../../../domain/company/exceptions/company-not-found-by-customer-id.exception';
 import {
@@ -15,6 +12,7 @@ import {
   SponsorshipStatus,
 } from '../../../../domain/company/entities/sponsorship.entity';
 import { Stripe } from 'stripe';
+import { CreditTransactionType } from '../../../../domain/company/credit-transaction-type.enum';
 
 @CommandHandler(ProcessWebhookCommand)
 export class ProcessWebhookHandler
