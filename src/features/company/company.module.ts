@@ -14,6 +14,7 @@ import { GetLogoUploadUrlHandler } from './commands/get-logo-upload-url/get-logo
 import { GetSponsorCompanyListHandler } from './queries/get-sponsor-company-list/get-sponsor-company-list.handler';
 import { GetMyCompanyHandler } from './queries/get-my-company/get-my-company.handler';
 import { GetCustomerPortalHandler } from './queries/get-customer-portal/get-customer-portal.handler';
+import { GetCreditBalanceHandler } from './queries/get-credit-balance/get-credit-balance.handler';
 
 const handlers: Provider[] = [
   UpdateCompanyHandler,
@@ -26,6 +27,7 @@ const handlers: Provider[] = [
   GetSponsorCompanyListHandler,
   GetMyCompanyHandler,
   GetCustomerPortalHandler,
+  GetCreditBalanceHandler,
 ];
 
 @Module({

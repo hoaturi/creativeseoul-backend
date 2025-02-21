@@ -52,6 +52,8 @@ import { GetMyCompanyQuery } from './queries/get-my-company/get-my-company.query
 import { SessionResponseDto } from '../auth/dtos/session-response.dto';
 import { GetCustomerPortalResponseDto } from './dtos/responses/get-customer-portal-response.dto';
 import { GetCustomerPortalQuery } from './queries/get-customer-portal/get-customer-portal.query';
+import { GetCreditBalanceResponseDto } from './dtos/responses/get-credit-balance-response.dto';
+import { GetCreditBalanceQuery } from './queries/get-credit-balance/get-credit-balance.query';
 
 @Controller('companies')
 export class CompanyController {
@@ -228,6 +230,32 @@ export class CompanyController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<GetCustomerPortalResponseDto> {
     const command = new GetCustomerPortalQuery(user);
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Get('/me/credit-balance')
+  @Roles(UserRole.COMPANY)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    type: GetCreditBalanceResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  public async getCreditBalance(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<GetCreditBalanceResponseDto> {
+    const command = new GetCreditBalanceQuery(user);
 
     const result = await this.queryBus.execute(command);
 
