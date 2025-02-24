@@ -17,12 +17,14 @@ import { GetCustomerPortalHandler } from './queries/get-customer-portal/get-cust
 import { GetCreditBalanceHandler } from './queries/get-credit-balance/get-credit-balance.handler';
 import { GetCreditTransactionListHandler } from './queries/get-credit-transaction-list/get-credit-transaction-list.handler';
 import { GetUnclaimedCompanyListHandler } from './queries/get-unclaimed-company-list/get-unclaimed-company-list.handler';
+import { SendInvitationByIdHandler } from './commands/send-invitation/send-invitation-by-id/send-invitation-by-id.handler';
 
 const handlers: Provider[] = [
   UpdateCompanyHandler,
   GetCompanyHandler,
   GetCompanyListHandler,
   SendInvitationHandler,
+  SendInvitationByIdHandler,
   AcceptInvitationHandler,
   GetMyLogoUploadUrlHandler,
   GetLogoUploadUrlHandler,

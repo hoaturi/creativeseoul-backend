@@ -56,6 +56,10 @@ import { GetCreditBalanceResponseDto } from './dtos/responses/get-credit-balance
 import { GetCreditBalanceQuery } from './queries/get-credit-balance/get-credit-balance.query';
 import { GetCreditTransactionListResponseDto } from './dtos/responses/get-credit-transaction-list-response.dto';
 import { GetCreditTransactionListQuery } from './queries/get-credit-transaction-list/get-credit-transaction-list.query';
+import { GetUnclaimedCompanyListResponseDto } from './dtos/responses/get-unclaimed-company-list-response.dto';
+import { GetUnclaimedCompanyListQuery } from './queries/get-unclaimed-company-list/get-unclaimed-company-list.query';
+import { SendInvitationByIdRequestDto } from './dtos/requests/send-invitation-by-id-request.dto';
+import { SendInvitationByIdCommand } from './commands/send-invitation/send-invitation-by-id/send-invitation-by-id.command';
 
 @Controller('companies')
 export class CompanyController {
@@ -116,6 +120,45 @@ export class CompanyController {
     @Body() dto: AcceptInvitationRequestDto,
   ): Promise<void> {
     const command = new AcceptInvitationCommand(dto);
+
+    const result = await this.commandBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+  }
+
+  @Post(':id/invitations')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    examples: {
+      ValidationFailed: {
+        summary: 'Validation failed',
+        value: CommonError.ValidationFailed,
+      },
+      ProfileAlreadyClaimed: {
+        summary: 'Profile already claimed',
+        value: CompanyError.ProfileAlreadyClaimed,
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    example: CompanyError.ProfileNotFound,
+  })
+  public async sendInvitationById(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: SendInvitationByIdRequestDto,
+  ): Promise<void> {
+    const command = new SendInvitationByIdCommand(id, dto);
 
     const result = await this.commandBus.execute(command);
 
