@@ -16,6 +16,7 @@ import { GetMyCompanyHandler } from './queries/get-my-company/get-my-company.han
 import { GetCustomerPortalHandler } from './queries/get-customer-portal/get-customer-portal.handler';
 import { GetCreditBalanceHandler } from './queries/get-credit-balance/get-credit-balance.handler';
 import { GetCreditTransactionListHandler } from './queries/get-credit-transaction-list/get-credit-transaction-list.handler';
+import { GetUnclaimedCompanyListHandler } from './queries/get-unclaimed-company-list/get-unclaimed-company-list.handler';
 
 const handlers: Provider[] = [
   UpdateCompanyHandler,
@@ -30,6 +31,7 @@ const handlers: Provider[] = [
   GetCustomerPortalHandler,
   GetCreditBalanceHandler,
   GetCreditTransactionListHandler,
+  GetUnclaimedCompanyListHandler,
 ];
 
 @Module({

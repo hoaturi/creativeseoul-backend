@@ -171,6 +171,22 @@ export class CompanyController {
     return result.value;
   }
 
+  @Get('unclaimed')
+  @ApiOkResponse({
+    type: GetUnclaimedCompanyListResponseDto,
+  })
+  public async getUnclaimedCompanyList(): Promise<GetUnclaimedCompanyListResponseDto> {
+    const command = new GetUnclaimedCompanyListQuery();
+
+    const result = await this.queryBus.execute(command);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
   @Get('me')
   @Roles(UserRole.COMPANY)
   @UseGuards(AuthGuard, RolesGuard)
