@@ -12,16 +12,6 @@ import { UserRole } from '../../../../domain/user/user-role.enum';
 import { Logger } from '@nestjs/common';
 import { StripeService } from '../../../../infrastructure/services/stripe/stripe.service';
 
-const INVITATION_FIELDS = [
-  'id',
-  'isAccepted',
-  'company.id',
-  'company.name',
-  'company.isClaimed',
-  'company.customerId',
-  'company.user.id',
-] as const;
-
 @CommandHandler(AcceptInvitationCommand)
 export class AcceptInvitationHandler
   implements ICommandHandler<AcceptInvitationCommand>
@@ -36,7 +26,8 @@ export class AcceptInvitationHandler
   public async execute(
     command: AcceptInvitationCommand,
   ): Promise<Result<void, ResultError>> {
-    const { token, email, password } = command.dto;
+    const { token, dto } = command;
+    const { email, password } = dto;
 
     const invitation = await this.em.findOne(
       CompanyInvitation,
@@ -46,7 +37,15 @@ export class AcceptInvitationHandler
         isAccepted: false,
       },
       {
-        fields: INVITATION_FIELDS,
+        fields: [
+          'id',
+          'isAccepted',
+          'company.id',
+          'company.name',
+          'company.isClaimed',
+          'company.customerId',
+          'company.user.id',
+        ],
       },
     );
 
@@ -58,11 +57,7 @@ export class AcceptInvitationHandler
       return Result.failure(CompanyError.ProfileAlreadyClaimed);
     }
 
-    const emailExists = await this.em.findOne(
-      User,
-      { email },
-      { fields: ['id'] },
-    );
+    const emailExists = await this.em.count(User, { email });
 
     if (emailExists) {
       return Result.failure(AuthError.EmailAlreadyExists);

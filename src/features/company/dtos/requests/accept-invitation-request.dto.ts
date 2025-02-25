@@ -10,8 +10,4 @@ export class AcceptInvitationRequestDto {
   @IsString()
   @MinLength(8)
   public readonly password!: string;
-
-  @ApiProperty()
-  @IsString()
-  public readonly token!: string;
 }

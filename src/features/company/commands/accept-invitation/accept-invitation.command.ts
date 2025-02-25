@@ -6,7 +6,10 @@ import { AcceptInvitationRequestDto } from '../../dtos/requests/accept-invitatio
 export class AcceptInvitationCommand extends Command<
   Result<void, ResultError>
 > {
-  public constructor(public readonly dto: AcceptInvitationRequestDto) {
+  public constructor(
+    public readonly token: string,
+    public readonly dto: AcceptInvitationRequestDto,
+  ) {
     super();
   }
 }

@@ -96,7 +96,7 @@ export class CompanyController {
     }
   }
 
-  @Post('invitations/accept')
+  @Post('invitations/:token/accept')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -119,9 +119,10 @@ export class CompanyController {
     example: AuthError.EmailAlreadyExists,
   })
   public async acceptInvitation(
+    @Param('token') token: string,
     @Body() dto: AcceptInvitationRequestDto,
   ): Promise<void> {
-    const command = new AcceptInvitationCommand(dto);
+    const command = new AcceptInvitationCommand(token, dto);
 
     const result = await this.commandBus.execute(command);
 
