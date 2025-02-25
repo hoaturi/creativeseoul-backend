@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Session,
   UseGuards,
 } from '@nestjs/common';
@@ -96,7 +97,7 @@ export class CompanyController {
     }
   }
 
-  @Post('invitations/:token/accept')
+  @Post('invitations/accept')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   @ApiBadRequestResponse({
@@ -119,7 +120,7 @@ export class CompanyController {
     example: AuthError.EmailAlreadyExists,
   })
   public async acceptInvitation(
-    @Param('token') token: string,
+    @Query('token') token: string,
     @Body() dto: AcceptInvitationRequestDto,
   ): Promise<void> {
     const command = new AcceptInvitationCommand(token, dto);
