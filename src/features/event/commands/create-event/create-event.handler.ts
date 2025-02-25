@@ -5,7 +5,6 @@ import { ResultError } from 'src/common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Event } from '../../../../domain/event/event.entity';
 import { EventType } from '../../../../domain/event/event-type.entity';
-import { EventError } from '../../event.error';
 import slugify from 'slugify';
 
 @CommandHandler(CreateEventCommand)
@@ -16,10 +15,6 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand> {
     command: CreateEventCommand,
   ): Promise<Result<void, ResultError>> {
     const { dto } = command;
-
-    if (!dto.registrationUrl && !dto.websiteUrl) {
-      return Result.failure(EventError.RequiredUrlMissing);
-    }
 
     const eventTypeRef = this.em.getReference(EventType, dto.eventTypeId);
 
@@ -37,7 +32,6 @@ export class CreateEventHandler implements ICommandHandler<CreateEventCommand> {
         startDate: dto.startDate,
         endDate: dto.endDate,
         coverImageUrl: dto.coverImageUrl,
-        registrationUrl: dto.registrationUrl,
         websiteUrl: dto.websiteUrl,
       }),
     );

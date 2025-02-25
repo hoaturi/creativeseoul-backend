@@ -38,11 +38,8 @@ export class Event extends BaseEntity {
   @Property()
   public coverImageUrl: string;
 
-  @Property({ nullable: true })
-  public registrationUrl?: string;
-
-  @Property({ nullable: true })
-  public websiteUrl?: string;
+  @Property()
+  public websiteUrl: string;
 
   public constructor(data: {
     title: string;
@@ -53,8 +50,7 @@ export class Event extends BaseEntity {
     startDate: Date;
     endDate: Date;
     coverImageUrl: string;
-    registrationUrl?: string;
-    websiteUrl?: string;
+    websiteUrl: string;
   }) {
     super();
     this.title = data.title;
@@ -65,7 +61,6 @@ export class Event extends BaseEntity {
     this.startDate = data.startDate;
     this.endDate = data.endDate;
     this.coverImageUrl = data.coverImageUrl;
-    this.registrationUrl = data.registrationUrl;
     this.websiteUrl = data.websiteUrl;
   }
 }

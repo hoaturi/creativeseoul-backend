@@ -1,9 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDate,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   IsUrl,
   Max,
@@ -56,15 +55,7 @@ export class CreateEventRequestDto {
   @IsUrl()
   public readonly coverImageUrl!: string;
 
-  @ApiPropertyOptional({
-    description: 'Either registrationUrl or websiteUrl is required',
-  })
-  @IsOptional()
+  @ApiProperty()
   @IsUrl()
-  public readonly registrationUrl?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsUrl()
-  public readonly websiteUrl?: string;
+  public readonly websiteUrl!: string;
 }

@@ -23,10 +23,7 @@ export class GetEventResponseDto {
   public readonly coverImageUrl: string;
 
   @ApiProperty()
-  public readonly registrationUrl?: string;
-
-  @ApiProperty()
-  public readonly websiteUrl?: string;
+  public readonly websiteUrl: string;
 
   public constructor(data: {
     eventType: string;
@@ -36,8 +33,7 @@ export class GetEventResponseDto {
     startDate: Date;
     endDate: Date;
     coverImageUrl: string;
-    registrationUrl?: string;
-    websiteUrl?: string;
+    websiteUrl: string;
   }) {
     this.eventType = data.eventType;
     this.title = data.title;
@@ -46,7 +42,6 @@ export class GetEventResponseDto {
     this.startDate = data.startDate;
     this.endDate = data.endDate;
     this.coverImageUrl = data.coverImageUrl;
-    this.registrationUrl = data.registrationUrl;
     this.websiteUrl = data.websiteUrl;
   }
 }

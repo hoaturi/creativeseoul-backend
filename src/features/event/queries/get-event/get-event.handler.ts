@@ -28,7 +28,6 @@ export class GetEventHandler implements IQueryHandler<GetEventQuery> {
           'startDate',
           'endDate',
           'coverImageUrl',
-          'registrationUrl',
           'websiteUrl',
         ],
       },
@@ -46,7 +45,6 @@ export class GetEventHandler implements IQueryHandler<GetEventQuery> {
       startDate: event.startDate,
       endDate: event.endDate,
       coverImageUrl: event.coverImageUrl,
-      registrationUrl: event.registrationUrl,
       websiteUrl: event.websiteUrl,
     });
 
