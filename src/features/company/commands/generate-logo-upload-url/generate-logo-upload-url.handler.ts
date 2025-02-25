@@ -17,7 +17,8 @@ export class GenerateLogoUploadUrlHandler
   ): Promise<Result<GenerateImageUploadUrlResponseDto, ResultError>> {
     const { dto } = command;
 
-    const fileName = `logos/${slugify(dto.companyName)}-${Date.now()}`;
+    const slug = slugify(dto.companyName, { lower: true });
+    const fileName = `logos/${slug}-${Date.now()}`;
 
     const presignedUrl = await this.storageService.generatePresignedUrl(
       fileName,
