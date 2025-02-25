@@ -3,9 +3,9 @@ import { CreateEventCommand } from './create-event.command';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Event } from '../../../domain/event/event.entity';
-import { EventType } from '../../../domain/event/event-type.entity';
-import { EventError } from '../event.error';
+import { Event } from '../../../../domain/event/event.entity';
+import { EventType } from '../../../../domain/event/event-type.entity';
+import { EventError } from '../../event.error';
 import slugify from 'slugify';
 
 @CommandHandler(CreateEventCommand)

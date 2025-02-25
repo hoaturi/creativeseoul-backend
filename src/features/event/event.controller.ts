@@ -22,7 +22,7 @@ import {
 import { AuthError } from '../auth/auth.error';
 import { CommonError } from '../common/common.error';
 import { CreateEventRequestDto } from './dtos/create-event-request.dto';
-import { CreateEventCommand } from './commands/create-event.command';
+import { CreateEventCommand } from './commands/create-event/create-event.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { EventError } from './event.error';
 import { GetEventResponseDto } from './dtos/get-event-response.dto';
