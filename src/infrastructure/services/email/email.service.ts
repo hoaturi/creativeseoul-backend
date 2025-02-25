@@ -69,7 +69,7 @@ export class EmailService {
     payload: CompanyInvitationJobDto,
   ): Promise<void> {
     const templateData: CompanyInvitationTemplateData = {
-      invitationLink: `${this.appConfig.client.baseUrl}/accept-invitation?token=${payload.token}`,
+      invitationLink: `${this.appConfig.client.baseUrl}/companies/invitations/accept?token=${payload.token}`,
     };
 
     await this.sendEmail(payload.email, {
