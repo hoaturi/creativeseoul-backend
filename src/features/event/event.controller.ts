@@ -5,6 +5,7 @@ import {
   HttpException,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -30,6 +31,9 @@ import { GetEventQuery } from './queries/get-event/get-event.query';
 import { GetEventListResponseDto } from './dtos/get-event-list-response.dto';
 import { GetEventListQuery } from './queries/get-event-list/get-event-list.query';
 import { GetEventListQueryDto } from './dtos/get-event-list-query.dto';
+import { GenerateImageUploadUrlResponseDto } from '../common/dtos/generate-image-upload-url-response.dto';
+import { GenerateEventImageUploadUrlRequestDto } from './dtos/generate-event-image-upload-url-request.dto';
+import { GenerateEventImageUploadUrlCommand } from './commands/generate-event-image-upload-url/generate-event-image-upload-url.command';
 
 @Controller('events')
 export class EventController {
@@ -101,6 +105,35 @@ export class EventController {
     const query = new GetEventQuery(slug);
 
     const result = await this.queryBus.execute(query);
+
+    if (!result.isSuccess) {
+      throw new HttpException(result.error, result.error.statusCode);
+    }
+
+    return result.value;
+  }
+
+  @Put('cover')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiOkResponse({
+    example: GenerateImageUploadUrlResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    example: AuthError.Unauthenticated,
+  })
+  @ApiForbiddenResponse({
+    example: AuthError.Unauthorized,
+  })
+  @ApiBadRequestResponse({
+    example: CommonError.ValidationFailed,
+  })
+  public async generateEventImageUploadUrl(
+    @Body() dto: GenerateEventImageUploadUrlRequestDto,
+  ): Promise<GenerateImageUploadUrlResponseDto> {
+    const command = new GenerateEventImageUploadUrlCommand(dto);
+
+    const result = await this.commandBus.execute(command);
 
     if (!result.isSuccess) {
       throw new HttpException(result.error, result.error.statusCode);
