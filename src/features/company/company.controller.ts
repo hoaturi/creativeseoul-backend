@@ -81,6 +81,9 @@ export class CompanyController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
+  @ApiConflictResponse({
+    example: CompanyError.ProfileAlreadyExists,
+  })
   public async sendInvitation(
     @Body() dto: SendInvitationRequestDto,
   ): Promise<void> {

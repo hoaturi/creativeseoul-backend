@@ -27,6 +27,12 @@ export class CompanyError extends ResultError {
     'Insufficient credit balance',
   );
 
+  public static readonly ProfileAlreadyExists = new ResultError(
+    CompanyErrorCode.PROFILE_ALREADY_EXISTS,
+    HttpStatus.CONFLICT,
+    'Company Profile already exists',
+  );
+
   public constructor(code: string, statusCode: number, description: string) {
     super(code, statusCode, description);
   }

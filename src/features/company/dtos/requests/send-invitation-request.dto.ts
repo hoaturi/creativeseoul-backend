@@ -59,14 +59,6 @@ export class SendInvitationRequestDto {
   @IsUrl()
   public readonly websiteUrl!: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(32)
-  @Trim()
-  public readonly city?: string;
-
   @ApiPropertyOptional({
     type: CompanySocialLinksDto,
   })

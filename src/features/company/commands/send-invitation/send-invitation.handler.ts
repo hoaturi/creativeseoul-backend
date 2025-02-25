@@ -12,17 +12,14 @@ import { Queue } from 'bullmq';
 import { EmailJobType } from '../../../../infrastructure/queues/email-queue/email-queue.type.enum';
 import { emailJobOption } from '../../../../infrastructure/queues/email-queue/processor/email-job.option';
 import { CompanyInvitationJobDto } from '../../../../infrastructure/queues/email-queue/dtos/company-invitation-job.dto';
-import { Logger } from '@nestjs/common';
-import { CompanyError } from '../../company.error';
 import { CompanySize } from '../../../../domain/company/entities/company-size.entity';
 import slugify from 'slugify';
+import { CompanyError } from '../../company.error';
 
 @CommandHandler(SendInvitationCommand)
 export class SendInvitationHandler
   implements ICommandHandler<SendInvitationCommand>
 {
-  private readonly logger = new Logger(SendInvitationHandler.name);
-
   public constructor(
     private readonly em: EntityManager,
     @InjectQueue(QueueType.EMAIL)
@@ -34,41 +31,36 @@ export class SendInvitationHandler
   ): Promise<Result<void, ResultError>> {
     const { dto } = command;
 
-    let company = await this.em.findOne(
-      Company,
-      {
-        websiteUrl: dto.websiteUrl,
-      },
-      {
-        fields: ['id', 'isClaimed'],
-      },
-    );
+    const size = this.em.getReference(CompanySize, dto.sizeId);
+    const slug = slugify(dto.name, { lower: true });
 
-    let isNewCompany = false;
-    if (!company) {
-      const size = this.em.getReference(CompanySize, dto.sizeId);
-      const slug = slugify(dto.name, { lower: true });
-
-      company = this.em.create(
-        Company,
-        new Company({
-          isClaimed: false,
-          name: dto.name,
-          slug,
-          size,
-          location: dto.location,
-          summary: dto.summary,
-          description: dto.description,
-          websiteUrl: dto.websiteUrl,
-          socialLinks: dto.socialLinks || {},
-          creditBalance: 0,
-        }),
-      );
-
-      isNewCompany = true;
-    } else if (company.isClaimed) {
-      return Result.failure(CompanyError.ProfileAlreadyClaimed);
+    const nameExists = await this.em.count(Company, { slug });
+    if (nameExists) {
+      return Result.failure(CompanyError.ProfileAlreadyExists);
     }
+
+    const websiteUrlExists = await this.em.count(Company, {
+      websiteUrl: dto.websiteUrl,
+    });
+    if (websiteUrlExists) {
+      return Result.failure(CompanyError.ProfileAlreadyExists);
+    }
+
+    const company = this.em.create(
+      Company,
+      new Company({
+        isClaimed: false,
+        name: dto.name,
+        slug,
+        size,
+        location: dto.location,
+        summary: dto.summary,
+        description: dto.description,
+        websiteUrl: dto.websiteUrl,
+        socialLinks: dto.socialLinks || {},
+        creditBalance: 0,
+      }),
+    );
 
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date();
@@ -80,13 +72,6 @@ export class SendInvitationHandler
     );
 
     await this.em.flush();
-
-    if (isNewCompany) {
-      this.logger.log(
-        { companyId: company.id },
-        'company.send-invitation.success: New company created during invitation process',
-      );
-    }
 
     const invitationDto = new CompanyInvitationJobDto(
       company.id,
