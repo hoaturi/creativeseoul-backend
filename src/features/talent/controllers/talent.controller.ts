@@ -39,15 +39,15 @@ import { UpdateTalentRequestDto } from '../dtos/requests/update-talent-request.d
 import { GetTalentResponseDto } from '../dtos/responses/get-talent-response.dto';
 import { CreateTalentCommand } from '../commands/create-talent/create-talent.command';
 import { CreateTalentRequestDto } from '../dtos/requests/create-talent-request.dto';
-import { GetImageUploadUrlResponseDto } from '../../common/dtos/get-image-upload-url-response.dto';
+import { GenerateImageUploadUrlResponseDto } from '../../common/dtos/generate-image-upload-url-response.dto';
 import { CompanyError } from '../../company/company.error';
-import { GetImageUploadUrlRequestDto } from '../../common/dtos/get-image-upload-url-request.dto';
-import { GetMyAvatarUploadUrlCommand } from '../commands/get-my-avatar-upload-url/get-my-avatar-upload-url.command';
+import { GenerateAvatarUploadUrlCommand } from '../commands/generate-avatar-upload-url/generate-avatar-upload-url.command';
 import { SessionResponseDto } from '../../auth/dtos/session-response.dto';
 import { GetMyTalentQuery } from '../queries/get-my-talent/get-my-talent.query';
 import { GetMyTalentResponseDto } from '../dtos/responses/get-my-talent-response.dto';
 import { UpdateJobPreferencesRequestDto } from '../dtos/requests/update-job-preferences-request.dto';
 import { UpdateJobPreferencesCommand } from '../commands/update-job-preferences/update-job-preferences.command';
+import { GenerateImageUploadUrlRequestDto } from '../../common/dtos/generate-image-upload-url-request.dto';
 
 @Controller('talents')
 export class TalentController {
@@ -237,11 +237,11 @@ export class TalentController {
     }
   }
 
-  @Put('me/avatar')
+  @Put('avatar')
   @Roles(UserRole.TALENT)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse({
-    type: GetImageUploadUrlResponseDto,
+    type: GenerateImageUploadUrlResponseDto,
   })
   @ApiUnauthorizedResponse({
     example: AuthError.Unauthenticated,
@@ -255,11 +255,11 @@ export class TalentController {
   @ApiNotFoundResponse({
     example: CompanyError.ProfileNotFound,
   })
-  public async getMyAvatarUploadUrl(
+  public async generateAvatarUploadUrl(
     @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: GetImageUploadUrlRequestDto,
-  ): Promise<GetImageUploadUrlResponseDto> {
-    const command = new GetMyAvatarUploadUrlCommand(user, dto);
+    @Body() dto: GenerateImageUploadUrlRequestDto,
+  ): Promise<GenerateImageUploadUrlResponseDto> {
+    const command = new GenerateAvatarUploadUrlCommand(user, dto);
 
     const result = await this.commandBus.execute(command);
 

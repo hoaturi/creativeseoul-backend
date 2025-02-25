@@ -8,9 +8,8 @@ import { QueueType } from '../../infrastructure/queues/queue-type.enum';
 import { AcceptInvitationHandler } from './commands/accept-invitation/accept-invitation.handler';
 import { StripeModule } from '../../infrastructure/services/stripe/stripe.module';
 import { GetCompanyHandler } from './queries/get-company/get-company.handler';
-import { GetMyLogoUploadUrlHandler } from './commands/get-my-logo-upload-url/get-my-logo-upload-url.handler';
 import { StorageModule } from '../../infrastructure/services/storage/storage.module';
-import { GetLogoUploadUrlHandler } from './commands/get-logo-upload-url/get-logo-upload-url.handler';
+import { GenerateLogoUploadUrlHandler } from './commands/generate-logo-upload-url/generate-logo-upload-url.handler';
 import { GetSponsorCompanyListHandler } from './queries/get-sponsor-company-list/get-sponsor-company-list.handler';
 import { GetMyCompanyHandler } from './queries/get-my-company/get-my-company.handler';
 import { GetCustomerPortalHandler } from './queries/get-customer-portal/get-customer-portal.handler';
@@ -26,8 +25,7 @@ const handlers: Provider[] = [
   SendInvitationHandler,
   SendInvitationByIdHandler,
   AcceptInvitationHandler,
-  GetMyLogoUploadUrlHandler,
-  GetLogoUploadUrlHandler,
+  GenerateLogoUploadUrlHandler,
   GetSponsorCompanyListHandler,
   GetMyCompanyHandler,
   GetCustomerPortalHandler,

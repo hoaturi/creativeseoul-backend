@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ALLOWED_IMAGE_TYPES } from '../../../domain/common/constants/allowed-image-type.constant';
 
-export class GetImageUploadUrlRequestDto {
+export class GenerateImageUploadUrlRequestDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

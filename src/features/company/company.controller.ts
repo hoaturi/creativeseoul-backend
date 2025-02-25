@@ -41,10 +41,7 @@ import { AcceptInvitationCommand } from './commands/accept-invitation/accept-inv
 import { CompanyError } from './company.error';
 import { GetCompanyResponseDto } from './dtos/responses/get-company-response.dto';
 import { GetCompanyQuery } from './queries/get-company/get-company.query';
-import { GetImageUploadUrlResponseDto } from '../common/dtos/get-image-upload-url-response.dto';
-import { GetMyLogoUploadUrlCommand } from './commands/get-my-logo-upload-url/get-my-logo-upload-url.command';
-import { GetImageUploadUrlRequestDto } from '../common/dtos/get-image-upload-url-request.dto';
-import { GetLogoUploadUrlCommand } from './commands/get-logo-upload-url/get-logo-upload-url.command';
+import { GenerateImageUploadUrlResponseDto } from '../common/dtos/generate-image-upload-url-response.dto';
 import { GetSponsorCompanyListResponseDto } from './dtos/responses/get-sponsor-company-list-response.dto';
 import { GetSponsorCompanyListQuery } from './queries/get-sponsor-company-list/get-sponsor-company-list.query';
 import { GetMyCompanyResponseDto } from './dtos/responses/get-my-company-response.dto';
@@ -60,6 +57,8 @@ import { GetUnclaimedCompanyListResponseDto } from './dtos/responses/get-unclaim
 import { GetUnclaimedCompanyListQuery } from './queries/get-unclaimed-company-list/get-unclaimed-company-list.query';
 import { SendInvitationByIdRequestDto } from './dtos/requests/send-invitation-by-id-request.dto';
 import { SendInvitationByIdCommand } from './commands/send-invitation/send-invitation-by-id/send-invitation-by-id.command';
+import { GenerateLogoUploadUrlCommand } from './commands/generate-logo-upload-url/generate-logo-upload-url.command';
+import { GenerateLogoUploadUrlRequestDto } from './dtos/requests/generate-logo-upload-url-request.dto';
 
 @Controller('companies')
 export class CompanyController {
@@ -374,11 +373,11 @@ export class CompanyController {
     return result.value;
   }
 
-  @Put('me/logo')
-  @Roles(UserRole.COMPANY)
+  @Put('logo')
+  @Roles(UserRole.COMPANY, UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse({
-    type: GetImageUploadUrlResponseDto,
+    type: GenerateImageUploadUrlResponseDto,
   })
   @ApiUnauthorizedResponse({
     example: AuthError.Unauthenticated,
@@ -389,41 +388,10 @@ export class CompanyController {
   @ApiBadRequestResponse({
     example: CommonError.ValidationFailed,
   })
-  public async getMyLogoUploadUrl(
-    @CurrentUser() user: AuthenticatedUser,
-    @Body() dto: GetImageUploadUrlRequestDto,
-  ): Promise<GetImageUploadUrlResponseDto> {
-    const command = new GetMyLogoUploadUrlCommand(user, dto);
-
-    const result = await this.commandBus.execute(command);
-
-    if (!result.isSuccess) {
-      throw new HttpException(result.error, result.error.statusCode);
-    }
-
-    return result.value;
-  }
-
-  @Put(':id/logo')
-  @Roles(UserRole.ADMIN)
-  @UseGuards(AuthGuard, RolesGuard)
-  @ApiOkResponse({
-    type: GetImageUploadUrlResponseDto,
-  })
-  @ApiUnauthorizedResponse({
-    example: AuthError.Unauthenticated,
-  })
-  @ApiForbiddenResponse({
-    example: AuthError.Unauthorized,
-  })
-  @ApiBadRequestResponse({
-    example: CommonError.ValidationFailed,
-  })
-  public async getLogoUploadUrl(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: GetImageUploadUrlRequestDto,
-  ): Promise<GetImageUploadUrlResponseDto> {
-    const command = new GetLogoUploadUrlCommand(id, dto);
+  public async generateLogoUploadUrl(
+    @Body() dto: GenerateLogoUploadUrlRequestDto,
+  ): Promise<GenerateImageUploadUrlResponseDto> {
+    const command = new GenerateLogoUploadUrlCommand(dto);
 
     const result = await this.commandBus.execute(command);
 

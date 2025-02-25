@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GetImageUploadUrlResponseDto {
+export class GenerateImageUploadUrlResponseDto {
   @ApiProperty()
   public readonly url: string;
 
