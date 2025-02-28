@@ -108,7 +108,7 @@ export class TalentController {
     return result.value;
   }
 
-  @Get(':id')
+  @Get(':handle')
   @UseGuards(AuthGuard)
   @ApiOkResponse({ type: GetTalentResponseDto })
   @ApiNotFoundResponse({
@@ -116,9 +116,9 @@ export class TalentController {
   })
   public async getTalent(
     @CurrentUser() user: AuthenticatedUser,
-    @Param('id') id: string,
+    @Param('handle') handle: string,
   ): Promise<GetTalentResponseDto> {
-    const command = new GetTalentQuery(user, id);
+    const command = new GetTalentQuery(user, handle);
 
     const result = await this.queryBus.execute(command);
 

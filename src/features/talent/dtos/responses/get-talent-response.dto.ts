@@ -7,6 +7,9 @@ import { TalentEmploymentTypeDto } from './talent-employment-type.dto';
 
 export class GetTalentResponseDto {
   @ApiProperty()
+  public readonly handle: string;
+
+  @ApiProperty()
   public readonly fullName: string;
 
   @ApiProperty()
@@ -55,6 +58,9 @@ export class GetTalentResponseDto {
   @ApiPropertyOptional()
   public readonly skills?: string[];
 
+  @ApiProperty()
+  public readonly isContactable: boolean;
+
   @ApiPropertyOptional()
   public readonly email?: string;
 
@@ -62,6 +68,7 @@ export class GetTalentResponseDto {
   public readonly phone?: string;
 
   public constructor(data: {
+    handle: string;
     fullName: string;
     title: string;
     bio: string;
@@ -75,9 +82,11 @@ export class GetTalentResponseDto {
     workLocationTypes: TalentWorkLocationTypeDto[];
     employmentTypes: TalentEmploymentTypeDto[];
     skills?: string[];
+    isContactable: boolean;
     email?: string;
     phone?: string;
   }) {
+    this.handle = data.handle;
     this.fullName = data.fullName;
     this.title = data.title;
     this.bio = data.bio;
@@ -91,6 +100,7 @@ export class GetTalentResponseDto {
     this.workLocationTypes = data.workLocationTypes;
     this.employmentTypes = data.employmentTypes;
     this.skills = data.skills;
+    this.isContactable = data.isContactable;
     this.email = data.email;
     this.phone = data.phone;
   }

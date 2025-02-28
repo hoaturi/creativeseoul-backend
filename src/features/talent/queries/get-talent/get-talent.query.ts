@@ -9,7 +9,7 @@ export class GetTalentQuery extends Query<
 > {
   public constructor(
     public readonly user: AuthenticatedUser,
-    public readonly id: string,
+    public readonly handle: string,
   ) {
     super();
   }

@@ -15,6 +15,7 @@ import { AuthenticatedUser } from '../../../../infrastructure/security/authentic
 
 const TALENT_FIELDS = [
   'id',
+  'handle',
   'fullName',
   'title',
   'bio',
@@ -25,13 +26,14 @@ const TALENT_FIELDS = [
   'hourlyRateRange',
   'workLocationTypes',
   'employmentTypes',
+  'isContactable',
   'email',
   'phone',
   'socialLinks',
   'country.label',
   'city.label',
   'languages.language.label',
-  'languages.level',
+  'languages.level.label',
   'salaryRange.id',
   'salaryRange.label',
   'hourlyRateRange.id',
@@ -52,7 +54,7 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
   public async execute(
     query: GetTalentQuery,
   ): Promise<Result<GetTalentResponseDto, ResultError>> {
-    const talent = await this.findTalentByUser(query.id);
+    const talent = await this.findTalent(query.handle);
 
     if (!talent) {
       return Result.failure(TalentError.ProfileNotFound);
@@ -66,12 +68,16 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     return Result.success(response);
   }
 
-  private async findTalentByUser(
-    talentId: string,
-  ): Promise<LoadedTalent | null> {
-    return (await this.em.findOne(Talent, talentId, {
-      fields: TALENT_FIELDS,
-    })) as LoadedTalent | null;
+  private async findTalent(handle: string): Promise<LoadedTalent | null> {
+    return (await this.em.findOne(
+      Talent,
+      {
+        handle,
+      },
+      {
+        fields: TALENT_FIELDS,
+      },
+    )) as LoadedTalent | null;
   }
 
   private hasAccessPermission(
@@ -109,6 +115,7 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     );
 
     return new GetTalentResponseDto({
+      handle: talent.handle,
       fullName: talent.fullName,
       title: talent.title,
       bio: talent.bio,
@@ -122,8 +129,9 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
       workLocationTypes,
       employmentTypes,
       skills: talent.skills,
-      email: talent.email,
-      phone: talent.phone,
+      isContactable: talent.isContactable,
+      email: talent.isContactable ? talent.email : undefined,
+      phone: talent.isContactable ? talent.phone : undefined,
     });
   }
 }

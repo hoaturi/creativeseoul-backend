@@ -19,7 +19,7 @@ import { GetTalentListQueryDto } from '../../dtos/requests/get-talent-list-query
 import { AvailabilityStatusId } from '../../../../domain/talent/constants/availability-status.constant';
 
 const TALENT_FIELDS = [
-  'id',
+  'handle',
   'fullName',
   'title',
   'bio',
@@ -109,7 +109,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     return talents.map(
       (talent) =>
         new GetTalentListItemDto({
-          id: talent.id,
+          handle: talent.handle,
           fullName: talent.fullName,
           title: talent.title,
           bio: talent.bio,

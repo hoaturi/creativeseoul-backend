@@ -5,10 +5,10 @@ export class TalentWorkLocationTypeDto {
   public readonly id: number;
 
   @ApiProperty()
-  public readonly name: string;
+  public readonly label: string;
 
-  public constructor(id: number, name: string) {
+  public constructor(id: number, label: string) {
     this.id = id;
-    this.name = name;
+    this.label = label;
   }
 }

@@ -3,7 +3,7 @@ import { TalentLocationDto } from './talent-location.dto';
 
 export class GetTalentListItemDto {
   @ApiProperty()
-  public readonly id: string;
+  public readonly handle: string;
 
   @ApiProperty()
   public readonly fullName: string;
@@ -32,7 +32,7 @@ export class GetTalentListItemDto {
   public readonly skills?: string[];
 
   public constructor(data: {
-    id: string;
+    handle: string;
     fullName: string;
     title: string;
     bio: string;
@@ -42,7 +42,7 @@ export class GetTalentListItemDto {
     requiresVisaSponsorship: boolean;
     skills?: string[];
   }) {
-    this.id = data.id;
+    this.handle = data.handle;
     this.fullName = data.fullName;
     this.title = data.title;
     this.bio = data.bio;
