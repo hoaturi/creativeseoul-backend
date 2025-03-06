@@ -1,5 +1,31 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+export class RelatedJobDto {
+  @ApiProperty()
+  public readonly slug: string;
+
+  @ApiProperty()
+  public readonly title: string;
+
+  @ApiProperty()
+  public readonly employmentType: string;
+
+  @ApiProperty()
+  public readonly location: string;
+
+  public constructor(data: {
+    slug: string;
+    title: string;
+    employmentType: string;
+    location: string;
+  }) {
+    this.slug = data.slug;
+    this.title = data.title;
+    this.employmentType = data.employmentType;
+    this.location = data.location;
+  }
+}
+
 export class JobCompanyDto {
   @ApiProperty()
   public readonly slug: string;
@@ -16,18 +42,23 @@ export class JobCompanyDto {
   @ApiPropertyOptional()
   public readonly size?: string;
 
+  @ApiProperty()
+  public readonly relatedJobs: RelatedJobDto[];
+
   public constructor(data: {
     slug: string;
     name: string;
     description: string;
     logoUrl?: string;
     size?: string;
+    relatedJobs?: RelatedJobDto[];
   }) {
     this.slug = data.slug;
     this.name = data.name;
     this.description = data.description;
     this.logoUrl = data.logoUrl;
     this.size = data.size;
+    this.relatedJobs = data.relatedJobs ?? [];
   }
 }
 
