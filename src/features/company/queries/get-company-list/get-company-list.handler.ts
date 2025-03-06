@@ -31,9 +31,14 @@ export class GetCompanyListHandler
   ): Promise<Result<GetCompanyListResponseDto, ResultError>> {
     const companies = await this.em.find(
       Company,
-      {},
+      {
+        isActive: true,
+      },
       {
         fields: COMPANY_FIELDS,
+        orderBy: {
+          isSponsor: 'DESC',
+        },
       },
     );
 

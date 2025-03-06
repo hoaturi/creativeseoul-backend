@@ -52,7 +52,7 @@ export class GetCompanyHandler implements IQueryHandler<GetCompanyQuery> {
   ): Promise<Result<GetCompanyResponseDto, ResultError>> {
     const company = await this.em.findOne(
       Company,
-      { slug: query.slug },
+      { slug: query.slug, isActive: true },
       {
         fields: COMPANY_FIELDS,
       },

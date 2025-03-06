@@ -74,6 +74,10 @@ export class Company extends BaseEntity {
   @Index()
   public isClaimed: boolean;
 
+  @Property()
+  @Index()
+  public isActive: boolean;
+
   @Formula(
     (alias) =>
       `(SELECT COUNT(*)::int FROM job j WHERE j.company_id = ${alias}.id)`,
@@ -95,6 +99,7 @@ export class Company extends BaseEntity {
 
   public constructor(data: {
     isClaimed: boolean;
+    isActive: boolean;
     name: string;
     slug: string;
     websiteUrl: string;
@@ -109,6 +114,7 @@ export class Company extends BaseEntity {
   }) {
     super();
     this.isClaimed = data.isClaimed;
+    this.isActive = data.isActive;
     this.name = data.name;
     this.slug = data.slug;
     this.summary = data.summary;

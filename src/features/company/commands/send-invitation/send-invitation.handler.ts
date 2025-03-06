@@ -50,6 +50,7 @@ export class SendInvitationHandler
       Company,
       new Company({
         isClaimed: false,
+        isActive: false,
         name: dto.name,
         slug,
         size,
