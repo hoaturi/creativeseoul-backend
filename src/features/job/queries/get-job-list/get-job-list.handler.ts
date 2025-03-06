@@ -110,11 +110,7 @@ export class GetJobListHandler implements IQueryHandler<GetJobListQuery> {
     } = dto;
 
     if (search) {
-      const formattedSearch = search
-        .split(' ')
-        .map((word) => word.trim())
-        .join(' & ');
-      where.searchVector = { $fulltext: formattedSearch };
+      where.searchVector = { $fulltext: search };
     }
 
     if (categoryIds?.length) {

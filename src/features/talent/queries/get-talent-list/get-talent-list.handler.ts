@@ -89,11 +89,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
     const { search, employmentTypeIds, workLocationTypeIds } = filters;
 
     if (search) {
-      const formattedSearch = search
-        .split(' ')
-        .map((word) => word.trim())
-        .join(' & ');
-      where.searchVector = { $fulltext: formattedSearch };
+      where.searchVector = { $fulltext: search };
     }
 
     if (employmentTypeIds?.length) {
