@@ -21,7 +21,6 @@ import { SalaryRange } from './salary-range.entity';
 import { HourlyRateRange } from './hourly-rate-range.entity';
 import { WorkLocationType } from '../../common/entities/work-location-type.entity';
 import { EmploymentType } from '../../common/entities/employment-type.entity';
-import { Check } from '@mikro-orm/core';
 import { ExperienceLevel } from '../../job/entities/experience-level.entity';
 import { AvailabilityStatus } from './availability-status.entity';
 
@@ -34,9 +33,6 @@ const generateSearchVector = (talent: Talent): WeightedFullTextValue => ({
 });
 
 @Entity()
-@Check({
-  expression: 'NOT "is_contactable" OR COALESCE("email", "phone") IS NOT NULL',
-})
 export class Talent extends BaseEntity {
   // Primary key and relations
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })
