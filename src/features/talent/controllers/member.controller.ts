@@ -17,8 +17,9 @@ export class MemberController {
   })
   public async GetTalentAsMemberList(
     @Query('page') page?: number,
+    @Query('search') search?: string,
   ): Promise<GetTalentAsMemberListResponseDto> {
-    const command = new GetTalentAsMemberListQuery(page);
+    const command = new GetTalentAsMemberListQuery(page, search);
 
     const result = await this.queryBus.execute(command);
 

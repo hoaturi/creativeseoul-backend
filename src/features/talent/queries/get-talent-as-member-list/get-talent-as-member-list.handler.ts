@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetTalentAsMemberListQuery } from './get-talent-as-member-list.query';
-import { EntityManager, raw } from '@mikro-orm/postgresql';
+import { EntityManager, FilterQuery, raw } from '@mikro-orm/postgresql';
 import { Result } from 'src/common/result/result';
 import { ResultError } from 'src/common/result/result-error';
 import {
@@ -20,7 +20,7 @@ export class GetTalentAsMemberListHandler
   public async execute(
     query: GetTalentAsMemberListQuery,
   ): Promise<Result<GetTalentAsMemberListResponseDto, ResultError>> {
-    const { page = 1 } = query;
+    const { page = 1, search } = query;
 
     const memberActivityScore = raw(`
       CASE
@@ -30,24 +30,26 @@ export class GetTalentAsMemberListHandler
       END
     `);
 
-    const talents = await this.em.find(
-      Talent,
-      {},
-      {
-        fields: [
-          'handle',
-          'fullName',
-          'title',
-          'avatarUrl',
-          'city.label',
-          'country.label',
-          'socialLinks',
-        ],
-        orderBy: { [memberActivityScore]: 'DESC' },
-        limit: 50,
-        offset: (page - 1) * 50,
-      },
-    );
+    const whereConditions: FilterQuery<Talent> = {};
+
+    if (search) {
+      whereConditions.searchVector = { $fulltext: search };
+    }
+
+    const talents = await this.em.find(Talent, whereConditions, {
+      fields: [
+        'handle',
+        'fullName',
+        'title',
+        'avatarUrl',
+        'city.label',
+        'country.label',
+        'socialLinks',
+      ],
+      orderBy: { [memberActivityScore]: 'DESC' },
+      limit: 50,
+      offset: (page - 1) * 50,
+    });
 
     const responseDto = talents.map((talent) => {
       const location = new TalentLocationDto(
