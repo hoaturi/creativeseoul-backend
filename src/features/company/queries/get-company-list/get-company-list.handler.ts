@@ -29,7 +29,7 @@ export class GetCompanyListHandler
   public async execute(
     _: GetCompanyListQuery,
   ): Promise<Result<GetCompanyListResponseDto, ResultError>> {
-    const companies = await this.em.find(
+    const [companies, count] = await this.em.findAndCount(
       Company,
       {
         isActive: true,
@@ -56,6 +56,6 @@ export class GetCompanyListHandler
         }),
     );
 
-    return Result.success(new GetCompanyListResponseDto(companyDtos));
+    return Result.success(new GetCompanyListResponseDto(companyDtos, count));
   }
 }

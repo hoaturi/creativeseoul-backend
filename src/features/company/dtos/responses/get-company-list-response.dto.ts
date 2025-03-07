@@ -50,7 +50,11 @@ export class GetCompanyListResponseDto {
   @ApiProperty({ type: [CompanyListItemDto] })
   public readonly companies: CompanyListItemDto[];
 
-  public constructor(companies: CompanyListItemDto[]) {
+  @ApiProperty()
+  public readonly total: number;
+
+  public constructor(companies: CompanyListItemDto[], total: number) {
     this.companies = companies;
+    this.total = total;
   }
 }
