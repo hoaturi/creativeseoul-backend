@@ -2279,43 +2279,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/cli@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@mikro-orm/cli@npm:6.4.0"
+"@mikro-orm/cli@npm:^6.4.8":
+  version: 6.4.8
+  resolution: "@mikro-orm/cli@npm:6.4.8"
   dependencies:
     "@jercle/yargonaut": "npm:1.1.5"
-    "@mikro-orm/core": "npm:6.4.0"
-    "@mikro-orm/knex": "npm:6.4.0"
-    fs-extra: "npm:11.2.0"
+    "@mikro-orm/core": "npm:6.4.8"
+    "@mikro-orm/knex": "npm:6.4.8"
+    fs-extra: "npm:11.3.0"
     tsconfig-paths: "npm:4.2.0"
     yargs: "npm:17.7.2"
   bin:
     mikro-orm: ./cli
     mikro-orm-esm: ./esm
-  checksum: 10c0/d1d046acc5519925276694666567384b554bc62d2e6103676feee579368f3a03c8bf185bcab17c248b41cf96a57c431a3f4221b0ee15286762e1ea08d6b472b4
+  checksum: 10c0/8752e16cca1815d63e0cbbbc9fb96d1cda0c0cfc023a28d30da0424cc835c6b7de570c6571f840f19d9e8b0caded33b436a7a85ab1e00c3f4f997ba3bd4e2e44
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:6.4.0, @mikro-orm/core@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@mikro-orm/core@npm:6.4.0"
+"@mikro-orm/core@npm:6.4.8, @mikro-orm/core@npm:^6.4.8":
+  version: 6.4.8
+  resolution: "@mikro-orm/core@npm:6.4.8"
   dependencies:
-    dataloader: "npm:2.2.2"
-    dotenv: "npm:16.4.5"
+    dataloader: "npm:2.2.3"
+    dotenv: "npm:16.4.7"
     esprima: "npm:4.0.1"
-    fs-extra: "npm:11.2.0"
+    fs-extra: "npm:11.3.0"
     globby: "npm:11.1.0"
-    mikro-orm: "npm:6.4.0"
+    mikro-orm: "npm:6.4.8"
     reflect-metadata: "npm:0.2.2"
-  checksum: 10c0/85e6771b4618f859506e04a6be36240d472310691a976f1d1332238e284ad3ca00ea95535553442f8aa2cb17dffb73f40e4d55ff5d7c739eae2148b37cb0c863
+  checksum: 10c0/35a31ae5d6bb08de324f0cf8ed6a41791934ed4f84468d089ef9f89ab7510de725595a0d65295d66fa1d6c3b0338a6c727be4eb5e9e00f4cd3f535edc955a827
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:6.4.0":
-  version: 6.4.0
-  resolution: "@mikro-orm/knex@npm:6.4.0"
+"@mikro-orm/knex@npm:6.4.8":
+  version: 6.4.8
+  resolution: "@mikro-orm/knex@npm:6.4.8"
   dependencies:
-    fs-extra: "npm:11.2.0"
+    fs-extra: "npm:11.3.0"
     knex: "npm:3.1.0"
     sqlstring: "npm:2.3.3"
   peerDependencies:
@@ -2330,58 +2330,58 @@ __metadata:
       optional: true
     mariadb:
       optional: true
-  checksum: 10c0/d9c3583b1ad284c0a1d74675bd7e6cc4e8de3a02356d0787eb47c1d356f232b2ee28a2a0a6b336933de980dd3ef66a4b2a16447ba930224b0e730e42974e0855
+  checksum: 10c0/b6878d597d7799a2b4b158acf5299a2ece0091f6fdc1a6d5a7d58dc8150aaf8c52588f7f1162d8f1b5899ce7dc51e029702e1cd7d52a5aba1ed9692be9ef4abc
   languageName: node
   linkType: hard
 
-"@mikro-orm/migrations@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@mikro-orm/migrations@npm:6.4.0"
+"@mikro-orm/migrations@npm:^6.4.8":
+  version: 6.4.8
+  resolution: "@mikro-orm/migrations@npm:6.4.8"
   dependencies:
-    "@mikro-orm/knex": "npm:6.4.0"
-    fs-extra: "npm:11.2.0"
+    "@mikro-orm/knex": "npm:6.4.8"
+    fs-extra: "npm:11.3.0"
     umzug: "npm:3.8.2"
   peerDependencies:
     "@mikro-orm/core": ^6.0.0
-  checksum: 10c0/c4832ce275e169112afd9921765667f7827f48c595b62a523b8e971802955c0777c07c6a038f56bcf62b856577c1492fe1453e89de331618e7c6f9cc69f9c3bd
+  checksum: 10c0/14a417c1f0d9c63106a28b8513767227ccb212512d388e8514f298252aef7db4c35e562ebe475d721670ce79c4b21d34971932aabc4ac9df1c0d6da02d13dc14
   languageName: node
   linkType: hard
 
-"@mikro-orm/nestjs@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "@mikro-orm/nestjs@npm:6.0.2"
+"@mikro-orm/nestjs@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "@mikro-orm/nestjs@npm:6.1.1"
   peerDependencies:
-    "@mikro-orm/core": ^6.0.0 || ^6.0.0-dev.0
-    "@nestjs/common": ^10.0.0
-    "@nestjs/core": ^10.0.0
-  checksum: 10c0/ae4d3cbe079d5b8742da5c4ec33629c3025fed7e2ed17ecee0ccfacea5cf978132d07651644a40a4dae9b5ae67e0fcee4e32ff3b6f49cc5b866144e357b19ca6
+    "@mikro-orm/core": ^6.0.0 || ^6.0.0-dev.0 || ^7.0.0-dev.0
+    "@nestjs/common": ^10.0.0 || ^11.0.5
+    "@nestjs/core": ^10.0.0 || ^11.0.5
+  checksum: 10c0/888309a41b5b18bf1155a0e46865e3e8cb750ebdf85515f973a4d4a4f442dd4fbd0298ecf9c171673b10e1e701498e62d7dea2e18b6bb91393ae864c7121af02
   languageName: node
   linkType: hard
 
-"@mikro-orm/postgresql@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@mikro-orm/postgresql@npm:6.4.0"
+"@mikro-orm/postgresql@npm:^6.4.8":
+  version: 6.4.8
+  resolution: "@mikro-orm/postgresql@npm:6.4.8"
   dependencies:
-    "@mikro-orm/knex": "npm:6.4.0"
-    pg: "npm:8.13.1"
+    "@mikro-orm/knex": "npm:6.4.8"
+    pg: "npm:8.13.3"
     postgres-array: "npm:3.0.2"
     postgres-date: "npm:2.1.0"
     postgres-interval: "npm:4.0.2"
   peerDependencies:
     "@mikro-orm/core": ^6.0.0
-  checksum: 10c0/8462b25f57c345d2fcdefab85e1e87e69b01478b44cd5e43797fc1f387ff7d322c917a2e561a02a4e022a28789b2dd8da9489c098627be9f57d491d0b5d53a9a
+  checksum: 10c0/b0a5c43dfdee95e721dd011560ba585b6268af2d87c475cf7f47e055b82cf68a3eabe7904c6ea0513f3d5d4601b854e1634c6405512386cef6323f6e7aa8843e
   languageName: node
   linkType: hard
 
-"@mikro-orm/seeder@npm:6.4.0":
-  version: 6.4.0
-  resolution: "@mikro-orm/seeder@npm:6.4.0"
+"@mikro-orm/seeder@npm:^6.4.8":
+  version: 6.4.8
+  resolution: "@mikro-orm/seeder@npm:6.4.8"
   dependencies:
-    fs-extra: "npm:11.2.0"
+    fs-extra: "npm:11.3.0"
     globby: "npm:11.1.0"
   peerDependencies:
     "@mikro-orm/core": ^6.0.0
-  checksum: 10c0/b54e46c49191263b17824347ed2e8f6849cc3f50db874754effad4b982024d792fa65283f89bee7e30346aacb2208a88a2122f439b6fcf3fa8bedcf1ca07fa66
+  checksum: 10c0/05c8b09777ae000dc6f62480df4583f4cde703656622c4cd12943d9a7e9378606b92bb2b99408049630c7e3502dcd9965737489f8e21bd412dae82f26eb9192c
   languageName: node
   linkType: hard
 
@@ -2502,9 +2502,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/common@npm:^10.0.0":
-  version: 10.4.12
-  resolution: "@nestjs/common@npm:10.4.12"
+"@nestjs/common@npm:10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/common@npm:10.4.15"
   dependencies:
     iterare: "npm:1.2.1"
     tslib: "npm:2.8.1"
@@ -2519,7 +2519,7 @@ __metadata:
       optional: true
     class-validator:
       optional: true
-  checksum: 10c0/8b156090391d731d0391de9ff7ab8fa35134858953ea0b6b88ee6fa7932b1afde59edc1826c700e8a8f30a6745b7def7652f5a511e92114d551e30dc8c34dc0d
+  checksum: 10c0/9566993fd3f805df2be632f5a16ca90d81b0deeb50e1e7cde4a49d4948c0d8d7db58b42ded70f35061e95e91a40d2adcd9e19cb2771090114eb737f62d2ea4c6
   languageName: node
   linkType: hard
 
@@ -2537,9 +2537,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/core@npm:^10.0.0":
-  version: 10.4.12
-  resolution: "@nestjs/core@npm:10.4.12"
+"@nestjs/core@npm:10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/core@npm:10.4.15"
   dependencies:
     "@nuxtjs/opencollective": "npm:0.3.2"
     fast-safe-stringify: "npm:2.1.1"
@@ -2561,19 +2561,19 @@ __metadata:
       optional: true
     "@nestjs/websockets":
       optional: true
-  checksum: 10c0/4c7c25d7d7de5233dd23fcc93eba55cfda078165a5034c2714d24eaf150d7aef7efe151737232303193305ed3b434dc9fcedb21ed0ad4816b1f1fc03d40ef05d
+  checksum: 10c0/68958efca25b28ea38bcfc810751c626a913a848d9ec86aab0a6021e708632b95585f0da5d5c2b0513bb64cacfc97d391b45ec002b718a8e90fdda1b4354bed1
   languageName: node
   linkType: hard
 
-"@nestjs/cqrs@npm:^11.0.0-next.1":
-  version: 11.0.0-next.1
-  resolution: "@nestjs/cqrs@npm:11.0.0-next.1"
+"@nestjs/cqrs@npm:^11.0.2":
+  version: 11.0.2
+  resolution: "@nestjs/cqrs@npm:11.0.2"
   peerDependencies:
-    "@nestjs/common": ^9.0.0 || ^10.0.0
-    "@nestjs/core": ^9.0.0 || ^10.0.0
+    "@nestjs/common": ^10.0.0 || ^11.0.0
+    "@nestjs/core": ^10.0.0 || ^11.0.0
     reflect-metadata: ^0.1.13 || ^0.2.0
     rxjs: ^7.2.0
-  checksum: 10c0/fcaabfca7e31c22cf53eb07f0fc1e3d90c9d29dbc65b7552e9dea3ac937fc96d80191b5dd7549378940b8751e0e2b11f5c5a4d552bcda85de6cbb6a202796938
+  checksum: 10c0/cebd833c3647fd4cda333da188d93636274b7d8dc1df42eb66b6b1d3482b4e6a0d92d1730d961e19e9e5a9ca128aea52586c6b77955f453c69a0d91e97f87507
   languageName: node
   linkType: hard
 
@@ -2594,19 +2594,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:^10.0.0":
-  version: 10.4.12
-  resolution: "@nestjs/platform-express@npm:10.4.12"
+"@nestjs/platform-express@npm:10.4.15":
+  version: 10.4.15
+  resolution: "@nestjs/platform-express@npm:10.4.15"
   dependencies:
     body-parser: "npm:1.20.3"
     cors: "npm:2.8.5"
-    express: "npm:4.21.1"
+    express: "npm:4.21.2"
     multer: "npm:1.4.4-lts.1"
     tslib: "npm:2.8.1"
   peerDependencies:
     "@nestjs/common": ^10.0.0
     "@nestjs/core": ^10.0.0
-  checksum: 10c0/3e8a60ca70df6f8a7e4312deb962f979dcc70417a4a387775a3e7d6a1975c0c40a4ebcd1fa723d6c0c1383381aab4e5d9e3dfb3be39180699fd5a624359777c9
+  checksum: 10c0/95df4c0580718dc78571827cbe074f8db24ecceb8d0305e9984b645ff806514dd8ddaacc8786f0bf7b78091032c77d8a244ba780007e58463ccdf6255ca7f039
   languageName: node
   linkType: hard
 
@@ -5570,20 +5570,20 @@ __metadata:
     "@aws-sdk/client-s3": "npm:^3.717.0"
     "@aws-sdk/client-ses": "npm:^3.699.0"
     "@aws-sdk/s3-request-presigner": "npm:^3.717.0"
-    "@mikro-orm/cli": "npm:^6.4.0"
-    "@mikro-orm/core": "npm:^6.4.0"
-    "@mikro-orm/migrations": "npm:^6.4.0"
-    "@mikro-orm/nestjs": "npm:^6.0.2"
-    "@mikro-orm/postgresql": "npm:^6.4.0"
-    "@mikro-orm/seeder": "npm:6.4.0"
+    "@mikro-orm/cli": "npm:^6.4.8"
+    "@mikro-orm/core": "npm:^6.4.8"
+    "@mikro-orm/migrations": "npm:^6.4.8"
+    "@mikro-orm/nestjs": "npm:^6.1.1"
+    "@mikro-orm/postgresql": "npm:^6.4.8"
+    "@mikro-orm/seeder": "npm:^6.4.8"
     "@nestjs/bullmq": "npm:^10.2.3"
     "@nestjs/cache-manager": "npm:^2.3.0"
     "@nestjs/cli": "npm:^10.0.0"
-    "@nestjs/common": "npm:^10.0.0"
+    "@nestjs/common": "npm:10.4.15"
     "@nestjs/config": "npm:^3.3.0"
-    "@nestjs/core": "npm:^10.0.0"
-    "@nestjs/cqrs": "npm:^11.0.0-next.1"
-    "@nestjs/platform-express": "npm:^10.0.0"
+    "@nestjs/core": "npm:10.4.15"
+    "@nestjs/cqrs": "npm:^11.0.2"
+    "@nestjs/platform-express": "npm:10.4.15"
     "@nestjs/schematics": "npm:^10.0.0"
     "@nestjs/swagger": "npm:^8.0.7"
     "@nestjs/testing": "npm:^10.0.0"
@@ -5649,10 +5649,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dataloader@npm:2.2.2":
-  version: 2.2.2
-  resolution: "dataloader@npm:2.2.2"
-  checksum: 10c0/125ec69f821478cf7c6b4360095db6cab939fe57876a0d2060c428091a8deee7152345189923b71a6afa694aaec463779f34b585317164016fd6f54f52cd94ba
+"dataloader@npm:2.2.3":
+  version: 2.2.3
+  resolution: "dataloader@npm:2.2.3"
+  checksum: 10c0/9b9a056fbc863ca86da87d59e053e871e263b4966aa4d55e40d61a65e96815fae5530ca220629064ca5f8e3000c0c4ec93292e170c38ff393fb34256b4d7c1aa
   languageName: node
   linkType: hard
 
@@ -5837,6 +5837,13 @@ __metadata:
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
   checksum: 10c0/48d92870076832af0418b13acd6e5a5a3e83bb00df690d9812e94b24aff62b88ade955ac99a05501305b8dc8f1b0ee7638b18493deb6fe93d680e5220936292f
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:16.4.7":
+  version: 16.4.7
+  resolution: "dotenv@npm:16.4.7"
+  checksum: 10c0/be9f597e36a8daf834452daa1f4cc30e5375a5968f98f46d89b16b983c567398a330580c88395069a77473943c06b877d1ca25b4afafcdd6d4adb549e8293462
   languageName: node
   linkType: hard
 
@@ -6365,9 +6372,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:4.21.1":
-  version: 4.21.1
-  resolution: "express@npm:4.21.1"
+"express@npm:4.21.2":
+  version: 4.21.2
+  resolution: "express@npm:4.21.2"
   dependencies:
     accepts: "npm:~1.3.8"
     array-flatten: "npm:1.1.1"
@@ -6388,7 +6395,7 @@ __metadata:
     methods: "npm:~1.1.2"
     on-finished: "npm:2.4.1"
     parseurl: "npm:~1.3.3"
-    path-to-regexp: "npm:0.1.10"
+    path-to-regexp: "npm:0.1.12"
     proxy-addr: "npm:~2.0.7"
     qs: "npm:6.13.0"
     range-parser: "npm:~1.2.1"
@@ -6400,7 +6407,7 @@ __metadata:
     type-is: "npm:~1.6.18"
     utils-merge: "npm:1.0.1"
     vary: "npm:~1.1.2"
-  checksum: 10c0/0c287867e5f6129d3def1edd9b63103a53c40d4dc8628839d4b6827e35eb8f0de5a4656f9d85f4457eba584f9871ebb2ad26c750b36bd75d9bbb8bcebdc4892c
+  checksum: 10c0/38168fd0a32756600b56e6214afecf4fc79ec28eca7f7a91c2ab8d50df4f47562ca3f9dee412da7f5cea6b1a1544b33b40f9f8586dbacfbdada0fe90dbb10a1f
   languageName: node
   linkType: hard
 
@@ -6666,14 +6673,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:11.2.0":
-  version: 11.2.0
-  resolution: "fs-extra@npm:11.2.0"
+"fs-extra@npm:11.3.0":
+  version: 11.3.0
+  resolution: "fs-extra@npm:11.3.0"
   dependencies:
     graceful-fs: "npm:^4.2.0"
     jsonfile: "npm:^6.0.1"
     universalify: "npm:^2.0.0"
-  checksum: 10c0/d77a9a9efe60532d2e790e938c81a02c1b24904ef7a3efb3990b835514465ba720e99a6ea56fd5e2db53b4695319b644d76d5a0e9988a2beef80aa7b1da63398
+  checksum: 10c0/5f95e996186ff45463059feb115a22fb048bdaf7e487ecee8a8646c78ed8fdca63630e3077d4c16ce677051f5e60d3355a06f3cd61f3ca43f48cc58822a44d0a
   languageName: node
   linkType: hard
 
@@ -8374,10 +8381,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mikro-orm@npm:6.4.0":
-  version: 6.4.0
-  resolution: "mikro-orm@npm:6.4.0"
-  checksum: 10c0/b3f27aa03bf3990e077f5947c1679596b4f8c3c88a226523bd763fce78b86c24ea315ae70b38c6aa60dd8c57f48f19de411866d979e06e149eafae56041c19ab
+"mikro-orm@npm:6.4.8":
+  version: 6.4.8
+  resolution: "mikro-orm@npm:6.4.8"
+  checksum: 10c0/ea49ec5ddec45d12584c54ed1cd918158e8217d8fa4b37f9327a9448d152c994d93bc145a603cdbb0bbd85f53eaab248c74fe5c14cd549ec32d3d93553fc0fc4
   languageName: node
   linkType: hard
 
@@ -9076,10 +9083,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:0.1.10":
-  version: 0.1.10
-  resolution: "path-to-regexp@npm:0.1.10"
-  checksum: 10c0/34196775b9113ca6df88e94c8d83ba82c0e1a2063dd33bfe2803a980da8d49b91db8104f49d5191b44ea780d46b8670ce2b7f4a5e349b0c48c6779b653f1afe4
+"path-to-regexp@npm:0.1.12":
+  version: 0.1.12
+  resolution: "path-to-regexp@npm:0.1.12"
+  checksum: 10c0/1c6ff10ca169b773f3bba943bbc6a07182e332464704572962d277b900aeee81ac6aa5d060ff9e01149636c30b1f63af6e69dd7786ba6e0ddb39d4dee1f0645b
   languageName: node
   linkType: hard
 
@@ -9132,19 +9139,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "pg-pool@npm:3.7.0"
+"pg-pool@npm:^3.7.1":
+  version: 3.7.1
+  resolution: "pg-pool@npm:3.7.1"
   peerDependencies:
     pg: ">=8.0"
-  checksum: 10c0/9128673cf941f288c0cb1a74ca959a9b4f6075ef73b2cc7dece5d4db3dd7043784869e7c12bce2e69ca0df22132a419cc45c2050b4373632856fe8bae9eb94b5
+  checksum: 10c0/65bff013102684774f4cfdffbfe0a2b0614252234561d391608f7fd915477e44f5fd0e1968ecc2f42032dcf8bac241d2f724c4f3df90384567d22df37dd3b6ba
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:*, pg-protocol@npm:^1.7.0":
+"pg-protocol@npm:*":
   version: 1.7.0
   resolution: "pg-protocol@npm:1.7.0"
   checksum: 10c0/c4af854d9b843c808231c0040fed89f2b9101006157df8da2bb2f62a7dde702de748d852228dc22df41cc7ffddfb526af3bcb34b278b581e9f76a060789186c1
+  languageName: node
+  linkType: hard
+
+"pg-protocol@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "pg-protocol@npm:1.7.1"
+  checksum: 10c0/3168d407ddc4c0fa2403eb9b49205399d4bc53dadbafdfcc5d25fa61b860a31c25df25704cf14c8140c80f0a41061d586e5fd5ce9bf800dfb91e9ce810bc2c37
   languageName: node
   linkType: hard
 
@@ -9176,14 +9190,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:8.13.1":
-  version: 8.13.1
-  resolution: "pg@npm:8.13.1"
+"pg@npm:8.13.3":
+  version: 8.13.3
+  resolution: "pg@npm:8.13.3"
   dependencies:
     pg-cloudflare: "npm:^1.1.1"
     pg-connection-string: "npm:^2.7.0"
-    pg-pool: "npm:^3.7.0"
-    pg-protocol: "npm:^1.7.0"
+    pg-pool: "npm:^3.7.1"
+    pg-protocol: "npm:^1.7.1"
     pg-types: "npm:^2.1.0"
     pgpass: "npm:1.x"
   peerDependencies:
@@ -9194,7 +9208,7 @@ __metadata:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: 10c0/c13bc661cbdb115337bc8519254836faf4bd79106dfd7ed588c8ece8c8b2dd3b7376bfec9a9a2f7646fa095b0b310cec77a83c3ba2ea4872331446eb93fd9055
+  checksum: 10c0/7296f0e5930b35faef471be2673210cda553b30f1b8e9d176fcc286aa43248e17e09336032bf5a6bba55d2cc2d03afb8a407b5a6e6bc56ebb331c02d1a7ccc05
   languageName: node
   linkType: hard
 
