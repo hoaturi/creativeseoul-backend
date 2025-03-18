@@ -73,6 +73,7 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
       fields: TALENT_FIELDS,
       orderBy: {
         [priorityTier]: QueryOrder.desc,
+        lastActiveAt: QueryOrder.desc,
       },
       limit: this.PAGE_SIZE,
       offset: this.PAGE_SIZE * (page - 1),
