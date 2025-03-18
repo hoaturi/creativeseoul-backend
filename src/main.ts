@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { sessionConfig } from './config/session.config';
 import { GlobalCustomExceptionFilter } from './common/exceptions/global-custom-exception.filter';
-import { TalentActivityInterceptor } from './infrastructure/interceptors/talent-activity-interceptor.service';
+import { TalentActivityInterceptor } from './infrastructure/interceptors/talent-activity-interceptor';
 import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
 
 async function bootstrap(): Promise<void> {
