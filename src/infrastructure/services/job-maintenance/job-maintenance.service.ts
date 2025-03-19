@@ -35,7 +35,7 @@ export class JobMaintenanceService {
 
   public async syncJobApplicationClicks(): Promise<void> {
     this.logger.log(
-      'job-metric.sync-job-application-clicks.started: Starting to sync job application clicks',
+      'job-maintenance.sync-job-application-clicks.started: Starting to sync job application clicks',
     );
 
     // Get all job click counts from hash
@@ -43,7 +43,7 @@ export class JobMaintenanceService {
 
     if (Object.keys(clickData).length === 0) {
       this.logger.log(
-        'job-metric.sync-job-application-clicks.success: No job application clicks to sync',
+        'job-maintenance.sync-job-application-clicks.success: No job application clicks to sync',
       );
       return;
     }
@@ -75,13 +75,13 @@ export class JobMaintenanceService {
     await this.redis.del(this.JOB_CLICKS_HASH);
 
     this.logger.log(
-      `job-metric.sync-job-application-clicks.success: Synced ${updates.length} job application clicks successfully`,
+      `job-maintenance.sync-job-application-clicks.success: Synced ${updates.length} job application clicks successfully`,
     );
   }
 
   public async expireFeaturedJobs(): Promise<void> {
     this.logger.log(
-      'job-metric.sync-expired-featured-jobs.started: Starting to expire featured jobs',
+      'job-maintenance.sync-expired-featured-jobs.started: Starting to expire featured jobs',
     );
 
     const expirationDate = new Date(Date.now() - this.FEATURE_DURATION);
@@ -98,7 +98,7 @@ export class JobMaintenanceService {
     );
 
     this.logger.log(
-      `job-metric.sync-expired-featured-jobs.success: Expired ${result} featured jobs successfully`,
+      `job-maintenance.sync-expired-featured-jobs.success: Expired ${result} featured jobs successfully`,
     );
   }
 }
