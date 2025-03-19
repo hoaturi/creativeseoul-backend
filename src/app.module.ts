@@ -24,17 +24,6 @@ import { EventModule } from './features/event/event.module';
   imports: [
     LoggerModule.forRoot({
       pinoHttp: {
-        transport: {
-          targets: [
-            {
-              target: '@autotelic/pino-seq-transport',
-              options: {
-                serverUrl: process.env.SEQ_URL,
-                apiKey: process.env.SEQ_API_KEY,
-              },
-            },
-          ],
-        },
         autoLogging: false,
       },
     }),
