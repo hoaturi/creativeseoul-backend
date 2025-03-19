@@ -10,13 +10,12 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true,
     "skipLibCheck": true,
-    "noImplicitAny": false,
     "strict": true,
-    "forceConsistentCasingInFileNames": false,
+    "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
