@@ -26,7 +26,6 @@ WORKDIR /app
 
 # Copy package files and yarn configuration
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn ./.yarn
 
 # Install only production dependencies using Yarn 4 syntax
 RUN yarn workspaces focus --production
