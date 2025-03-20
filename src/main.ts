@@ -49,10 +49,7 @@ async function bootstrap(): Promise<void> {
     new TalentActivityInterceptor(app.get(TalentActivityService)),
   );
 
-  await app.listen(
-    process.env.PORT ?? 3000,
-    process.env.HOST_IP ?? 'localhost',
-  );
+  await app.listen(process.env.PORT ?? 3000, process.env.HOST ?? '0.0.0.0');
 }
 
 bootstrap();
