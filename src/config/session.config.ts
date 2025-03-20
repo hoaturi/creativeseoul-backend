@@ -9,8 +9,10 @@ const TTL_DAYS = 7;
 
 export const sessionConfig = (): SessionOptions => {
   const redisClient = new Redis({
-    host: process.env.REDIS_HOST!,
+    host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT!),
+    username: process.env.REDIS_USER,
+    password: process.env.REDIS_PASSWORD,
   });
 
   const redisStore = new RedisStore({

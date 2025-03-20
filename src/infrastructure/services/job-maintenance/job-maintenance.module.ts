@@ -7,7 +7,12 @@ import { RedisModule } from '@nestjs-modules/ioredis';
   imports: [
     RedisModule.forRoot({
       type: 'single',
-      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+      options: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT!),
+        username: process.env.REDIS_USER,
+        password: process.env.REDIS_PASSWORD,
+      },
     }),
   ],
   providers: [JobMaintenanceService],
