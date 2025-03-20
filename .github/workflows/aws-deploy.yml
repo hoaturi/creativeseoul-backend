@@ -112,7 +112,7 @@ jobs:
             docker rm nestjs-container || true
 
             # Run the new container
-            docker run -d --name nestjs-container -p 3000:3000 --env-file /home/ec2-user/app/.env $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            docker run -d --name nestjs-container -p 3000:3000 --env-file /home/ubuntu/app/.env $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
             # Clean up old images (optional)
             docker system prune -af
