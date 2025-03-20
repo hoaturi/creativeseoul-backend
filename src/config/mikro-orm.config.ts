@@ -8,7 +8,18 @@ dotenv.config();
 const logger = new Logger('MikroORM');
 
 export default defineConfig({
-  clientUrl: process.env.DATABASE_URL,
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT!),
+  dbName: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  driverOptions: {
+    connection: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
+  },
   logger: logger.log.bind(logger),
   debug: true,
   entities: ['dist/domain/**/*.entity.js'],
