@@ -94,10 +94,10 @@ jobs:
           EOL
 
           # Copy .env file to EC2
-          scp .env ec2-user@${{ env.EC2_HOST }}:/home/ec2-user/app/.env
+          scp .env ubuntu@${{ env.EC2_HOST }}:/home/ubuntu/app/.env
 
           # SSH into EC2, login to ECR, pull latest image and restart container
-          ssh ec2-user@${{ env.EC2_HOST }} "
+          ssh ubuntu@${{ env.EC2_HOST }} "
             # Configure AWS CLI if needed
             aws configure set region ${{ env.AWS_REGION }}
 
