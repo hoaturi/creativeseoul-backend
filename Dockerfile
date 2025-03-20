@@ -7,7 +7,6 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn ./.yarn
 
 # Install all dependencies
 RUN yarn install
