@@ -208,7 +208,7 @@ export class JobController {
   }
 
   @Get('my/:slug')
-  @Roles(UserRole.COMPANY)
+  @Roles(UserRole.COMPANY, UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiOkResponse({
     type: GetJobResponseDto,

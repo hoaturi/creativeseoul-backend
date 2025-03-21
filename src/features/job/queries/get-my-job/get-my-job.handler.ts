@@ -5,6 +5,7 @@ import { ResultError } from 'src/common/result/result-error';
 import {
   GetJobResponseDto,
   JobCompanyDto,
+  RelatedJobDto,
 } from '../../dtos/responses/get-job-response.dto';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Job } from '../../../../domain/job/entities/job.entity';
@@ -12,7 +13,7 @@ import { JobError } from '../../job.error';
 
 @QueryHandler(GetMyJobQuery)
 export class GetMyJobHandler implements IQueryHandler<GetMyJobQuery> {
-  public constructor(private em: EntityManager) {}
+  public constructor(private readonly em: EntityManager) {}
 
   public async execute(
     query: GetMyJobQuery,
@@ -54,12 +55,37 @@ export class GetMyJobHandler implements IQueryHandler<GetMyJobQuery> {
       return Result.failure(JobError.NotFound);
     }
 
+    const relatedJobs = await this.em.find(
+      Job,
+      {
+        company: job.company,
+        isPublished: true,
+        id: { $ne: job.id },
+      },
+      {
+        fields: ['slug', 'title', 'employmentType.label', 'location'],
+        limit: 5,
+        orderBy: { createdAt: 'DESC' },
+      },
+    );
+
+    const relatedJobDtos = relatedJobs.map(
+      (relatedJob) =>
+        new RelatedJobDto({
+          slug: relatedJob.slug,
+          title: relatedJob.title,
+          employmentType: relatedJob.employmentType.label,
+          location: relatedJob.location,
+        }),
+    );
+
     const companyDto = new JobCompanyDto({
       slug: job.company.slug,
       name: job.company.name,
       description: job.company.description!,
       logoUrl: job.company.logoUrl,
       size: job.company.size?.label,
+      relatedJobs: relatedJobDtos,
     });
 
     const responseDto = new GetJobResponseDto({
