@@ -128,7 +128,6 @@ export class TalentController {
     return result.value;
   }
 
-  @Get()
   @Post('me')
   @HttpCode(HttpStatus.OK)
   @Roles(UserRole.TALENT)
