@@ -244,11 +244,8 @@ export class JobController {
   @ApiNotFoundResponse({
     example: JobError.NotFound,
   })
-  public async getJob(
-    @Param('slug') slug: string,
-    @CurrentUser() user?: AuthenticatedUser,
-  ): Promise<GetJobResponseDto> {
-    const query = new GetJobQuery(slug, user);
+  public async getJob(@Param('slug') slug: string): Promise<GetJobResponseDto> {
+    const query = new GetJobQuery(slug);
 
     const result = await this.queryBus.execute(query);
 
