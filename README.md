@@ -37,10 +37,10 @@
 
 ## ERD & System Architecture
 
-
+### ERD
 ![erd](https://github.com/user-attachments/assets/9585dc5c-6111-41c3-bb13-f372fbe18b1b)
 
-
+### 시스템 아키텍처
 ![image](https://github.com/user-attachments/assets/5c6ed1ee-78ec-43ea-8bf4-705c1c7d6c93)
 
 
