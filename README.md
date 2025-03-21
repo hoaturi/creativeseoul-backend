@@ -1,99 +1,117 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# WaferJobs
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 1. 개요
+- CreativeSeoul은 디자인, 마케팅, 비주얼 등 다양한 크리에이티브 분야에 특화된 구인구직 플랫폼의 백엔드 애플리케이션입니다. 이 플랫폼은 국내 기업과 국내에서 인재를 찾는 해외 기업, 그리고 구직자들을 연결해주는 서비스를 제공합니다.
+- 한국과 해외에서 선호하는 UI 디자인의 차이점에 착안하여 개발되었습니다. 한국 기업의 해외 시장 진출이나 해외 기업의 국내 시장 진출 시, 각 시장의 특성과 문화적 맥락을 이해하는 다양한 관점의 디자이너 필요성을 해결하는 플랫폼입니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 2. 배포 및 API 명세
+- **[Swagger 배포 링크](http://15.165.124.135:3000/api)**
 
-## Description
+## 3. 기술 스택
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 언어 및 런타임
+- **TypeScript**
+- **Node.js 22**
 
-## Project setup
+### 프레임워크 및 라이브러리
+- **Nestjs**
+- **BullMQ**
+- **Pino**
 
-```bash
-$ yarn install
-```
+### 데이터베이스
+- **PostgreSQL**
+- **Redis**
 
-## Compile and run the project
+### 인프라 및 배포
+- **Docker**
+- **AWS EC2**
+- **AWS ECR**
+- **AWS RDS PostgreSQL**
+- **Cloudflare R2**
+- **Redis Cloud**
+- **GitHub Actions**
 
-```bash
-# development
-$ yarn run start
+### 외부 서비스
+- **Stripe**
+- **AWS SES**
 
-# watch mode
-$ yarn run start:dev
+## ERD & System Architecture
 
-# production mode
-$ yarn run start:prod
-```
 
-## Run tests
+![erd](https://github.com/user-attachments/assets/9585dc5c-6111-41c3-bb13-f372fbe18b1b)
 
-```bash
-# unit tests
-$ yarn run test
 
-# e2e tests
-$ yarn run test:e2e
+![image](https://github.com/user-attachments/assets/5c6ed1ee-78ec-43ea-8bf4-705c1c7d6c93)
 
-# test coverage
-$ yarn run test:cov
-```
 
-## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 4. 주요 기능
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 인증 및 사용자 관리
+- 회원가입, 로그인, 로그아웃, 이메일 인증
+- 비밀번호 찾기/재설정
+- 세션 정보 관리
+- 계정 삭제
 
-```bash
-$ yarn install -g mau
-$ mau deploy
-```
+### 인재(Talent) 관리
+- 인재 프로필 생성 및 관리
+- 인재 목록 조회 및 특정 인재 조회
+- 구직 선호도 설정
+- 아바타 업로드
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 멤버 관리
+- 멤버 목록 조회
+- 특정 멤버 정보 조회
 
-## Resources
+### 기업(Company) 관리
+- 기업 프로필 생성 및 관리
+- 기업 멤버 초대 및 초대 수락
+- 기업 로고 업로드
+- 미청구 기업 프로필 확인
+- 스폰서 기업 조회
 
-Check out a few resources that may come in handy when working with NestJS:
+### 채용공고 관리
+- 일반 및 주요 채용공고 등록
+- 채용공고 검색 및 조회
+- 개인 채용공고 관리
+- 채용공고 게시/비게시 및 갱신
+- 지원 클릭 통계 추적
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 결제 및 청구
+- 크레딧 결제 시스템
+- 스폰서십 결제
+- 웹훅 처리
+- 기업 결제 정보 및 크레딧 잔액 관리
 
-## Support
+### 이벤트 관리
+- 이벤트 등록 및 조회
+- 이벤트 커버 이미지 업로드
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 5. 문제 해결 및 기술적 고민
 
-## Stay in touch
+### Result 패턴 구현
+- 일관된 에러 처리와 성공/실패 응답 구조를 위한 Result 패턴 도입
+- 예외(Exception)는 예상치 못한 경우에만 사용하고, 예상된 비즈니스 로직 실패는 Result 객체로 처리
+- 타입스크립트 제네릭을 활용하여 성공 값(`TValue`)과 실패 값(`TError`)의 타입 안전성 확보
+- 도메인별 에러 케이스를 중앙화하여 에러 코드와 메시지의 일관성 유지 및 재사용성 향상
+- [자세한 구현 방법](https://medium.com/@oink2716/nestjs에서-result-패턴을-적용하여-에러-처리하기-d59d9294f6a2)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 프로필 랭킹 및 활동 추적 시스템 구현
+- 구직자 프로필을 효과적으로 노출하기 위한 복합적 랭킹 시스템 설계
+- 세 가지 주요 요소(프로필 완성도, 최근 활동 시각, 프로필 업데이트 시각) 종합 고려
+- 프로필 점수화 시스템 구현: 요소별 가중치 적용(프로필 사진 25%, 자기소개 35%, 언어 능력 25%, 거주 도시 15%)
+- 사용자 활동 추적을 위한 `TalentActivityInterceptor` 구현 및 In-Memory 캐싱을 통한 DB 부하 최소화
+- 4시간의 업데이트 쿨다운 기간 적용 및 NestJS Interceptor를 활용한 HTTP 응답 완료 후 활동 시간 업데이트
+- 프로필 업데이트 시 14일 쿨다운 기간을 적용하여 랭킹 조작 방지
+- 우선순위 티어(Priority Tier) 개념을 도입하여 4단계 랭킹 체계 적용
+- Raw SQL 표현식을 활용한 복합 정렬 조건 구현
+- [자세한 구현 방법](https://medium.com/@oink2716/구인구직-플랫폼-구직자-프로필-랭킹-시스템-구현하기-eb5270111a02)
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### MikroORM 부분 로드 엔티티 타입 안전성 유지
+- 부분 필드 선택을 통한 DB 성능 최적화와 타입 안전성 사이의 균형 확보
+- `fields` 옵션을 사용한 부분 로딩 시 발생하는 TypeScript 타입 호환성 문제 해결
+- 상수 필드 배열과 TypeScript의 타입 추출 패턴을 활용한 해결책 구현
+- `as const` 키워드로 정의된 필드 리스트로부터 타입 자동 추출
+- 관계 엔티티 필드 처리를 위한 조건부 타입과 `infer` 키워드 활용
+- 단일 진실 공급원(Single Source of Truth) 원칙에 따라 필드 목록 중앙화 관리
+- [자세한 구현 방법](https://medium.com/@oink2716/mikroorm에서-부분-엔티티-로딩-시-타입-안전성-유지하기-ab4225ea3e1f)
