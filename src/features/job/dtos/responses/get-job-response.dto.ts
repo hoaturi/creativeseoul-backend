@@ -51,14 +51,14 @@ export class JobCompanyDto {
     description: string;
     logoUrl?: string;
     size?: string;
-    relatedJobs?: RelatedJobDto[];
+    relatedJobs: RelatedJobDto[];
   }) {
     this.slug = data.slug;
     this.name = data.name;
     this.description = data.description;
     this.logoUrl = data.logoUrl;
     this.size = data.size;
-    this.relatedJobs = data.relatedJobs ?? [];
+    this.relatedJobs = data.relatedJobs;
   }
 }
 
