@@ -31,4 +31,10 @@ export class GetTalentListQueryDto {
   @IsNumber()
   @Transform(({ value }) => (value ? parseInt(value) : undefined))
   public readonly page?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value) : undefined))
+  public readonly limit?: number;
 }

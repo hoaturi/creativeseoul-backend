@@ -39,14 +39,12 @@ type LoadedTalent = Loaded<Talent, never, TalentFields>;
 
 @QueryHandler(GetTalentListQuery)
 export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
-  private readonly PAGE_SIZE = 20;
-
   public constructor(private readonly em: EntityManager) {}
 
   public async execute(
     query: GetTalentListQuery,
   ): Promise<Result<GetTalentListResponseDto, ResultError>> {
-    const { page = 1 } = query.dto;
+    const { page = 1, limit = 20 } = query.dto;
 
     const where: QBFilterQuery<Talent> = {
       qualityScore: { $gte: 40 },
@@ -75,8 +73,8 @@ export class GetTalentListHandler implements IQueryHandler<GetTalentListQuery> {
         [priorityTier]: QueryOrder.desc,
         lastActiveAt: QueryOrder.desc,
       },
-      limit: this.PAGE_SIZE,
-      offset: this.PAGE_SIZE * (page - 1),
+      limit: limit,
+      offset: limit * (page - 1),
     });
 
     const talentDtos = this.mapToTalentDtos(talents);
