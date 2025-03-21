@@ -8,8 +8,8 @@ export class GetTalentQuery extends Query<
   Result<GetTalentResponseDto, ResultError>
 > {
   public constructor(
-    public readonly user: AuthenticatedUser,
     public readonly handle: string,
+    public readonly user?: AuthenticatedUser,
   ) {
     super();
   }

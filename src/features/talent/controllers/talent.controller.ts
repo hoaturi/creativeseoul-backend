@@ -109,16 +109,15 @@ export class TalentController {
   }
 
   @Get(':handle')
-  @UseGuards(AuthGuard)
   @ApiOkResponse({ type: GetTalentResponseDto })
   @ApiNotFoundResponse({
     example: TalentError.ProfileNotFound,
   })
   public async getTalent(
-    @CurrentUser() user: AuthenticatedUser,
     @Param('handle') handle: string,
+    @CurrentUser() user?: AuthenticatedUser,
   ): Promise<GetTalentResponseDto> {
-    const command = new GetTalentQuery(user, handle);
+    const command = new GetTalentQuery(handle, user);
 
     const result = await this.queryBus.execute(command);
 
@@ -129,6 +128,7 @@ export class TalentController {
     return result.value;
   }
 
+  @Get()
   @Post('me')
   @HttpCode(HttpStatus.OK)
   @Roles(UserRole.TALENT)

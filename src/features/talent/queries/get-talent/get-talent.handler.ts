@@ -12,6 +12,7 @@ import { GetTalentResponseDto } from '../../dtos/responses/get-talent-response.d
 import { TalentWorkLocationTypeDto } from '../../dtos/responses/talent-work-location-type.dto';
 import { TalentEmploymentTypeDto } from '../../dtos/responses/talent-employment-type.dto';
 import { AuthenticatedUser } from '../../../../infrastructure/security/authenticated-user.interface';
+import { AvailabilityStatusId } from '../../../../domain/talent/constants/availability-status.constant';
 
 const TALENT_FIELDS = [
   'id',
@@ -60,11 +61,14 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
       return Result.failure(TalentError.ProfileNotFound);
     }
 
-    if (!this.hasAccessPermission(query.user, talent)) {
+    if (
+      query.user?.profile?.id !== talent.id &&
+      talent.availabilityStatus.id === AvailabilityStatusId.NOT_LOOKING
+    ) {
       return Result.failure(TalentError.ProfileNotFound);
     }
 
-    const response = this.createTalentResponse(talent);
+    const response = this.createTalentResponse(talent, query.user);
     return Result.success(response);
   }
 
@@ -80,18 +84,10 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
     )) as LoadedTalent | null;
   }
 
-  private hasAccessPermission(
-    user: AuthenticatedUser,
+  private createTalentResponse(
     talent: LoadedTalent,
-  ): boolean {
-    const isUserOwner = user.profile.id === talent.id;
-    const isUserAdmin = user.role === UserRole.ADMIN;
-    const isUserCompany = user.role === UserRole.COMPANY;
-
-    return isUserCompany || isUserAdmin || isUserOwner;
-  }
-
-  private createTalentResponse(talent: LoadedTalent): GetTalentResponseDto {
+    user?: AuthenticatedUser,
+  ): GetTalentResponseDto {
     const location = new TalentLocationDto(
       talent.country.label,
       talent.city?.label,
@@ -114,6 +110,11 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
       (type) => new TalentEmploymentTypeDto(type.id, type.label),
     );
 
+    // Determine if contact info should be shown based on user role directly in this method
+    const isAdminOrCompany =
+      user?.role === UserRole.ADMIN || user?.role === UserRole.COMPANY;
+    const showContactInfo = isAdminOrCompany && talent.isContactable;
+
     return new GetTalentResponseDto({
       handle: talent.handle,
       fullName: talent.fullName,
@@ -130,8 +131,8 @@ export class GetTalentHandler implements IQueryHandler<GetTalentQuery> {
       employmentTypes,
       skills: talent.skills,
       isContactable: talent.isContactable,
-      email: talent.isContactable ? talent.email : undefined,
-      phone: talent.isContactable ? talent.phone : undefined,
+      email: showContactInfo ? talent.email : undefined,
+      phone: showContactInfo ? talent.phone : undefined,
     });
   }
 }
