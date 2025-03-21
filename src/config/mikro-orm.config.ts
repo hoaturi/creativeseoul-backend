@@ -13,13 +13,15 @@ export default defineConfig({
   dbName: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  driverOptions: {
-    connection: {
-      ssl: {
-        rejectUnauthorized: false,
+  ...(process.env.NODE_ENV === 'production' && {
+    driverOptions: {
+      connection: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
       },
     },
-  },
+  }),
   logger: logger.log.bind(logger),
   debug: true,
   entities: ['dist/domain/**/*.entity.js'],
