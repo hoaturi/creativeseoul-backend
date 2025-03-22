@@ -45,6 +45,9 @@ export class GetTalentResponseDto {
   @ApiPropertyOptional()
   public readonly hourlyRateRange?: string;
 
+  @ApiPropertyOptional()
+  public readonly experienceLevel?: string;
+
   @ApiProperty({
     type: [TalentWorkLocationTypeDto],
   })
@@ -79,6 +82,7 @@ export class GetTalentResponseDto {
     availabilityStatus: string;
     salaryRange?: string;
     hourlyRateRange?: string;
+    experienceLevel?: string;
     workLocationTypes: TalentWorkLocationTypeDto[];
     employmentTypes: TalentEmploymentTypeDto[];
     skills?: string[];
@@ -96,6 +100,7 @@ export class GetTalentResponseDto {
     this.socialLinks = data.socialLinks;
     this.availabilityStatus = data.availabilityStatus;
     this.salaryRange = data.salaryRange;
+    this.experienceLevel = data.experienceLevel;
     this.hourlyRateRange = data.hourlyRateRange;
     this.workLocationTypes = data.workLocationTypes;
     this.employmentTypes = data.employmentTypes;
