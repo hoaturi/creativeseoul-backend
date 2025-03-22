@@ -28,10 +28,10 @@ export const sessionConfig = (): SessionOptions => {
     store: redisStore,
     rolling: true,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * TTL_DAYS,
-      sameSite: 'none',
+      sameSite: 'lax',
     },
   };
 };
