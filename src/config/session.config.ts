@@ -28,7 +28,7 @@ export const sessionConfig = (): SessionOptions => {
     store: redisStore,
     rolling: true,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: 'auto',
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * TTL_DAYS,
       sameSite: 'lax',
