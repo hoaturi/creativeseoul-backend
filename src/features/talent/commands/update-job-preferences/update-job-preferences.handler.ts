@@ -31,6 +31,7 @@ export class UpdateJobPreferencesHandler
           fields: ['id', 'employmentTypes', 'workLocationTypes'],
         },
       );
+
       if (!talent) {
         return Result.failure(TalentError.ProfileNotFound);
       }
@@ -58,19 +59,15 @@ export class UpdateJobPreferencesHandler
       );
 
       // Handle many-to-many relationships separately
-      if (talent) {
-        // Update work location types
-        const workLocationTypes = dto.workLocationTypeIds.map((id) =>
-          em.getReference(WorkLocationType, id),
-        );
-        talent.workLocationTypes.set(workLocationTypes);
+      const workLocationTypes = dto.workLocationTypeIds.map((id) =>
+        em.getReference(WorkLocationType, id),
+      );
+      talent.workLocationTypes.set(workLocationTypes);
 
-        // Update employment types
-        const employmentTypes = dto.employmentTypeIds.map((id) =>
-          em.getReference(EmploymentType, id),
-        );
-        talent.employmentTypes.set(employmentTypes);
-      }
+      const employmentTypes = dto.employmentTypeIds.map((id) =>
+        em.getReference(EmploymentType, id),
+      );
+      talent.employmentTypes.set(employmentTypes);
 
       await em.flush();
 
