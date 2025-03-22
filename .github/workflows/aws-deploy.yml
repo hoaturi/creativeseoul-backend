@@ -64,6 +64,7 @@ jobs:
         run: |
           # Create .env file from GitHub secrets
           cat > .env << EOL
+          DOMAIN=${{ secrets.DOMAIN }}
           CLIENT_BASE_URL=${{ secrets.CLIENT_BASE_URL }}
           DB_HOST=${{ secrets.DB_HOST }}
           DB_PORT=${{ secrets.DB_PORT }}
