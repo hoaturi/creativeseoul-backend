@@ -9,9 +9,20 @@ import { sessionConfig } from './config/session.config';
 import { GlobalCustomExceptionFilter } from './common/exceptions/global-custom-exception.filter';
 import { TalentActivityInterceptor } from './infrastructure/interceptors/talent-activity-interceptor';
 import { TalentActivityService } from './infrastructure/services/talent-activity/talent-activity.service';
+import fs from 'fs';
 
 async function bootstrap(): Promise<void> {
+  let httpsOptions: { cert: Buffer; key: Buffer } | undefined = undefined;
+
+  if (process.env.NODE_ENV === 'production') {
+    httpsOptions = {
+      cert: fs.readFileSync('/app/ssl/creativeseoul.pem'),
+      key: fs.readFileSync('/app/ssl/creativeseoul.key'),
+    };
+  }
+
   const app = await NestFactory.create(AppModule, {
+    ...(httpsOptions && { httpsOptions }),
     bufferLogs: true,
     rawBody: true,
   });

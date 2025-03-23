@@ -115,7 +115,11 @@ jobs:
             docker rm creativeseoul || true
 
             # Run the new container
-            docker run -d --name creativeseoul -p 3000:3000 --env-file /home/ubuntu/app/.env $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            docker run -d --name creativeseoul \
+            -p 443:3000 \
+            -v /home/ubuntu/app/ssl:/app/ssl:ro \
+            --env-file /home/ubuntu/app/.env \
+            $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
             # Clean up old images (optional)
             docker system prune -af
